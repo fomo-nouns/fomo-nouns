@@ -1,0 +1,17 @@
+{
+  "name": "settlement",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@flashbots/ethers-provider-bundle": "^0.4.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "ethers": "^5.4.7",
+    "hardhat": "^2.6.4"
+  }
+}
