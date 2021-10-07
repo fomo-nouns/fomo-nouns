@@ -1,0 +1,35 @@
+require("@nomiclabs/hardhat-waffle");
+
+
+/**
+ * Print List of Accounts for the Network
+ */
+task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
+  const accounts = await hre.ethers.getSigners();
+
+  for (const account of accounts) {
+    console.log(account.address);
+  }
+});
+
+
+/**
+ * @type import('hardhat/config').HardhatUserConfig
+ */
+ module.exports = {
+   solidity: "0.8.6",
+   networks: {
+     rinkeby: {
+       url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`,
+       accounts: [`0x${process.env.RINKEBY_PRIVATE_KEY}`],
+     },
+     mainnet: {
+       url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`,
+       accounts: [`0x${process.env.MAINNET_PRIVATE_KEY}`],
+     },
+     goerli: {
+      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`,
+      accounts: [`0x${process.env.RINKEBY_PRIVATE_KEY}`],
+    },
+   }
+ };
