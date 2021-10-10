@@ -10,50 +10,79 @@ import { AccessControl } from '@openzeppelin/contracts/access/AccessControl.sol'
 
 
 contract NounSettlement is AccessControl {
-  address private immutable executor;
-  address private immutable nounsDao;
-  INounsAuctionHouse private immutable auctionHouse;
+  address payable public nounsDao;
+  address payable public executor;
+  INounsAuctionHouse public immutable auctionHouse;
 
-  bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
-  bytes32 public constant FOMO_ROLE = keccak256("FOMO_ROLE");
-  
+  uint256 public maxGasPrice;
+  uint256 private OVERHEAD_GAS = 28925;
+
 
   constructor(address _executor, address _nounsDao, address _nounsAuctionHouseAddress) {
-    executor = _executor;
-    nounsDao = _nounsDao;
     auctionHouse = INounsAuctionHouse(_nounsAuctionHouseAddress);
+    executor = payable(_executor);
+    nounsDao = payable(_nounsDao);
 
-    _setupRole(DAO_ROLE, _nounsDao);
-    _setupRole(FOMO_ROLE, _executor);
-    _setRoleAdmin(DAO_ROLE, DAO_ROLE); // All DAO_ROLE members have admin rights
+    maxGasPrice = 1000 * 10**9; // 1,000 gwei; used to limit damage from malicious executor
   }
 
-  function donateFunds() external payable { }
+  /**
+    Custom modifiers to limit executor to intended addresses
+   */
+  modifier onlyDAO() {
+    require(msg.sender == nounsDao, "Only executable by Nouns DAO");
+    _;
+  }
 
-  function pullFunds() external onlyRole(DAO_ROLE) {
-    (bool sent, ) = payable(nounsDao).call{value: address(this).balance}("");
+
+  /**
+    Fund management to allow donations and liquidation by the DAO
+   */
+  function donateFunds() external payable { }
+  receive() external payable { }
+  fallback() external payable { }
+
+  function pullFunds() external onlyDAO {
+    (bool sent, ) = nounsDao.call{value: address(this).balance}("");
     require(sent, "Funds removal failed.");
   }
 
-  function changeDaoAddress(address _newDao) external onlyRole(DAO_ROLE) {
-    grantRole(DAO_ROLE, _newDao);
-    renounceRole(DAO_ROLE, address(this));
+
+  /**
+    Change addresses or limits for the contract exeuction
+   */
+  function changeDaoAddress(address _newDao) external onlyDAO {
+    nounsDao = payable(_newDao);
+  }
+
+  function changeExecutorAddress(address _newExecutor) external onlyDAO {
+    executor = payable(_newExecutor);
+  }
+
+  function changeMaxGasPrice(uint256 _newGasPriceLimit) external onlyDAO {
+    maxGasPrice = _newGasPriceLimit;
   }
 
 
   /**
     Mint the desired Nouns via Flashbots
    */
-  function mintDesiredNoun(bytes32 _desiredHash, uint256 _minerEthTip) external onlyRole(FOMO_ROLE) {
+  function mintDesiredNoun(bytes32 _desiredHash) external {
+    uint256 startGas = gasleft();
+
+    require(msg.sender == executor, "Only executable by FOMO Nouns executor");
+
+    // Settle the auction only if blockhash matches the intended hash
     bytes32 lastHash = blockhash(block.number - 1);
-    require(_desiredHash == lastHash, "Block hashes do not match, not settling");
+    require(lastHash == _desiredHash, "Prior blockhash did not match intended hash");
 
     (bool success, ) = address(auctionHouse).call(abi.encodeWithSignature("settleCurrentAndCreateNewAuction()"));
     require(success, "Settlement failed");
-    
-    block.coinbase.transfer(_minerEthTip);
-  }
 
-  receive() external payable { }
-  fallback() external payable { }
+    // Reimburse the gas used plus a reasonable overhead for require, transfer, calculations
+    require(tx.gasprice <= maxGasPrice, "Gas price above current reasonable limit");
+
+    uint256 totalGasCost = tx.gasprice * (OVERHEAD_GAS + startGas - gasleft());
+    executor.transfer(totalGasCost); // Executor must be EOA
+  }
 }
