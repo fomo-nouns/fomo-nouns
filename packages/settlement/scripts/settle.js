@@ -38,9 +38,9 @@ async function sendNormalTransaction(signer, tx) {
   const response = await signer.sendTransaction(tx);
   const receipt = await response.wait();
   if (receipt.status === 1) {
-    console.log(`✅ Transaction included in block ${receipt.block}`);
+    console.log(`  ✅ Transaction included in block ${receipt.blockNumber}`);
   } else {
-    console.log(`❌ Transaction reverted`);
+    console.log(`  ❌ Transaction reverted`);
   }
 }
 
@@ -71,11 +71,11 @@ async function sendFlashbotsTransaction(provider, bundle, targetBlock) {
 
   const bundleResolution = await bundleResponse.wait()
   if (bundleResolution === FlashbotsBundleResolution.BundleIncluded) {
-    console.log(`✅ Transaction included in block ${targetBlockNumber}`);
+    console.log(`  ✅ Transaction included in block ${targetBlock}`);
   } else if (bundleResolution === FlashbotsBundleResolution.BlockPassedWithoutInclusion) {
-    console.log(`🐢 Transaction missed block ${targetBlockNumber}`);
+    console.log(`  🐢 Transaction missed block ${targetBlock}`);
   } else {
-    console.log(`❌ Transaction reverted`);
+    console.log(`  ❌ Transaction reverted`);
   }
 }
 
@@ -83,7 +83,7 @@ async function simulateFlashbots(provider, signedBundle, targetBlock) {
   const simulation = await provider.simulate(signedBundle, targetBlock);
 
   if ('error' in simulation) {
-    console.log(`💥 Simulation signalled error: ${simulation.error.reason}`);
+    console.log(`  💥 Simulation signalled error: ${simulation.error.reason}`);
     return false;
   }
   

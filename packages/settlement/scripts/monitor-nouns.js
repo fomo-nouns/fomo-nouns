@@ -118,13 +118,11 @@ async function main() {
     const {auction, nextNoun} = await getData(nextNounId);
     const time = nowSeconds();
 
-    logNoun(nextNoun);
-
     if (auction.nounId < nextNounId && auction.endTime < time && !auction.settled) {
-      console.log(`  📖 Noun eligible for settlement...`)
+      logNoun(nextNoun);
       if (isDesirableNoun(nextNoun)) {
         // settleFlashbots(auctionHouse, flashbotsProvider, signer, blockNumber+1);
-        settleNormally(auctionHouse, provider, signer);
+        settleNormally(auctionHouse, provider, signer, blockNumber+1);
       }
     } else {
       if (auction.nounId >= nextNounId) {
@@ -133,7 +131,7 @@ async function main() {
       }
   
       if (auction.endTime > time) {
-        // pauseFor(auction.endTime - nowSeconds() - 5);
+        pauseFor(auction.endTime - nowSeconds() - 5);
       }
     }
   });
