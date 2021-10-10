@@ -6,21 +6,25 @@ const { parseUnits, parseEther, formatUnits, formatEther } = ethers.utils;
 const GWEI = parseUnits('1', 'gwei');
 const formatGwei = n => formatUnits(n, 'gwei');
 
-const MAX_SETTLEMENT_COST = parseEther('0.1');
-
+const MAX_SETTLEMENT_COST = parseEther('0.06');
+const DEFAULT_PRIORITY_FEE = GWEI.mul(25);
 
 /**
  * SETTLEMENT TRANSACTION
  */
-async function buildTransaction(feeData, priorityFeePerGas = null) {
+async function buildTransaction(auctionHouse, feeData, priorityFeePerGas = null) {
   // if (network === 'goerli') baseFeePerGas = baseFeePerGas.mul(GWEI);
   if (priorityFeePerGas) {
-    feeData.maxFeePerGas = feeData.maxFeePerGas.sub(feeData.priorityFeePerGas).add(priorityFeePerGas);
-    feeData.maxPriorityFeePerGas = priorityFeePerGas;
+    let maxPriorityFee = priorityFeePerGas.gt(feeData.maxPriorityFeePerGas) ? priorityFeePerGas : feeData.maxPriorityFeePerGas;
+
+    feeData.maxFeePerGas = feeData.maxFeePerGas.sub(feeData.maxPriorityFeePerGas).add(maxPriorityFee);
+    feeData.maxPriorityFeePerGas = maxPriorityFee;
+
+    delete feeData.gasPrice;
   }
   
   const tx = await auctionHouse.populateTransaction.settleCurrentAndCreateNewAuction({...feeData, type: 2});
-  tx.chainId = auctionHouse.provider.chainId;
+  tx.chainId = auctionHouse.provider.network.chainId;
 
   return tx;
 }
@@ -30,10 +34,6 @@ async function buildTransaction(feeData, priorityFeePerGas = null) {
 /**
  * NORMAL TRANSACTION SIGNING & SENDING
  */
-async function signNormalTransaction(signer, tx) {
-  return await signer.signTransaction(tx);
-}
-
 async function sendNormalTransaction(signer, tx) {
   const response = await signer.sendTransaction(tx);
   const receipt = await response.wait();
@@ -98,17 +98,18 @@ async function simulateFlashbots(provider, signedBundle, targetBlock) {
 /**
  * MAIN SETTLEMENT FUNCTIONS
  */
-async function settleNormally(auctionHouse, provider, signer, priorityFee = GWEI.mul(40)) {
+async function settleNormally(auctionHouse, provider, signer, targetBlock, priorityFee = DEFAULT_PRIORITY_FEE) {
   console.log(`🔨 TRXN: Targeting settlement on ${targetBlock}...`);
 
-  const block = await provider.getBlock(targetBlock-1);
+  const feeData = await provider.getFeeData();
 
-  const tx = await buildTransaction(block.baseFeePerGas, priorityFee);
-  const signedTx = await signNormalTransaction(signer, tx);
+  const tx = await buildTransaction(auctionHouse, feeData, priorityFee);
+  console.log(tx);
+
+  const cost = await simulateNormalTransaction(provider, tx);
 
   if (cost.lt(MAX_SETTLEMENT_COST)) {
-    console.log(`  🤡 Skipping sending transaction for debugging...`);
-    // await sendNormalTransaction(signer, signedTx);
+    await sendNormalTransaction(signer, tx);
   } else {
     console.log(`  ❌ NOT SETTLING: Total cost above ${formatEther(MAX_SETTLEMENT_COST)} limit`);
   }
@@ -120,10 +121,9 @@ async function settleFlashbots(auctionHouse, flashbotsProvider, signer, targetBl
   console.log(`🤖 FLASHBOT: Targeting settlement on ${targetBlock}...`);
 
   const flashbotsPriorityFee = BigNumber.from(0); // Use contract tranansfer instead
-
-  const block = await flashbotsProvider.getBlock(targetBlock-1);
-  const tx = await buildTransaction(block.baseFeePerGas, flashbotsPriorityFee);
-
+  const feeData = await provider.getFeeData();
+  
+  const tx = await buildTransaction(auctionHouse, feeData, flashbotsPriorityFee);
   const bundle = await signFlashbotsTransaction(flashbotsProvider, signer, tx);
 
   const cost = await simulateFlashbots(bundle, targetBlock);
