@@ -8,7 +8,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
 
   for (const account of accounts) {
-    console.log(account.address);
+    let bal = await hre.ethers.provider.getBalance(account.address);
+    console.log(`${account.address}: ${hre.ethers.utils.formatEther(bal)}`);
   }
 });
 
