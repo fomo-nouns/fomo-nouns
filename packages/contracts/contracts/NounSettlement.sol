@@ -8,14 +8,15 @@ pragma solidity 0.8.9;
 import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
 import { AccessControl } from '@openzeppelin/contracts/access/AccessControl.sol';
 
+import "hardhat/console.sol"; // TODO: Remove before deployment
 
 contract NounSettlement is AccessControl {
   address payable public nounsDao;
   address payable public executor;
   INounsAuctionHouse public immutable auctionHouse;
 
-  uint256 public maxGasPrice;
-  uint256 private OVERHEAD_GAS = 28925;
+  uint256 public maxPriorityFee;
+  uint256 private OVERHEAD_GAS = 21000; // Handles gas not captured by gasleft's, rounded up from ~20,257 in testing
 
 
   constructor(address _executor, address _nounsDao, address _nounsAuctionHouseAddress) {
@@ -23,15 +24,31 @@ contract NounSettlement is AccessControl {
     executor = payable(_executor);
     nounsDao = payable(_nounsDao);
 
-    maxGasPrice = 1000 * 10**9; // 1,000 gwei; used to limit damage from malicious executor
+    maxPriorityFee = 100 * 10**9; // Prevents malicious actor burning all the ETH on gas
   }
 
   /**
-    Custom modifiers to limit executor to intended addresses
+    Custom modifiers to handle access and refund
    */
   modifier onlyDAO() {
     require(msg.sender == nounsDao, "Only executable by Nouns DAO");
     _;
+  }
+
+  modifier onlyFOMO() {
+    require(msg.sender == executor, "Only executable by FOMO Nouns executor");
+    _;
+  }
+
+  modifier refundGas() { // Executor must be EOA
+    uint256 startGas = gasleft();
+    require(tx.gasprice <= block.basefee + maxPriorityFee, "Gas price above current reasonable limit");
+    _;
+    uint256 endGas = gasleft();
+
+    uint256 totalGasCost = tx.gasprice * (startGas - endGas + OVERHEAD_GAS);
+    console.log("Gas Used %s", startGas - endGas); // TODO: Remove before deployment
+    executor.transfer(totalGasCost);
   }
 
 
@@ -59,30 +76,24 @@ contract NounSettlement is AccessControl {
     executor = payable(_newExecutor);
   }
 
-  function changeMaxGasPrice(uint256 _newGasPriceLimit) external onlyDAO {
-    maxGasPrice = _newGasPriceLimit;
+  function changeMaxPriorityFee(uint256 _newMaxPriorityFee) external onlyDAO {
+    maxPriorityFee = _newMaxPriorityFee;
   }
 
 
   /**
     Mint the desired Nouns via Flashbots
    */
-  function mintDesiredNoun(bytes32 _desiredHash) external {
-    uint256 startGas = gasleft();
-
-    require(msg.sender == executor, "Only executable by FOMO Nouns executor");
-
+  function settleAuction(bytes32 _desiredHash) public { // Public
     // Settle the auction only if blockhash matches the intended hash
     bytes32 lastHash = blockhash(block.number - 1);
     require(lastHash == _desiredHash, "Prior blockhash did not match intended hash");
 
     (bool success, ) = address(auctionHouse).call(abi.encodeWithSignature("settleCurrentAndCreateNewAuction()"));
     require(success, "Settlement failed");
+  }
 
-    // Reimburse the gas used plus a reasonable overhead for require, transfer, calculations
-    require(tx.gasprice <= maxGasPrice, "Gas price above current reasonable limit");
-
-    uint256 totalGasCost = tx.gasprice * (OVERHEAD_GAS + startGas - gasleft());
-    executor.transfer(totalGasCost); // Executor must be EOA
+  function settleAuctionWithRefund(bytes32 _desiredHash) external refundGas onlyFOMO {
+    settleAuction(_desiredHash);
   }
 }
