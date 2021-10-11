@@ -3,7 +3,7 @@
 /// @title FOMO Nouns Settlement Contract
 /// @author forager
 
-pragma solidity ^0.8.6;
+pragma solidity 0.8.9;
 
 import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
 import { AccessControl } from '@openzeppelin/contracts/access/AccessControl.sol';
