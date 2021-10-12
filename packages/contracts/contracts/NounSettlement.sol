@@ -6,17 +6,16 @@
 pragma solidity 0.8.9;
 
 import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
-import { AccessControl } from '@openzeppelin/contracts/access/AccessControl.sol';
 
 import "hardhat/console.sol"; // TODO: Remove before deployment
 
-contract NounSettlement is AccessControl {
+contract NounSettlement {
   address payable public nounsDao;
   address payable public executor;
   INounsAuctionHouse public immutable auctionHouse;
 
   uint256 public maxPriorityFee;
-  uint256 private OVERHEAD_GAS = 21000; // Handles gas not captured by gasleft's, rounded up from ~20,257 in testing
+  uint256 private OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
 
 
   constructor(address _executor, address _nounsDao, address _nounsAuctionHouseAddress) {
@@ -26,6 +25,7 @@ contract NounSettlement is AccessControl {
 
     maxPriorityFee = 100 * 10**9; // Prevents malicious actor burning all the ETH on gas
   }
+
 
   /**
     Custom modifiers to handle access and refund
@@ -84,9 +84,8 @@ contract NounSettlement is AccessControl {
   /**
     Mint the desired Nouns via Flashbots
    */
-  function settleAuction(bytes32 _desiredHash) public { // Public
-    // Settle the auction only if blockhash matches the intended hash
-    bytes32 lastHash = blockhash(block.number - 1);
+  function settleAuction(bytes32 _desiredHash) public {
+    bytes32 lastHash = blockhash(block.number - 1); // Only settle if desired Noun would be minted
     require(lastHash == _desiredHash, "Prior blockhash did not match intended hash");
 
     (bool success, ) = address(auctionHouse).call(abi.encodeWithSignature("settleCurrentAndCreateNewAuction()"));
