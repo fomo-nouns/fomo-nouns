@@ -1,0 +1,15 @@
+.img {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    width: 75vh;
+    height: auto;
+    vertical-align: middle;
+}
+
+.imgWrapper {
+    display: block;
+    padding-top: 1%;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}

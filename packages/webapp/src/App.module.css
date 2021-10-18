@@ -1,0 +1,14 @@
+.App{
+  display: flex;
+  flex-direction: column;
+  min-width: 100vh;
+  min-height: 100vh;
+}
+
+.bgGrey{
+  background-color: #d5d7e1;
+}
+
+.bgBeige {
+  background-color: #e1d7d5;
+}

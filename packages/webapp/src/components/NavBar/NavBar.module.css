@@ -1,0 +1,54 @@
+.navBarBrand {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* connect button displays differently to default NavBarItems, thus the !importants */
+  .connectBtn {
+    cursor: pointer;
+  }
+  .connectBtn:hover,
+  .connectBtn:active,
+  .connectBtn:focus {
+    cursor: pointer !important;
+  }
+  .disconnectBtn {
+    cursor: pointer;
+  }
+  .disconnectBtn:hover,
+  .disconnectBtn:active,
+  .disconnectBtn:focus {
+    cursor: pointer !important;
+  }
+  
+  .greenStatusCircle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #7fc59c;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  
+  .nounsNavLink,
+  .nounsNavLink:active,
+  .nounsNavLink:visited {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem !important;
+    color: var(--brand-black) !important;
+  }
+  .nounsNavLink:hover {
+    color: var(--brand-dark-red) !important;
+  }
+  
+  .testnetImg {
+    width: auto;
+    height: 45px;
+  }
+  
+  .addressNavLink {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
