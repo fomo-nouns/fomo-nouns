@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
-const { abi } = require('./config.js');
+const { abi } = require('../scripts/config.js');
 
 const {
   networkReset,
