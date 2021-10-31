@@ -1,6 +1,8 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
 
+require('./tasks');
+
 
 /**
  * Print List of Accounts for the Network
@@ -36,5 +38,5 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
    },
   etherscan: {
     apiKey: `${process.env.ETHERSCAN_KEY}`
-   }
+  }
  };
