@@ -87,9 +87,8 @@ contract NounSettlement {
   function settleAuction(bytes32 _desiredHash) public {
     bytes32 lastHash = blockhash(block.number - 1); // Only settle if desired Noun would be minted
     require(lastHash == _desiredHash, "Prior blockhash did not match intended hash");
-
-    (bool success, ) = address(auctionHouse).call(abi.encodeWithSignature("settleCurrentAndCreateNewAuction()"));
-    require(success, "Settlement failed");
+    
+    auctionHouse.settleCurrentAndCreateNewAuction();
   }
 
   function settleAuctionWithRefund(bytes32 _desiredHash) external refundGas onlyFOMO {
