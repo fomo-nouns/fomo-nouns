@@ -1,15 +1,17 @@
-const { abi, address } = require('../scripts/config.js');
 const { task, types } = require('hardhat/config');
 
 task('settle-next', 'Attempts settlement for the next Noun')
   .addParam('settler', 'Address for the NounSettlement contract')
-  .setAction(async ({ settler }, { network, ethers }) => {
+  .addFlag('refund', 'Toggles calling refundable settlement')
+  .setAction(async ({ settler, refund }, { network, ethers }) => {
     const [signer] = await ethers.getSigners();
     const provider = ethers.provider;
     const socket = new ethers.providers.AlchemyWebSocketProvider(network.name); // new ethers.providers.AlchemyProvider.getWebSocketProvider(network.name, process.env.ALCHEMY_RINKEBY_KEY);
     
     const settlerFactory = await ethers.getContractFactory('NounSettlement', signer);
     const settlerContract = settlerFactory.attach(settler);
+
+    const startBalance = await provider.getBalance(signer.address);
 
     await new Promise(function(resolve, reject) {
       socket.once('block', async (blockNumber) => {
@@ -18,7 +20,7 @@ task('settle-next', 'Attempts settlement for the next Noun')
         const block = await provider.getBlock(blockNumber);
         const blockhash = block.hash;
 
-        const trxn = await settlerContract.settleAuction(blockhash);
+        const trxn = await (refund ? settlerContract.settleAuctionWithRefund(blockhash) : settlerContract.settleAuction(blockhash));
         const receipt = await trxn.wait();
 
         if (receipt.status) {
@@ -29,6 +31,10 @@ task('settle-next', 'Attempts settlement for the next Noun')
         resolve();
       });
     });
+
+    const endBalance = await provider.getBalance(signer.address);
+
+    console.log(`Signer ETH Balance Change: ${ethers.utils.formatEther(startBalance.sub(endBalance))}`)
 
     console.log('Task complete.');
   });
