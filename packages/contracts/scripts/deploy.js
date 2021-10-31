@@ -59,6 +59,16 @@ async function main() {
     AuctionHouse address: ${auctionHouseAddress}
     NounsDAO address: ${nounsDaoAddress}
   `);
+
+  // Wait 10 seconds for bytecode to sync
+  console.log('Waiting for Etherscan to sync...');
+  await new Promise(resolve => setTimeout(resolve, 10 * 1000))
+
+  // Verify on Etherscan
+  await hre.run("verify:verify", {
+    address: deployedContract.address,
+    constructorArguments: [deployer.address, nounsDaoAddress, auctionHouseAddress]
+  });
 }
 
 // Execute Deployment

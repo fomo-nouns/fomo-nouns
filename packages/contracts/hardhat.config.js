@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan");
 
 
 /**
@@ -32,5 +33,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`,
       accounts: [`0x${process.env.RINKEBY_PRIVATE_KEY}`],
     },
+   },
+  etherscan: {
+    apiKey: `${process.env.ETHERSCAN_KEY}`
    }
  };
