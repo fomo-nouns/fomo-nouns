@@ -31,7 +31,7 @@ async function main() {
   const factory = await ethers.getContractFactory(contractName);
 
   const deploymentGas = await factory.signer.estimateGas(
-    factory.getDeployTransaction(deployer.address, auctionHouseAddress, nounsDaoAddress, { gasPrice })
+    factory.getDeployTransaction(deployer.address, nounsDaoAddress, auctionHouseAddress, { gasPrice })
   );
   const deploymentCost = deploymentGas.mul(gasPrice);
 
@@ -49,7 +49,7 @@ async function main() {
   // Deploy the contract
   console.log(`Deploying ${contractName}...`);
 
-  const deployedContract = await factory.deploy(deployer.address, auctionHouseAddress, nounsDaoAddress, { gasPrice });
+  const deployedContract = await factory.deploy(deployer.address, nounsDaoAddress, auctionHouseAddress, { gasPrice });
   await deployedContract.deployed();
 
   console.log(`${contractName} contract deployed to ${deployedContract.address}`);
