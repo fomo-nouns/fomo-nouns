@@ -9,6 +9,8 @@ const formatGwei = n => formatUnits(n, 'gwei');
 const MAX_SETTLEMENT_COST = parseEther('0.06');
 const DEFAULT_PRIORITY_FEE = GWEI.mul(25);
 
+
+
 /**
  * SETTLEMENT TRANSACTION
  */
