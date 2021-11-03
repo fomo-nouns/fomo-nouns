@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useEthers } from '@usedapp/core';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { setActiveAccount } from './state/slices/account';
 import classes from './App.module.css';
-import NavBar from './components/NavBar';
 import Noun  from './components/Noun';
 import Title from './components/Title/Title';
 

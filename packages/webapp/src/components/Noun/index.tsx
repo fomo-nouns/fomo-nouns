@@ -30,7 +30,6 @@ const Noun: React.FC<{ alt: string }> = props => {
 
   function subBlocks() {
     provider.on('block', (blockNumber) => {
-      console.log("new block: ", blockNumber);
       if(blockNumber !== lockBlockNumber) {
         lockBlockNumber = blockNumber;
         generateNoun();
@@ -40,15 +39,13 @@ const Noun: React.FC<{ alt: string }> = props => {
 
   useEffect(() => {
     subBlocks();
-  }, []);
+  });
 
   const generateNoun = async () => {
 
     const nounId = await getNextNounId();
-    console.log(nounId);
     const isNounder = nounId % 10 === 0;
     const nextNounId = isNounder ? nounId + 1 : nounId;
-    console.log("generating Noun for Id: ", nextNounId);
     
     const seed = await SeederContract.generateSeed(
       nextNounId,
