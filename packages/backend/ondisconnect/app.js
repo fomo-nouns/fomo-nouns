@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT-0
 
-// https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-route-keys-connect-disconnect.html
-// $disconnect is not guaranteed to be delivered
+// Modified from: https://github.com/aws-samples/simple-websockets-chat-app/blob/master/ondisconnect/app.js
 
 const AWS = require('aws-sdk');
 
