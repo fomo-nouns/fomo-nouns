@@ -16,6 +16,15 @@ Parameters:
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
+  VoteTableName:
+    Type: String
+    Default: 'nouns_vote_results'
+    Description: (Required) The name of the DynamoDB table to store Noun vote results for each possible Noun. Minimum 3 characters
+    MinLength: 3
+    MaxLength: 50
+    AllowedPattern: ^[A-Za-z_]+$
+    ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
+
 Resources:
   SimpleChatWebSocket:
     Type: AWS::ApiGatewayV2::Api
@@ -98,6 +107,8 @@ Resources:
       Description: Prod Stage
       DeploymentId: !Ref Deployment
       ApiId: !Ref SimpleChatWebSocket
+
+  # DynamoDB Table Creation
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -107,12 +118,24 @@ Resources:
       KeySchema:
       - AttributeName: "connectionId"
         KeyType: "HASH"
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
+      BillingMode: PAY_PER_REQUEST
       SSESpecification:
         SSEEnabled: True
       TableName: !Ref TableName
+  VotingTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: "nounIdWithBlockHash"
+        AttributeType: "S"
+      KeySchema:
+      - AttributeName: "nounIdWithBlockHash"
+        KeyType: "HASH"
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: True
+      TableName: !Ref VoteTableName
+
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -165,6 +188,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref TableName
+          VOTE_TABLE_NAME: !Ref VoteTableName
       Policies:
       - DynamoDBCrudPolicy:
           TableName: !Ref TableName
@@ -187,6 +211,10 @@ Outputs:
   ConnectionsTableArn:
     Description: "Connections table ARN"
     Value: !GetAtt ConnectionsTable.Arn
+
+  VotingTableArn:
+    Description: "Voting table ARN"
+    Value: !GetAtt VotingTable.Arn
 
   OnConnectFunctionArn:
     Description: "OnConnect function ARN"
