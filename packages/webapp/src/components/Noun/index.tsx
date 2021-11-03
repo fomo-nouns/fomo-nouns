@@ -19,7 +19,8 @@ const Noun: React.FC<{ alt: string }> = props => {
   const dispatch = useAppDispatch();
   const [img, setImg] = useState('');
 
-  let lockBlockNumber = -1;
+  const [lockBlock, setLockBlock] = useState(-1);
+  const [lockImg, setLockImg] = useState(false);
 
   async function getNextNounId() {
     const res =  await AuctionContract.auction();
@@ -30,8 +31,8 @@ const Noun: React.FC<{ alt: string }> = props => {
 
   function subBlocks() {
     provider.on('block', (blockNumber) => {
-      if(blockNumber !== lockBlockNumber) {
-        lockBlockNumber = blockNumber;
+      if(blockNumber > lockBlock) {
+        setLockBlock(blockNumber)
         generateNoun();
       }
     });
@@ -39,10 +40,14 @@ const Noun: React.FC<{ alt: string }> = props => {
 
   useEffect(() => {
     subBlocks();
-  });
+  },);
 
   const generateNoun = async () => {
 
+    if(lockImg) {
+      return;
+    }
+    setLockImg(true);
     const nounId = await getNextNounId();
     const isNounder = nounId % 10 === 0;
     const nextNounId = isNounder ? nounId + 1 : nounId;
@@ -58,6 +63,7 @@ const Noun: React.FC<{ alt: string }> = props => {
     dispatch(setActiveBackground(useGreyBg));
     const svg = await DesciptorContract.generateSVGImage(seed);
     setImg(svg);
+    setLockImg(false);
   }
   const { alt } = props;
   return (
