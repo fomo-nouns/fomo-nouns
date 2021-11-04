@@ -192,6 +192,8 @@ Resources:
       Policies:
       - DynamoDBCrudPolicy:
           TableName: !Ref TableName
+      - DynamoDBCrudPolicy:
+          TableName: !Ref VoteTableName
       - Statement:
         - Effect: Allow
           Action:
