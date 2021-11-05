@@ -42,7 +42,7 @@ async function updateVote(dbKey, voteType) {
  * 
  * @param {Object} data Data to distribute to all clients
  */
-async function distributeVote(voteType) {
+async function distributeVote(endpoint, voteType) {
   let connectionCount = 0;
   let connectionData;
   
@@ -54,7 +54,7 @@ async function distributeVote(voteType) {
   
   const apigwManagementApi = new AWS.ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
-    endpoint: event.requestContext.domainName + '/' + event.requestContext.stage  // TODO: FIX THIS REFERENCE
+    endpoint: endpoint
   });
   
   const postCalls = connectionData.Items.map(async ({ connectionId }) => {
@@ -118,8 +118,11 @@ async function updateCount(dbKey, count) {
 
 exports.handler = async event => {
   const body = JSON.parse(event.body);
-  const dbKey = `${body.nounId}||${body.blockhash}`;
+  const context = event.requestContext;
+
   const vote = body.vote;
+  const dbKey = `${body.nounId}||${body.blockhash}`;
+  const endpoint = `${context.domainName}/${context.stage}`;
 
   let dbCount;
   try {
@@ -130,7 +133,7 @@ exports.handler = async event => {
 
   let distributeCount;
   try {
-    distributeCount = await distributeVote(vote);
+    distributeCount = await distributeVote(endpoint, vote);
   } catch(err) {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
