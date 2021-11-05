@@ -1,12 +1,12 @@
 {
-  "name": "settlement",
+  "name": "sendvote",
   "version": "1.0.0",
-  "description": "Launch Nouns auction settlement",
+  "description": "Send votes for a specific Noun",
   "main": "src/app.js",
   "author": "@_forager",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "ethers": "^5.4.7"
+    "aws-sdk": "^2.739.0"
   }
 }

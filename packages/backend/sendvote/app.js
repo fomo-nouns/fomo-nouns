@@ -2,7 +2,7 @@
 
 /**
  * Event Example:
- *   {"action": "sendmessage", "nounId": "22", "blockhash": "a83d9e", "vote": "like"}
+ *   {"action": "sendvote", "nounId": "22", "blockhash": "a83d9e", "vote": "like"}
  * 
  */
 
