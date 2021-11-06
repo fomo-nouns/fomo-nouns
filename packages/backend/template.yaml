@@ -1,15 +1,15 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  simple-websockets-chat-app
+  nouns-websockets-app
 
-  SAM Template for simple-websockets-chat-app that has the DynamoDB table and Lambda
-  functions needed to demonstrate the Websocket protocol on API Gateway.
+  SAM Template for nouns-websockets-app using DynamoDB, Lambdas, and API 
+  Gateway to enable real-time voting and settlement for Nouns auctions.
 
 Parameters:
   TableName:
     Type: String
-    Default: 'simplechat_connections'
+    Default: 'nouns_websocket_connections'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
     MinLength: 3
     MaxLength: 50
@@ -26,16 +26,16 @@ Parameters:
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
 Resources:
-  SimpleChatWebSocket:
+  NounsWebSocket:
     Type: AWS::ApiGatewayV2::Api
     Properties:
-      Name: SimpleChatWebSocket
+      Name: NounsWebSocket
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.action"
   ConnectRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
       RouteKey: $connect
       AuthorizationType: NONE
       OperationName: ConnectRoute
@@ -46,7 +46,7 @@ Resources:
   ConnectInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
       Description: Connect Integration
       IntegrationType: AWS_PROXY
       IntegrationUri: 
@@ -55,7 +55,7 @@ Resources:
   DisconnectRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
       RouteKey: $disconnect
       AuthorizationType: NONE
       OperationName: DisconnectRoute
@@ -66,7 +66,7 @@ Resources:
   DisconnectInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
       Description: Disconnect Integration
       IntegrationType: AWS_PROXY
       IntegrationUri: 
@@ -75,7 +75,7 @@ Resources:
   SendRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
       RouteKey: sendvote
       AuthorizationType: NONE
       OperationName: SendRoute
@@ -86,7 +86,7 @@ Resources:
   SendInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
       Description: Send Integration
       IntegrationType: AWS_PROXY
       IntegrationUri: 
@@ -99,14 +99,14 @@ Resources:
     - SendRoute
     - DisconnectRoute
     Properties:
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
   Stage:
     Type: AWS::ApiGatewayV2::Stage
     Properties:
       StageName: Prod
       Description: Prod Stage
       DeploymentId: !Ref Deployment
-      ApiId: !Ref SimpleChatWebSocket
+      ApiId: !Ref NounsWebSocket
 
   # DynamoDB Table Creation
   ConnectionsTable:
@@ -152,7 +152,7 @@ Resources:
   OnConnectPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
-      - SimpleChatWebSocket
+      - NounsWebSocket
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref OnConnectFunction
@@ -173,7 +173,7 @@ Resources:
   OnDisconnectPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
-      - SimpleChatWebSocket
+      - NounsWebSocket
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref OnDisconnectFunction
@@ -199,11 +199,11 @@ Resources:
           Action:
           - 'execute-api:ManageConnections'
           Resource:
-          - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${SimpleChatWebSocket}/*'
+          - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${NounsWebSocket}/*'
   SendVotePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
-      - SimpleChatWebSocket
+      - NounsWebSocket
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref SendVoteFunction
@@ -232,4 +232,4 @@ Outputs:
 
   WebSocketURI:
     Description: "The WSS Protocol URI to connect to"
-    Value: !Join [ '', [ 'wss://', !Ref SimpleChatWebSocket, '.execute-api.',!Ref 'AWS::Region','.amazonaws.com/',!Ref 'Stage'] ]
+    Value: !Join [ '', [ 'wss://', !Ref NounsWebSocket, '.execute-api.',!Ref 'AWS::Region','.amazonaws.com/',!Ref 'Stage'] ]
