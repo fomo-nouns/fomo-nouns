@@ -26,6 +26,10 @@ Parameters:
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
 Resources:
+
+  #----------------------------------------#
+  # API Gateway: Websocket & Routes Config
+  #----------------------------------------#
   NounsWebSocket:
     Type: AWS::ApiGatewayV2::Api
     Properties:
@@ -108,7 +112,9 @@ Resources:
       DeploymentId: !Ref Deployment
       ApiId: !Ref NounsWebSocket
 
-  # DynamoDB Table Creation
+  #----------------------------------------#
+  # DynamoDB: Connections & Voting Tables
+  #----------------------------------------#
   ConnectionsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -136,6 +142,9 @@ Resources:
         SSEEnabled: True
       TableName: !Ref VoteTableName
 
+  #----------------------------------------#
+  # Lambda: OnConnect from Websocket
+  #----------------------------------------#
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -157,6 +166,10 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref OnConnectFunction
       Principal: apigateway.amazonaws.com
+
+  #----------------------------------------#
+  # Lambda: OnDisconnect from Websocket
+  #----------------------------------------#
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -178,6 +191,10 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref OnDisconnectFunction
       Principal: apigateway.amazonaws.com
+
+  #----------------------------------------#
+  # Lambda: SendVote Websocket Handler
+  #----------------------------------------#
   SendVoteFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -209,6 +226,9 @@ Resources:
       FunctionName: !Ref SendVoteFunction
       Principal: apigateway.amazonaws.com
 
+#----------------------------------------#
+# CloudFormation Outputs
+#----------------------------------------#
 Outputs:
   ConnectionsTableArn:
     Description: "Connections table ARN"
