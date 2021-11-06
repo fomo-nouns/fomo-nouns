@@ -49,7 +49,7 @@ async function distributeVote(endpoint, voteType) {
   try {
     connectionData = await ddb.scan({ TableName: process.env.TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
   } catch (e) {
-    throw e; //return { statusCode: 500, body: e.stack };
+    throw e;
   }
   
   const apigwManagementApi = new AWS.ApiGatewayManagementApi({
@@ -74,7 +74,7 @@ async function distributeVote(endpoint, voteType) {
   try {
     await Promise.all(postCalls);
   } catch (e) {
-    throw e; // return { statusCode: 500, body: e.stack };
+    throw e;
   }
 
   return connectionCount;
@@ -124,6 +124,7 @@ exports.handler = async event => {
   const dbKey = `${body.nounId}||${body.blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
 
+  // Update the DB with the latest vote
   let dbCount;
   try {
     dbCount = await updateVote(dbKey, vote);
@@ -131,6 +132,7 @@ exports.handler = async event => {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
   }
 
+  // Distribute votes to clients
   let distributeCount;
   try {
     distributeCount = await distributeVote(endpoint, vote);
@@ -138,7 +140,8 @@ exports.handler = async event => {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
 
-  if (!dbCount) { // Update iif dbCount was not present
+  // Update connection count if not present
+  if (!dbCount) {
     try {
       await updateCount(dbKey, distributeCount);
     } catch(err) {
