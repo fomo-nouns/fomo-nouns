@@ -1,4 +1,4 @@
-function hasWinningVotes(voteAttributes) {
+function hasWinningVotes(attr) {
   // Structure: {
   //   love: 
   //   basiclike: 
@@ -7,12 +7,15 @@ function hasWinningVotes(voteAttributes) {
   //   totalConnected: 
   // }
 
-  let like = (voteAttributes.basiclike ?? 0);
-  let love = (voteAttributes.love ?? 0);
-  let hate = (voteAttributes.hate ?? 0);
-  let count = (voteAttributes.totalConnected ?? 1);
+  if (!attr.totalConnected) {
+    return false;
+  }
 
-  let score = (1.5 * love + like - hate) / count;
+  let like = (attr.basiclike ?? 0);
+  let love = (attr.love ?? 0);
+  let hate = (attr.hate ?? 0);
+
+  let score = (1.5 * love + like - hate) / attr.totalConnected;
 
   if (score > 0.6) {
     return true;
@@ -21,6 +24,6 @@ function hasWinningVotes(voteAttributes) {
   }
 }
 
-modules.export = {
+module.exports = {
   hasWinningVotes
 };
