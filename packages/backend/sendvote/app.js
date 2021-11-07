@@ -6,11 +6,14 @@
  * 
  */
 
-const AWS = require('aws-sdk');
+const DynamoDB = require('aws-sdk/clients/dynamodb');
+const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
+
 const { hasWinningVotes } = require('./scoreVotes.js');
 const { submitSettlement } = require('./settlement.js');
 
-const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
+const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
+
 
 /**
  * Update the DB counter
@@ -54,7 +57,7 @@ async function distributeVote(endpoint, voteType) {
     throw e;
   }
   
-  const apigwManagementApi = new AWS.ApiGatewayManagementApi({
+  const apigwManagementApi = new ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
     endpoint: endpoint
   });
