@@ -5,8 +5,9 @@
   "main": "src/app.js",
   "author": "@_forager",
   "license": "MIT",
-  "dependencies": {
-    "ethers": "^5.4.7",
-    "aws-sdk": "^2.739.0"
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.739.0",
+    "ethers": "^5.4.7"
   }
 }
