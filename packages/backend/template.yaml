@@ -195,6 +195,17 @@ Resources:
   #----------------------------------------#
   # Lambda: SendVote Websocket Handler
   #----------------------------------------#
+  EthersDepLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: ethers-js-dependency
+      Description: Ethersjs depency
+      ContentUri: dependencies/
+      CompatibleRuntimes:
+        - nodejs14.x
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: nodejs14.x
   SendVoteFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -202,6 +213,8 @@ Resources:
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs14.x
+      Layers:
+        - !Ref EthersDepLayer
       Environment:
         Variables:
           TABLE_NAME: !Ref TableName
