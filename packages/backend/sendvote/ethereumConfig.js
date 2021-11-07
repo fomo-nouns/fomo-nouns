@@ -9,7 +9,7 @@ const nounsSettlerAbi = [{"inputs":[{"internalType":"address","name":"_executor"
 const executorPrivateKey = process.env.FOMO_EXECUTOR_PRIVATE_KEY;
 const alchemyKey = process.env.ALCHEMY_KEY;
 
-modules.exports = {
+module.exports = {
   networkName,
   executorPrivateKey,
   alchemyKey,
