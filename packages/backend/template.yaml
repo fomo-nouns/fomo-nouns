@@ -199,8 +199,8 @@ Resources:
     Type: AWS::Serverless::LayerVersion
     Properties:
       LayerName: ethers-js-dependency
-      Description: Ethersjs depency
-      ContentUri: dependencies/
+      Description: Ethers js depency
+      ContentUri: ethers-layer/
       CompatibleRuntimes:
         - nodejs14.x
       RetentionPolicy: Retain
