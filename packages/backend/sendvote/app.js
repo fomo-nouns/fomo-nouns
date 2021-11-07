@@ -165,16 +165,6 @@ exports.handler = async event => {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
   }
 
-  // Launch settlement if new values signal voting has won
-  if (!newValues.settled && hasWinningVotes(newValues)) {
-    try {
-      await launchSettlement(dbKey, body.blockhash);
-      newValues.settled = true;
-    } catch(err) {
-      return { statusCode: 500, body: 'Error settling.', message: err.stack };
-    }
-  }
-
   // Distribute votes to clients
   let distributeCount;
   try {
@@ -183,8 +173,24 @@ exports.handler = async event => {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
 
-  // Update connection count if not present
+  // Locally update count (solves case where first vote must settle)
+  let countNeeded;
   if (!newValues.totalConnected) {
+    countNeeded = true;
+    newValues.totalConnected = distributeCount;
+  }
+
+  // Launch settlement if new values signal voting has won
+  if (!newValues.settled && hasWinningVotes(newValues)) {
+    try {
+      await launchSettlement(dbKey, body.blockhash);
+    } catch(err) {
+      return { statusCode: 500, body: 'Error settling.', message: err.stack };
+    }
+  }
+
+  // Update connection count if not present
+  if (countNeeded) {
     try {
       await updateCount(dbKey, distributeCount);
     } catch(err) {
