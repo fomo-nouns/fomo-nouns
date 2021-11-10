@@ -1,9 +1,9 @@
 function hasWinningVotes(attr) {
   // Structure: {
-  //   love: 
-  //   basiclike: 
-  //   dislike: 
-  //   hate: 
+  //   voteLove: 
+  //   voteLike: 
+  //   voteDislike: 
+  //   voteHate: 
   //   totalConnected: 
   // }
 
@@ -11,9 +11,9 @@ function hasWinningVotes(attr) {
     return false;
   }
 
-  let like = (attr.basiclike ?? 0);
-  let love = (attr.love ?? 0);
-  let hate = (attr.hate ?? 0);
+  let like = (attr.voteLike ?? 0);
+  let love = (attr.voteLove ?? 0);
+  let hate = (attr.voteHate ?? 0);
 
   let score = (1.5 * love + like - hate) / attr.totalConnected;
 
