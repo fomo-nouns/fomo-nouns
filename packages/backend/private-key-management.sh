@@ -1,20 +1,35 @@
 #!/bin/bash
 
-DESCRIPTION="Ethereum private key with Executor rights to the FOMO Nouns Contract"
+ACTION="$1"
+SECRET="$3"
 
-if [[ "$1" == "--set" ]]; then
-  aws secretsmanager create-secret --name nouns/ExecutorPrivateKey --description "$DESCRIPTION" --secret-string $2
-elif [[ "$1" == "--get" ]]; then
-  if [[ -z "$2" ]]; then
-    aws secretsmanager describe-secret --secret-id nouns/ExecutorPrivateKey
-  else
-    aws secretsmanager describe-secret --secret-id "$2"
-  fi
+if [[ "$2" == "--alchemy" ]]; then
+  NAME="nouns/AlchemyKey"
+  DESCRIPTION="Alchemy API key"
+elif [[ "$2" == "--executor" ]]; then
+  NAME="nouns/ExecutorPrivateKey"
+  DESCRIPTION="Ethereum private key with Executor rights to the FOMO Nouns Contract"
 else
-  echo '''Script can be run with two commands:
-    ./private-key-management.sh --set <private_key>
-      - Stores a new private key for execution
+  ACTION=""
+fi
 
-    ./private-key-management.sh --get
+if [[ "ACTION" == "--set" ]]; then
+  aws secretsmanager create-secret --name "$NAME" --description "$DESCRIPTION" --secret-string "$SECRET"
+elif [[ "ACTION" == "--update" ]]; then
+  aws secretsmanager update-secret --secret-id "$NAME" --secret-string "$SECRET"
+elif [[ "ACTION" == "--get" ]]; then
+  aws secretsmanager describe-secret --secret-id "$NAME"
+else
+  echo '''The script can be run with the following commands:
+    ./private-key-management.sh --set --executor <private_key>
+                                --set --alchemy <private_key>
+      - Create the new private key storage
+
+    ./private-key-management.sh --update --executor <private_key>
+                                --update --alchemy <private_key>
+      - Updates the existing stored private key
+
+    ./private-key-management.sh --get --executor
+                                --get --alchemy <private_key>
       - Gets the description of currently stored key'''
 fi
