@@ -230,6 +230,12 @@ Resources:
           - 'execute-api:ManageConnections'
           Resource:
           - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${NounsWebSocket}/*'
+        - Effect: Allow
+          Action:
+          - 'secretsmanager:GetSecretValue'
+          Resource:
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ExecutorPrivateKey-*'
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/AlchemyKey-*'
   SendVotePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
