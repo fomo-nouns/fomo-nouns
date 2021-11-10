@@ -1,4 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan");
+
+require('./tasks');
 
 
 /**
@@ -8,7 +11,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
 
   for (const account of accounts) {
-    console.log(account.address);
+    let bal = await hre.ethers.provider.getBalance(account.address);
+    console.log(`${account.address}: ${hre.ethers.utils.formatEther(bal)}`);
   }
 });
 
@@ -17,7 +21,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
  * @type import('hardhat/config').HardhatUserConfig
  */
  module.exports = {
-   solidity: "0.8.6",
+   solidity: "0.8.9",
    networks: {
      rinkeby: {
        url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`,
@@ -31,5 +35,8 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`,
       accounts: [`0x${process.env.RINKEBY_PRIVATE_KEY}`],
     },
-   }
+   },
+  etherscan: {
+    apiKey: `${process.env.ETHERSCAN_KEY}`
+  }
  };

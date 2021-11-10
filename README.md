@@ -1,3 +1,5 @@
+<img src="https://user-images.githubusercontent.com/84751016/139562461-a32f8887-62a5-4ca7-94ae-b7b52b97ebcf.jpg" width="50%" height="50%">
+
 # FOMO Nouns
 
 This is the repository for the FOMO Nouns project, passed as part of [Nouns DAO Proposal #8](https://nouns.wtf/vote/8).

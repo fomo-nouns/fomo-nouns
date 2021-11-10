@@ -10,7 +10,12 @@ require("@nomiclabs/hardhat-waffle");
     hardhat: {
       forking: {
         url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`,
-        blockNumber: 13365089 // One block prior to Noun 64 settlement at Oct-06-2021 11:20:49 AM +UTC
+        blockNumber: 13287091, // One block prior to Noun 51 settlement at Sep-24-2021 07:14:39 AM +UTC
+        accounts: [`0x${process.env.MAINNET_PRIVATE_KEY}`]
+      },
+      mining: {
+        auto: false,
+        interval: 5000
       }
     },
     rinkeby: {

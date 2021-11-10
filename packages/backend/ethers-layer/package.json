@@ -1,0 +1,8 @@
+{
+  "name": "ethersjs",
+  "version": "1.0.0",
+  "description": "Layer for Ethers js dependencies",
+  "dependencies": {
+    "ethers": "^5.4.7"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "onconnect",
+  "version": "1.0.0",
+  "description": "Connect to FOMO Nouns websocket",
+  "main": "src/app.js",
+  "author": "@_forager",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.739.0"
+  }
+}

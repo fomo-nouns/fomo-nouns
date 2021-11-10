@@ -3,57 +3,95 @@
 /// @title FOMO Nouns Settlement Contract
 /// @author forager
 
-pragma solidity ^0.8.6;
+pragma solidity 0.8.9;
 
 import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
-import { AccessControl } from '@openzeppelin/contracts/access/AccessControl.sol';
 
+import "hardhat/console.sol"; // TODO: Remove before deployment
 
-contract NounSettlement is AccessControl {
-  address private immutable executor;
-  address private immutable nounsDao;
-  INounsAuctionHouse private immutable auctionHouse;
+contract NounSettlement {
+  address payable public nounsDao;
+  address payable public executor;
+  INounsAuctionHouse public immutable auctionHouse;
 
-  bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
-  bytes32 public constant FOMO_ROLE = keccak256("FOMO_ROLE");
-  
+  uint256 public maxPriorityFee;
+  uint256 private OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
+
 
   constructor(address _executor, address _nounsDao, address _nounsAuctionHouseAddress) {
-    executor = _executor;
-    nounsDao = _nounsDao;
     auctionHouse = INounsAuctionHouse(_nounsAuctionHouseAddress);
+    executor = payable(_executor);
+    nounsDao = payable(_nounsDao);
 
-    _setupRole(DAO_ROLE, _nounsDao);
-    _setupRole(FOMO_ROLE, _executor);
-    _setRoleAdmin(DAO_ROLE, DAO_ROLE); // All DAO_ROLE members have admin rights
+    maxPriorityFee = 100 * 10**9; // Prevents malicious actor burning all the ETH on gas
   }
 
-  function donateFunds() external payable { }
 
-  function pullFunds() external onlyRole(DAO_ROLE) {
-    (bool sent, ) = payable(nounsDao).call{value: address(this).balance}("");
+  /**
+    Custom modifiers to handle access and refund
+   */
+  modifier onlyDAO() {
+    require(msg.sender == nounsDao, "Only executable by Nouns DAO");
+    _;
+  }
+
+  modifier onlyFOMO() {
+    require(msg.sender == executor, "Only executable by FOMO Nouns executor");
+    _;
+  }
+
+  modifier refundGas() { // Executor must be EOA
+    uint256 startGas = gasleft();
+    require(tx.gasprice <= block.basefee + maxPriorityFee, "Gas price above current reasonable limit");
+    _;
+    uint256 endGas = gasleft();
+
+    uint256 totalGasCost = tx.gasprice * (startGas - endGas + OVERHEAD_GAS);
+    console.log("Gas Used %s", startGas - endGas); // TODO: Remove before deployment
+    executor.transfer(totalGasCost);
+  }
+
+
+  /**
+    Fund management to allow donations and liquidation by the DAO
+   */
+  function donateFunds() external payable { }
+  receive() external payable { }
+  fallback() external payable { }
+
+  function pullFunds() external onlyDAO {
+    (bool sent, ) = nounsDao.call{value: address(this).balance}("");
     require(sent, "Funds removal failed.");
   }
 
-  function changeDaoAddress(address _newDao) external onlyRole(DAO_ROLE) {
-    grantRole(DAO_ROLE, _newDao);
-    renounceRole(DAO_ROLE, address(this));
+
+  /**
+    Change addresses or limits for the contract exeuction
+   */
+  function changeDaoAddress(address _newDao) external onlyDAO {
+    nounsDao = payable(_newDao);
+  }
+
+  function changeExecutorAddress(address _newExecutor) external onlyDAO {
+    executor = payable(_newExecutor);
+  }
+
+  function changeMaxPriorityFee(uint256 _newMaxPriorityFee) external onlyDAO {
+    maxPriorityFee = _newMaxPriorityFee;
   }
 
 
   /**
     Mint the desired Nouns via Flashbots
    */
-  function mintDesiredNoun(bytes32 _desiredHash, uint256 _minerEthTip) external onlyRole(FOMO_ROLE) {
-    bytes32 lastHash = blockhash(block.number - 1);
-    require(_desiredHash == lastHash, "Block hashes do not match, not settling");
-
-    (bool success, ) = address(auctionHouse).call(abi.encodeWithSignature("settleCurrentAndCreateNewAuction()"));
-    require(success, "Settlement failed");
+  function settleAuction(bytes32 _desiredHash) public {
+    bytes32 lastHash = blockhash(block.number - 1); // Only settle if desired Noun would be minted
+    require(lastHash == _desiredHash, "Prior blockhash did not match intended hash");
     
-    block.coinbase.transfer(_minerEthTip);
+    auctionHouse.settleCurrentAndCreateNewAuction();
   }
 
-  receive() external payable { }
-  fallback() external payable { }
+  function settleAuctionWithRefund(bytes32 _desiredHash) external refundGas onlyFOMO {
+    settleAuction(_desiredHash);
+  }
 }
