@@ -1,11 +1,9 @@
-const { Wallet, Contract } = require('ethers');
+// const { Wallet, Contract } = require('ethers');
+const { Contract } = require('ethers');
 const { parseUnits, parseEther, formatEther } = require('@ethersproject/units');
-const { AlchemyProvider } = require('@ethersproject/providers');
+// const { AlchemyProvider } = require('@ethersproject/providers');
 
 const {
-  networkName,
-  executorPrivateKey,
-  alchemyKey,
   nounsSettlerAddress,
   nounsSettlerAbi
 } = require('./ethereumConfig.js');
@@ -64,9 +62,9 @@ async function sendNormalTransaction(signer, tx) {
 /**
  * Overall settlement function
  */
-async function submitSettlement(blockhash, priorityFee = DEFAULT_PRIORITY_FEE) {
-  const provider = new AlchemyProvider(networkName, alchemyKey);
-  const signer = new Wallet(executorPrivateKey, provider);
+async function submitSettlement(signer, blockhash, priorityFee = DEFAULT_PRIORITY_FEE) {
+  const provider = signer.provider;
+
   const fomoSettler = new Contract(nounsSettlerAddress, nounsSettlerAbi);
 
   console.log(`🔨 TRXN: Targeting settlement on ${targetBlock}...`);
