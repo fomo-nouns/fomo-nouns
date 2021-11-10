@@ -60,7 +60,7 @@ const NavBar = () => {
     return (
       <>
         {showConnectModal && activeAccount === undefined && (
-          <WalletConnectModal onDismiss={hideModalHandler} />
+          <WalletConnectModal/>
         )}
         <Navbar expand="lg">
           <Container>

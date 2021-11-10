@@ -1,3 +1,57 @@
 .clickable {
     cursor: pointer;
-  }
+}
+
+.connectBtn {
+  border: black solid 1px;
+  display: inline-block;
+  border-radius: 30px;
+  width: max-content;
+  height: max-content;
+  margin: 10px 10px;
+  background:rgb(256, 256, 256, 0.8);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px;
+}
+.connectBtn:hover,
+.connectBtn:active,
+.connectBtn:focus {
+  cursor: pointer !important;
+}
+
+.disconnectBtn {
+  border: black solid 1px;
+  border-radius: 30px;
+  width: max-content;
+  height: max-content;
+  margin: 10px 10px;
+  background:rgb(256, 256, 256, 0.8);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px;
+}
+.disconnectBtn:hover,
+.disconnectBtn:active,
+.disconnectBtn:focus {
+  cursor: pointer !important;
+}
+
+.greenStatusCircle{
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  background: #7fc59c;
+  border-radius: 50px;
+  margin-left: 5px;
+}
+
+
+
+.walletConnectWrapper{
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu';
+  justify-self: center;
+  align-self: center;
+  grid-column: 3;
+  grid-row: 1;
+}

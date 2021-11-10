@@ -12,7 +12,7 @@ import { setActiveBackground } from '../../state/slices/background';
 import classes from './Noun.module.css';
 
 const LoadingNoun = () => {
-  return <Image src={loadingNoun} alt={'loading noun'} fluid />;
+  return <Image src={loadingNoun} className={classes.img} alt={'loading noun'}/>;
 };
 
 const Noun: React.FC<{ alt: string }> = props => {

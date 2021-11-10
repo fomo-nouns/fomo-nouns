@@ -1,8 +1,10 @@
 .Title{
+    text-align: center;
     font-family: 'Londrina Solid';
 }
 .Wrapper{
-    position: relative;
-    top: 50%;
-    text-align: center;
+    grid-column: 2;
+    grid-row-start: 2;
+    justify-self: center;
+    white-space: pre-wrap;
 }

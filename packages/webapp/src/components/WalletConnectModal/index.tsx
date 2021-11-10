@@ -8,13 +8,52 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { TrezorConnector } from '@web3-react/trezor-connector';
 import config, { CHAIN_ID } from '../../config';
 import classes from './WalletConnectModal.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
-const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
-  const { onDismiss } = props;
-  const { activate } = useEthers();
+const WalletConnectModal: React.FC<{}> = props => {
+  const activeAccount = useAppSelector(state => state.account.activeAccount);
+  const dispatch = useAppDispatch();
+  const { deactivate, activate, account } = useEthers();
+  const [showConnectModal, setShowConnectModal] = useState(false);
+  
+  const showModalHandler = () => {
+    setShowConnectModal(true);
+  };
+  const hideModalHandler = () => {
+    setShowConnectModal(false);
+  };
+
+  const connectedContent = (
+    <>
+    <div className={classes.walletConnectWrapper}>
+      <button className={classes.disconnectBtn} onClick={deactivate}>
+        DISCONNECT
+        <span className={classes.greenStatusCircle}> </span>
+      </button>
+    </div>
+    </>
+  )
+
+  const disconnectedContent = (
+    <>
+    <div className={classes.walletConnectWrapper}>
+      <button className={classes.connectBtn} onClick={showModalHandler} >
+          CONNECT WALLET
+      </button>
+    </div>
+    </>
+  );
+
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const supportedChainIds = [CHAIN_ID];
+
+  useEffect(() => {
+    if(activeAccount){
+      hideModalHandler();
+    }
+  }, [account, dispatch, activate, activeAccount]);
+  
 
   const wallets = (
     <>
@@ -27,16 +66,6 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
         }}
         walletType={WALLET_TYPE.metamask}
       />
-      {/* <WalletButton
-        onClick={() => {
-          const fortmatic = new FortmaticConnector({
-            apiKey: 'pk_test_FB5E5C15F2EC5AE6',
-            chainId: CHAIN_ID,
-          });
-          activate(fortmatic);
-        }}
-        walletType={WALLET_TYPE.fortmatic}
-      /> */}
       <WalletButton
         onClick={() => {
           const walletlink = new WalletConnectConnector({
@@ -71,17 +100,6 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
         }}
         walletType={WALLET_TYPE.brave}
       />
-      {/* <WalletButton
-        onClick={() => {
-          const ledger = new LedgerConnector({
-            //TODO: refactor
-            chainId: config.supportedChainId,
-            url: config.rinkebyJsonRpc,
-          });
-          activate(ledger);
-        }}
-        walletType={WALLET_TYPE.ledger}
-      /> */}
       <WalletButton
         onClick={() => {
           const trezor = new TrezorConnector({
@@ -109,6 +127,11 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
       )}
     </>
   );
-  return <Modal title="Connect your wallet" content={wallets} onDismiss={onDismiss} />;
+  return (
+    <>
+      {activeAccount ? connectedContent : disconnectedContent}
+      {showConnectModal && <Modal title="Connect your wallet" content={wallets} onDismiss={hideModalHandler} />}
+    </>
+  )
 };
 export default WalletConnectModal;

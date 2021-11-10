@@ -1,6 +1,9 @@
 .App{
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: .5fr 1fr max-content max-content .5fr;
+  column-gap: 10px;
+  row-gap: 0px;
   min-width: 100vh;
   min-height: 100vh;
 }

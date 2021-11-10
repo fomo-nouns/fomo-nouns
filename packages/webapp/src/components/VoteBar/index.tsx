@@ -20,7 +20,7 @@ const VoteBar = () => {
   )
 
   return(
-    <div>
+    <div className={classes.VoteBar}>
       {emojiVoteOpts}  
     </div>
   );

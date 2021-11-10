@@ -1,6 +1,7 @@
 import { Button } from 'react-bootstrap';
+import clsx from 'clsx';
 import classes from './VoteButton.module.css';
-import { setCurrentVote } from '../../state/slices/vote';
+import vote, { setCurrentVote } from '../../state/slices/vote';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 export enum EMOJI_TYPE {
@@ -11,6 +12,10 @@ export enum EMOJI_TYPE {
 }
 
 const VoteButton: React.FC<{emojiType: EMOJI_TYPE }> = props => {
+  const activeVote = useAppSelector(state => state.vote.currentVote);
+
+
+  const votes = 0;
 
   const dispatch = useAppDispatch();  
   const { emojiType } = props;
@@ -20,10 +25,10 @@ const VoteButton: React.FC<{emojiType: EMOJI_TYPE }> = props => {
   }
 
   return (
-    <Button className={classes.emojiButton} onClick={changeVote}>
-      {emojiType}
-      0
-    </Button>
+      <button className={activeVote === emojiType ? clsx(classes.emojiButton, classes.selected) : classes.emojiButton} onClick={changeVote}>
+        <p className={classes.emojiText}> {emojiType} </p>
+        <p className={classes.voteText}> {votes} </p>
+      </button>
   );
 };
   export default VoteButton;

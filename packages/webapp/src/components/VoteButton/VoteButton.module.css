@@ -1,0 +1,33 @@
+.emojiButton{
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid black;
+    width: max-content;
+    height: max-content;
+    border-radius: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 2vw;
+    padding-right: 2vw;
+}
+.emojiButton:hover{
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.voteText{
+    margin-top: 0;
+    margin-bottom: 1vh;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.emojiText{
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    font-size: 32px;
+}
+
+.selected{
+    border: 2px solid black;
+    background: rgba(0, 0, 0, 0.1);
+}
