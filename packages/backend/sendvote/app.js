@@ -2,17 +2,27 @@
 
 /**
  * Event Example:
- *   {"action": "sendvote", "nounId": "22", "blockhash": "a83d9e", "vote": "like"}
+ *   {"action": "sendvote", "nounId": "22", "blockhash": "a83d9e", "vote": "voteLike"}
  * 
  */
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
+const SecretsManager = require('aws-sdk/clients/secretsmanager');
 
+const { AlchemyProvider } = require('@ethersproject/providers');
+const { Wallet } = require('ethers');
+
+const { networkName } = require('./ethereumConfig.js');
 const { hasWinningVotes } = require('./scoreVotes.js');
 const { submitSettlement } = require('./settlement.js');
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
+const smc = new SecretsManager({ region: process.env.AWS_REGION });
+
+// Keep as a 
+var signer;
+
 
 
 /**
@@ -159,6 +169,16 @@ exports.handler = async event => {
   const vote = body.vote;
   const dbKey = `${body.nounId}||${body.blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
+
+  // Setup the Ethereum signer if not yet created
+  if (!signer) {
+    let alchemyKey = await smc.getSecretValue({SecretId: 'nouns/AlchemyKey'}).promise();
+    let executorPrivateKey = await smc.getSecretValue({SecretId: 'nouns/ExecutorPrivateKey'}).promise();
+    let provider = new AlchemyProvider(networkName, alchemyKey.SecretString);
+
+    signer = new Wallet(executorPrivateKey.SecretString, provider);
+    console.log(signer);
+  }
 
   // Update the DB with the latest vote
   let newValues;
