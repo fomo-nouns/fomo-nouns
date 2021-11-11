@@ -1,7 +1,5 @@
-// const { Wallet, Contract } = require('ethers');
 const { Contract } = require('ethers');
 const { parseUnits, parseEther, formatEther } = require('@ethersproject/units');
-// const { AlchemyProvider } = require('@ethersproject/providers');
 
 const {
   nounsSettlerAddress,
