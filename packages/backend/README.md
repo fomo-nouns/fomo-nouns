@@ -15,9 +15,14 @@ Dependencies:
 
 First, install the AWS CLI ([instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)). Then, configure the CLI with your AWS account information and keys ([instructions](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)). Finally, install the SAM CLI ([instructions](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)).
 
-### 2. Store Executor private key in AWS Secrets Manager
+### 2. Store private keys in AWS Secrets Manager
 
-Run the `store-private-key.sh` script to store the Executor private key in AWS Secrets Manager.
+Run `key-management.sh` script to store your Alchemy API key and Ethereum Executor Account private key in AWS Secrets Manager:
+
+```
+./key-management.sh --set --alchemy "<YOUR_PRIVATE_KEY>"
+./key-management.sh --set --executor "0x<YOUR_PRIVATE_KEY>"
+```
 
 ### 3. Build and Deploy
 
@@ -37,13 +42,13 @@ Connected (press CTRL+C to quit)
 Pass an example payload like the one below:
 
 ```
-{"action": "sendvote", "nounId": "1234", "blockhash": "abcd1234", "vote": "love"}
+{"action": "sendvote", "nounId": "1234", "blockhash": "abcd1234", "vote": "voteLove"}
 ```
 
 You should see a response from the websocket echoing the vote:
 
 ```
-< love
+< voteLove
 ```
 
 If so, you've successfully deployed the backend.
