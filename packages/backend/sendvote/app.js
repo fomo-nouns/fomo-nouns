@@ -14,7 +14,7 @@ const { AlchemyProvider } = require('@ethersproject/providers');
 const { Wallet } = require('ethers');
 
 const { networkName } = require('./ethereumConfig.js');
-const { hasWinningVotes } = require('./scoreVotes.js');
+const { hasWinningVotes } = require('./utils/scoreVotes.js');
 const { submitSettlement } = require('./settlement.js');
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
