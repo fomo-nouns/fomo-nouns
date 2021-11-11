@@ -1,14 +1,12 @@
 const { Contract } = require("@ethersproject/contracts");
-const { parseUnits, parseEther, formatEther } = require('@ethersproject/units');
+const { formatEther } = require('@ethersproject/units');
 
+const { FOMO_SETTLER_ABI } = require('./abi.js');
 const {
-  nounsSettlerAddress,
-  nounsSettlerAbi
-} = require('./ethereumConfig.js');
-
-const GWEI = parseUnits('1', 'gwei');
-const DEFAULT_PRIORITY_FEE = GWEI.mul(20);
-const MAX_SETTLEMENT_COST = parseEther('0.06');
+  FOMO_SETTLER_ADDR,
+  DEFAULT_PRIORITY_FEE,
+  DEFAULT_MAX_SETTLEMENT_COST
+} = require('../ethereumConfig.js');
 
 
 /**
@@ -60,10 +58,10 @@ async function sendNormalTransaction(signer, tx) {
 /**
  * Overall settlement function
  */
-async function submitSettlement(signer, blockhash, priorityFee = DEFAULT_PRIORITY_FEE) {
+async function submitSettlement(signer, blockhash, priorityFee = DEFAULT_PRIORITY_FEE, maxSettlementCost = DEFAULT_MAX_SETTLEMENT_COST) {
   const provider = signer.provider;
 
-  const fomoSettler = new Contract(nounsSettlerAddress, nounsSettlerAbi);
+  const fomoSettler = new Contract(FOMO_SETTLER_ADDR, FOMO_SETTLER_ABI);
 
   console.log(`🔨 TRXN: Targeting settlement on ${targetBlock}...`);
 
@@ -74,7 +72,7 @@ async function submitSettlement(signer, blockhash, priorityFee = DEFAULT_PRIORIT
 
   const cost = await simulateNormalTransaction(provider, tx);
 
-  if (cost.lt(MAX_SETTLEMENT_COST)) {
+  if (cost.lt(maxSettlementCost)) {
     await sendNormalTransaction(signer, tx);
   } else {
     console.log(`  ❌ NOT SETTLING: Total cost above ${formatEther(MAX_SETTLEMENT_COST)} limit`);

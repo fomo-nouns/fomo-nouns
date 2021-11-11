@@ -13,7 +13,7 @@ const SecretsManager = require('aws-sdk/clients/secretsmanager');
 const { AlchemyProvider } = require('@ethersproject/providers');
 const { Wallet } = require('ethers');
 
-const { networkName } = require('./ethereumConfig.js');
+const { NETWORK_NAME } = require('./ethereumConfig.js');
 const { hasWinningVotes } = require('./utils/scoreVotes.js');
 const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');
 const { submitSettlement } = require('./utils/settlement.js');
@@ -180,7 +180,7 @@ exports.handler = async event => {
   if (!signer) {
     let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys(smc);
     
-    let provider = new AlchemyProvider(networkName, alchemyKey);
+    let provider = new AlchemyProvider(NETWORK_NAME, alchemyKey);
     signer = new Wallet(executorPrivateKey, provider);
   }
 
