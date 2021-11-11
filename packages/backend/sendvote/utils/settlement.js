@@ -1,4 +1,4 @@
-const { Contract } = require('ethers');
+const { Contract } = require("@ethersproject/contracts");
 const { parseUnits, parseEther, formatEther } = require('@ethersproject/units');
 
 const {
