@@ -1,0 +1,7 @@
+{
+  "body": "{\"action\": \"sendvote\", \"nounId\": \"22\", \"blockhash\": \"a83d9e\", \"vote\": \"voteLike\"}",
+  "requestContext": {
+    "domainName": "66jnwhvdmc.execute-api.us-east-1.amazonaws.com",
+    "stage": "Prod"
+  }
+}
