@@ -20,7 +20,7 @@ const { submitSettlement } = require('./utils/settlement.js');
 
 const {
   AWS_REGION,
-  TABLE_NAME,
+  SOCKET_TABLE_NAME,
   VOTE_TABLE_NAME
 } = process.env;
 
@@ -69,7 +69,7 @@ async function distributeVote(endpoint, voteType) {
   let connectionData;
   
   try {
-    connectionData = await ddb.scan({ TableName: TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
+    connectionData = await ddb.scan({ TableName: SOCKET_TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
   } catch (e) {
     throw e;
   }
@@ -86,7 +86,7 @@ async function distributeVote(endpoint, voteType) {
     } catch (e) {
       if (e.statusCode === 410) {
         console.log(`Found stale connection, deleting ${connectionId}`);
-        await ddb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
+        await ddb.delete({ TableName: SOCKET_TABLE_NAME, Key: { connectionId } }).promise();
       } else {
         throw e;
       }
