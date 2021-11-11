@@ -8,6 +8,7 @@
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
+const SecretsManager = require('aws-sdk/clients/secretsmanager');
 
 const { AlchemyProvider } = require('@ethersproject/providers');
 const { Wallet } = require('ethers');
@@ -18,7 +19,7 @@ const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');
 const { submitSettlement } = require('./utils/settlement.js');
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
-
+const smc = new SecretsManager({ region: process.env.AWS_REGION });
 
 // Keep as a 
 var signer;
@@ -172,11 +173,10 @@ exports.handler = async event => {
 
   // Setup the Ethereum signer if not yet created
   if (!signer) {
-    let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys();
-    let provider = new AlchemyProvider(networkName, alchemyKey.SecretString);
-
-    signer = new Wallet(executorPrivateKey.SecretString, provider);
-    console.log(signer);
+    let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys(smc);
+    
+    let provider = new AlchemyProvider(networkName, alchemyKey);
+    signer = new Wallet(executorPrivateKey, provider);
   }
 
   // Update the DB with the latest vote
