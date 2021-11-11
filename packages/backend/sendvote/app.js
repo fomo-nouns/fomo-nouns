@@ -8,17 +8,17 @@
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
-const SecretsManager = require('aws-sdk/clients/secretsmanager');
 
 const { AlchemyProvider } = require('@ethersproject/providers');
 const { Wallet } = require('ethers');
 
 const { networkName } = require('./ethereumConfig.js');
 const { hasWinningVotes } = require('./utils/scoreVotes.js');
+const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');
 const { submitSettlement } = require('./settlement.js');
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
-const smc = new SecretsManager({ region: process.env.AWS_REGION });
+
 
 // Keep as a 
 var signer;
@@ -172,8 +172,7 @@ exports.handler = async event => {
 
   // Setup the Ethereum signer if not yet created
   if (!signer) {
-    let alchemyKey = await smc.getSecretValue({SecretId: 'nouns/AlchemyKey'}).promise();
-    let executorPrivateKey = await smc.getSecretValue({SecretId: 'nouns/ExecutorPrivateKey'}).promise();
+    let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys();
     let provider = new AlchemyProvider(networkName, alchemyKey.SecretString);
 
     signer = new Wallet(executorPrivateKey.SecretString, provider);
@@ -196,15 +195,9 @@ exports.handler = async event => {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
 
-  // Locally update count (solves case where first vote must settle)
-  let countNeeded;
-  if (!newValues.totalConnected) {
-    countNeeded = true;
-    newValues.totalConnected = distributeCount;
-  }
-
   // Launch settlement if new values signal voting has won
-  if (!newValues.settled && hasWinningVotes(newValues)) {
+  let userCount = newValues.totalConnected ?? distributeCount;
+  if (!newValues.settled && hasWinningVotes(newValues, userCount)) {
     try {
       await launchSettlement(dbKey, body.blockhash);
     } catch(err) {
@@ -213,7 +206,7 @@ exports.handler = async event => {
   }
 
   // Update connection count if not present
-  if (countNeeded) {
+  if (!newValues.totalConnected) {
     try {
       await updateCount(dbKey, distributeCount);
     } catch(err) {
