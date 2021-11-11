@@ -57,11 +57,17 @@ async function sendNormalTransaction(signer, tx) {
 
 /**
  * Overall settlement function
+ * 
+ * @param {Signer} signer Ethers Signer used to sign and send transaction
+ * @param {String} blockhash Blockhash of the latest mined block
+ * @param {String} fomoContractAddress Address of the FOMO Nouns Settler contract
+ * @param {BigNumber} priorityFee Max priority fee to pay on top of the base fee
+ * @param {BigNumber} maxSettlementCost Maximum all-in cost to pay for settlement
  */
-async function submitSettlement(signer, blockhash, priorityFee = DEFAULT_PRIORITY_FEE, maxSettlementCost = DEFAULT_MAX_SETTLEMENT_COST) {
+async function submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SETTLER_ADDR, priorityFee = DEFAULT_PRIORITY_FEE, maxSettlementCost = DEFAULT_MAX_SETTLEMENT_COST) {
   const provider = signer.provider;
 
-  const fomoSettler = new Contract(FOMO_SETTLER_ADDR, FOMO_SETTLER_ABI);
+  const fomoSettler = new Contract(fomoContractAddress, FOMO_SETTLER_ABI);
 
   console.log(`🔨 TRXN: Targeting settlement on ${targetBlock}...`);
 
