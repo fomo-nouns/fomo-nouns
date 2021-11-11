@@ -18,8 +18,14 @@ const { hasWinningVotes } = require('./utils/scoreVotes.js');
 const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');
 const { submitSettlement } = require('./utils/settlement.js');
 
-const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
-const smc = new SecretsManager({ region: process.env.AWS_REGION });
+const {
+  AWS_REGION,
+  TABLE_NAME,
+  VOTE_TABLE_NAME
+} = process.env;
+
+const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: AWS_REGION });
+const smc = new SecretsManager({ region: AWS_REGION });
 
 // Keep as a 
 var signer;
@@ -34,7 +40,7 @@ var signer;
  */
 async function updateVote(dbKey, voteType) {
   const updateParams = {
-    TableName: process.env.VOTE_TABLE_NAME,
+    TableName: VOTE_TABLE_NAME,
     Key: { nounIdWithBlockHash: dbKey },
     ExpressionAttributeValues: { ':start': 0, ':incr': 1 },
     UpdateExpression: `set ${voteType} = if_not_exists(${voteType}, :start) + :incr`,
@@ -63,7 +69,7 @@ async function distributeVote(endpoint, voteType) {
   let connectionData;
   
   try {
-    connectionData = await ddb.scan({ TableName: process.env.TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
+    connectionData = await ddb.scan({ TableName: TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
   } catch (e) {
     throw e;
   }
@@ -80,7 +86,7 @@ async function distributeVote(endpoint, voteType) {
     } catch (e) {
       if (e.statusCode === 410) {
         console.log(`Found stale connection, deleting ${connectionId}`);
-        await ddb.delete({ TableName: process.env.TABLE_NAME, Key: { connectionId } }).promise();
+        await ddb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
       } else {
         throw e;
       }
@@ -104,7 +110,7 @@ async function distributeVote(endpoint, voteType) {
  */
 async function updateCount(dbKey, count) {
   const updateParams = {
-    TableName: process.env.VOTE_TABLE_NAME,
+    TableName: VOTE_TABLE_NAME,
     Key: { nounIdWithBlockHash: dbKey },
     ExpressionAttributeValues: { ':newCount': count },
     ConditionExpression: 'attribute_not_exists(totalConnected)',
@@ -130,7 +136,7 @@ async function updateCount(dbKey, count) {
  */
  async function launchSettlement(dbKey, blockhash) {
   const updateParams = {
-    TableName: process.env.VOTE_TABLE_NAME,
+    TableName: VOTE_TABLE_NAME,
     Key: { nounIdWithBlockHash: dbKey },
     ExpressionAttributeValues: { ':status': true },
     ConditionExpression: 'attribute_not_exists(settled)',
@@ -142,8 +148,7 @@ async function updateCount(dbKey, count) {
     await ddb.update(updateParams).promise();
 
     // Submit and wait for settlement transaction
-    // await submitSettlement(blockhash);
-    console.log('Fake attempt to settle!');
+    console.log('Fake attempt to settle!'); // await submitSettlement(blockhash);
   } catch (err) {
     // If settlement was already attempted, ignore
     if (err.code !== "ConditionalCheckFailedException") {
