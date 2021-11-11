@@ -15,7 +15,7 @@ const { Wallet } = require('ethers');
 const { networkName } = require('./ethereumConfig.js');
 const { hasWinningVotes } = require('./utils/scoreVotes.js');
 const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');
-const { submitSettlement } = require('./settlement.js');
+const { submitSettlement } = require('./utils/settlement.js');
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
 
