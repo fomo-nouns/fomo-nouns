@@ -6,7 +6,7 @@
   "author": "@_forager",
   "license": "MIT",
   "scripts": {
-    "test": "mocha tests/unit"
+    "test": "mocha tests"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.1",
