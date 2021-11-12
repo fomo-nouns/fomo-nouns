@@ -8,5 +8,5 @@ s3_prefix = "nouns"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "TableName=\"nouns_websocket_connections\""
+parameter_overrides = "SocketTableName=\"nouns_websocket_connections\""
 image_repositories = []

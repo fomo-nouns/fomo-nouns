@@ -5,9 +5,14 @@
   "main": "src/app.js",
   "author": "@_forager",
   "license": "MIT",
-  "dependencies": {},
+  "scripts": {
+    "test": "mocha tests"
+  },
   "devDependencies": {
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
     "aws-sdk": "^2.739.0",
-    "ethers": "^5.4.7"
+    "chai": "^4.3.4",
+    "ethers": "^5.4.7",
+    "hardhat": "^2.6.8"
   }
 }

@@ -7,7 +7,7 @@ Description: >
   Gateway to enable real-time voting and settlement for Nouns auctions.
 
 Parameters:
-  TableName:
+  SocketTableName:
     Type: String
     Default: 'nouns_websocket_connections'
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
@@ -127,7 +127,7 @@ Resources:
       BillingMode: PAY_PER_REQUEST
       SSESpecification:
         SSEEnabled: True
-      TableName: !Ref TableName
+      TableName: !Ref SocketTableName
   VotingTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -154,10 +154,10 @@ Resources:
       Runtime: nodejs14.x
       Environment:
         Variables:
-          TABLE_NAME: !Ref TableName
+          SOCKET_TABLE_NAME: !Ref SocketTableName
       Policies:
       - DynamoDBCrudPolicy:
-          TableName: !Ref TableName
+          TableName: !Ref SocketTableName
   OnConnectPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -179,10 +179,10 @@ Resources:
       Runtime: nodejs14.x
       Environment:
         Variables:
-          TABLE_NAME: !Ref TableName
+          SOCKET_TABLE_NAME: !Ref SocketTableName
       Policies:
       - DynamoDBCrudPolicy:
-          TableName: !Ref TableName
+          TableName: !Ref SocketTableName
   OnDisconnectPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -217,11 +217,11 @@ Resources:
         - !Ref EthersDepLayer
       Environment:
         Variables:
-          TABLE_NAME: !Ref TableName
+          SOCKET_TABLE_NAME: !Ref SocketTableName
           VOTE_TABLE_NAME: !Ref VoteTableName
       Policies:
       - DynamoDBCrudPolicy:
-          TableName: !Ref TableName
+          TableName: !Ref SocketTableName
       - DynamoDBCrudPolicy:
           TableName: !Ref VoteTableName
       - Statement:

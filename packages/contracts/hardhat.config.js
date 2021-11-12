@@ -3,6 +3,7 @@ require("@nomiclabs/hardhat-etherscan");
 
 require('./tasks');
 
+const { FOMO_ALCHEMY_KEY, RINKEBY_PRIVATE_KEY, MAINNET_PRIVATE_KEY } = process.env;
 
 /**
  * Print List of Accounts for the Network
@@ -24,16 +25,16 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
    solidity: "0.8.9",
    networks: {
      rinkeby: {
-       url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`,
-       accounts: [`0x${process.env.RINKEBY_PRIVATE_KEY}`],
+       url: `https://eth-rinkeby.alchemyapi.io/v2/${FOMO_ALCHEMY_KEY}`,
+       accounts: [`0x${RINKEBY_PRIVATE_KEY}`],
      },
      mainnet: {
-       url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`,
-       accounts: [`0x${process.env.MAINNET_PRIVATE_KEY}`],
+       url: `https://eth-mainnet.alchemyapi.io/v2/${FOMO_ALCHEMY_KEY}`,
+       accounts: [`0x${MAINNET_PRIVATE_KEY}`],
      },
      goerli: {
-      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.ALCHEMY_RINKEBY_KEY}`,
-      accounts: [`0x${process.env.RINKEBY_PRIVATE_KEY}`],
+      url: `https://eth-goerli.alchemyapi.io/v2/${FOMO_ALCHEMY_KEY}`,
+      accounts: [`0x${RINKEBY_PRIVATE_KEY}`],
     },
    },
   etherscan: {

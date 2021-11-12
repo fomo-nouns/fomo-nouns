@@ -16,12 +16,12 @@ async function stopImpersonatingAccount(address){
   )
 }
 
-async function networkReset(block){
+async function networkReset(block, networkName='mainnet'){
   await network.provider.request({
     method: "hardhat_reset",
     params: [{
       forking: {
-        jsonRpcUrl: `https://eth-mainnet.alchemyapi.io/v2/${FOMO_ALCHEMY_KEY}`,
+        jsonRpcUrl: `https://eth-${networkName}.alchemyapi.io/v2/${FOMO_ALCHEMY_KEY}`,
         blockNumber: block 
       }
     }]

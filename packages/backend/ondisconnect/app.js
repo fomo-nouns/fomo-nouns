@@ -4,11 +4,13 @@
 
 const AWS = require('aws-sdk');
 
-const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: process.env.AWS_REGION });
+const { AWS_REGION, SOCKET_TABLE_NAME } = process.env;
+
+const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: AWS_REGION });
 
 exports.handler = async event => {
   const deleteParams = {
-    TableName: process.env.TABLE_NAME,
+    TableName: SOCKET_TABLE_NAME,
     Key: {
       connectionId: event.requestContext.connectionId
     }
