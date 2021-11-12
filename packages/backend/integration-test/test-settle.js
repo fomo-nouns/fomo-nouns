@@ -23,6 +23,7 @@ const auctionHouse = new ethers.Contract(auctionHouseProxyAddress, auctionHouseA
 
 // Functions
 const nowSeconds = () => Math.floor(Date.now() / 1000);
+const pause = (seconds) => new Promise(r => setTimeout(r, seconds * 1000));
 
 function createWebsockets(count) {
   let sockets = [];
@@ -37,7 +38,7 @@ async function waitForAuctionEnd() {
   let auction = await auctionHouse.auction();
 
   while (nowSeconds() < auction.endTime) {
-    await new Promise(r => setTimeout(r, (auction.endTime - nowSeconds()) * 1000));
+    await pause(auction.endTime - nowSeconds());
     auction = await auctionHouse.auction();
   }
 
@@ -81,7 +82,6 @@ async function main() {
 
   console.log(`⏳ Waiting for Noun auction to end...`);
   const newNounId = await waitForAuctionEnd();
-  console.log(`💤 Awaiting settlement to mint Noun #${newNounId}`);
 
   console.log(`⏳ Waiting for next block...`);
   const latestBlockNumber = await waitForNextBlock();
@@ -90,6 +90,10 @@ async function main() {
   console.log(`🗳 Casting votes...`);
   await castVotes(wsArray, newNounId, latestBlockNumber, votes);
   console.log(`✅ Voting complete`);
+
+  console.log('🛫 Waiting for broadcast to occur...')
+  await pause(10);
+  console.log('🛬 Waiting period over')
 
   console.log(`🎬 Closing all connections...`);
   wsArray.map(s => s.close());
