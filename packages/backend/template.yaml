@@ -25,6 +25,15 @@ Parameters:
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
+  SettlementLambdaName:
+    Type: String
+    Default: 'nouns-fomo-SettlementFunction'
+    Description: (Required) The name of the DynamoDB table to store Noun vote results for each possible Noun. Minimum 3 characters
+    MinLength: 3
+    MaxLength: 50
+    AllowedPattern: ^[A-Za-z_-]+$
+    ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
+
 Resources:
 
   #----------------------------------------#
@@ -206,6 +215,7 @@ Resources:
         Variables:
           SOCKET_TABLE_NAME: !Ref SocketTableName
           VOTE_TABLE_NAME: !Ref VoteTableName
+          SETTLEMENT_FUNCTION_NAME: !Ref SettlementLambdaName
       Policies:
       - DynamoDBCrudPolicy:
           TableName: !Ref SocketTableName
@@ -217,6 +227,12 @@ Resources:
           - 'execute-api:ManageConnections'
           Resource:
           - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${NounsWebSocket}/*'
+      - Statement:
+        - Effect: Allow
+          Action:
+          - 'lambda:InvokeFunction'
+          Resource:
+          - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${SettlementLambdaName}'
   SendVotePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -247,6 +263,7 @@ Resources:
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs14.x
+      FunctionName: !Ref SettlementLambdaName
       Layers:
         - !Ref EthersDepLayer
       Environment:
