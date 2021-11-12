@@ -46,10 +46,7 @@ var signer;
     // Lock the DB to prevent duplicate settlement
     await ddb.update(updateParams).promise();
   } catch (err) {
-    // If settlement was already attempted, ignore
-    if (err.code !== "ConditionalCheckFailedException") {
-      throw err;
-    }
+    throw err;
   }
 }
 
@@ -70,19 +67,23 @@ async function initSigner() {
  *      - blockhash
  */
 exports.handler = async event => {
-  const body = JSON.parse(event.body);
-  const dbKey = `${body.nounId}||${body.blockhash}`;
-  const blockhash = body.blockhash;
+  // Event is passed by invoke and already in JSON format
+  const { nounId, blockhash } = event;
+  const dbKey = `${nounId}||${blockhash}`;
 
   await initSigner();
 
   try {
-    await updateStatus(dbKey, signer, body.blockhash);
+    await updateStatus(dbKey, signer, blockhash);
     await submitSettlement(signer, blockhash);
-    console.log('Settlement completed.');
   } catch(err) {
-    return { statusCode: 500, body: 'Error settling.', message: err.stack };
+    // If settlement was already attempted, ignore
+    if (err.code !== "ConditionalCheckFailedException") {
+      return { statusCode: 200, body: 'Auction settlement already launched.' };
+    } else {
+      return { statusCode: 500, body: 'Error with settlement.', message: err.stack };
+    }
   }
 
-  return { statusCode: 200, body: 'Vote updated.' };
+  return { statusCode: 200, body: 'Settlement completed.' };
 };
