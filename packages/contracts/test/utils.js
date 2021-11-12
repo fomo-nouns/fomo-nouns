@@ -1,4 +1,5 @@
 const { ethers, network } = require('hardhat');
+const { FOMO_ALCHEMY_KEY } = process.env;
 
 
 async function impersonateAccount(address){
@@ -20,7 +21,7 @@ async function networkReset(block){
     method: "hardhat_reset",
     params: [{
       forking: {
-        jsonRpcUrl: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`,
+        jsonRpcUrl: `https://eth-mainnet.alchemyapi.io/v2/${FOMO_ALCHEMY_KEY}`,
         blockNumber: block 
       }
     }]
