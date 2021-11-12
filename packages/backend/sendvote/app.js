@@ -8,15 +8,8 @@
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
-const SecretsManager = require('aws-sdk/clients/secretsmanager');
 
-const { AlchemyProvider } = require('@ethersproject/providers');
-const { Wallet } = require('ethers');
-
-const { NETWORK_NAME } = require('./ethereumConfig.js');
 const { hasWinningVotes } = require('./utils/scoreVotes.js');
-const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');
-const { submitSettlement } = require('./utils/settlement.js');
 
 const {
   AWS_REGION,
@@ -25,11 +18,6 @@ const {
 } = process.env;
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: AWS_REGION });
-const smc = new SecretsManager({ region: AWS_REGION });
-
-// Keep as a 
-var signer;
-
 
 
 /**
@@ -128,37 +116,6 @@ async function updateCount(dbKey, count) {
 }
 
 
-
-/**
- * Launch settlement of the Nouns auction
- * 
- * @param {Integer} count Count of connections
- */
- async function launchSettlement(dbKey, signer, blockhash) {
-  const updateParams = {
-    TableName: VOTE_TABLE_NAME,
-    Key: { nounIdWithBlockHash: dbKey },
-    ExpressionAttributeValues: { ':status': true },
-    ConditionExpression: 'attribute_not_exists(settled)',
-    UpdateExpression: 'set settled = :status'
-  };
-
-  try {
-    // Lock the DB to prevent duplicate settlement
-    await ddb.update(updateParams).promise();
-
-    // Submit and wait for settlement transaction
-    await submitSettlement(signer, blockhash);
-  } catch (err) {
-    // If settlement was already attempted, ignore
-    if (err.code !== "ConditionalCheckFailedException") {
-      throw err;
-    }
-  }
-}
-
-
-
 /**
  * 
  * @param {Object} event
@@ -167,7 +124,6 @@ async function updateCount(dbKey, count) {
  *      - blockhash
  *      - vote
  */
-
 exports.handler = async event => {
   const body = JSON.parse(event.body);
   const context = event.requestContext;
@@ -175,14 +131,6 @@ exports.handler = async event => {
   const vote = body.vote;
   const dbKey = `${body.nounId}||${body.blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
-
-  // Setup the Ethereum signer if not yet created
-  if (!signer) {
-    let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys(smc);
-    
-    let provider = new AlchemyProvider(NETWORK_NAME, alchemyKey);
-    signer = new Wallet(executorPrivateKey, provider);
-  }
 
   // Update the DB with the latest vote
   let newValues;
@@ -203,11 +151,8 @@ exports.handler = async event => {
   // Launch settlement if new values signal voting has won
   let userCount = newValues.totalConnected ?? distributeCount;
   if (!newValues.settled && hasWinningVotes(newValues, userCount)) {
-    try {
-      await launchSettlement(dbKey, signer, body.blockhash);
-    } catch(err) {
-      return { statusCode: 500, body: 'Error settling.', message: err.stack };
-    }
+    console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
+    // Trigger Settlement
   }
 
   // Update connection count if not present
@@ -219,5 +164,6 @@ exports.handler = async event => {
     }
   }
 
+  // Return successfully
   return { statusCode: 200, body: 'Vote updated.' };
 };
