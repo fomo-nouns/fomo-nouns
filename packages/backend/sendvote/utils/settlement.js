@@ -67,7 +67,7 @@ async function sendNormalTransaction(signer, tx) {
 async function submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SETTLER_ADDR, priorityFee = DEFAULT_PRIORITY_FEE, maxSettlementCost = DEFAULT_MAX_SETTLEMENT_COST) {
   const provider = signer.provider;
 
-  const fomoSettler = new Contract(fomoContractAddress, FOMO_SETTLER_ABI);
+  const fomoSettler = new Contract(fomoContractAddress, FOMO_SETTLER_ABI, signer);
 
   console.log(`🔨 TRXN: Targeting settlement on ${targetBlock}...`);
 
