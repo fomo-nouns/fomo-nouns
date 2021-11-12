@@ -8,16 +8,19 @@
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
+const Lambda = require('aws-sdk/clients/lambda');
 
 const { hasWinningVotes } = require('./utils/scoreVotes.js');
 
 const {
   AWS_REGION,
   SOCKET_TABLE_NAME,
-  VOTE_TABLE_NAME
+  VOTE_TABLE_NAME,
+  SETTLEMENT_FUNCTION_NAME
 } = process.env;
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: AWS_REGION });
+const lambda = new Lambda({ apiVersion: '2015-03-31', region: AWS_REGION });
 
 
 /**
@@ -117,6 +120,26 @@ async function updateCount(dbKey, count) {
 
 
 /**
+ * Invoke the Settlement Lambda function asynchronously
+ * 
+ * @param {String} nounId ID number of the upcoming to-be-minted Noun
+ * @param {String} blockhash Blockhash of the most recently mined block
+ */
+async function callSettlement(nounId, blockhash) {
+  var params = {
+    FunctionName: SETTLEMENT_FUNCTION_NAME,
+    InvokeArgs: JSON.stringify({'nounId': nounId, 'blockhash': blockhash})
+  };
+
+  try {
+    await lambda.invokeAsync(params).promise();
+  } catch (err) {
+    throw err;
+  }
+}
+
+
+/**
  * 
  * @param {Object} event
  *    event.body:
@@ -128,8 +151,9 @@ exports.handler = async event => {
   const body = JSON.parse(event.body);
   const context = event.requestContext;
 
-  const vote = body.vote;
-  const dbKey = `${body.nounId}||${body.blockhash}`;
+  const { vote, nounId, blockhash } = body;
+
+  const dbKey = `${nounId}||${blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
 
   // Update the DB with the latest vote
@@ -152,7 +176,7 @@ exports.handler = async event => {
   let userCount = newValues.totalConnected ?? distributeCount;
   if (!newValues.settled && hasWinningVotes(newValues, userCount)) {
     console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
-    // Trigger Settlement
+    await callSettlement(nounId, blockhash);
   }
 
   // Update connection count if not present
