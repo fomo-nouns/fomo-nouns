@@ -9,6 +9,10 @@ const {
 } = require('../ethereumConfig.js');
 
 
+const LOG_PROGRESS = false;
+const logr = x => { if (LOG_PROGRESS) console.log(x); }
+
+
 /**
  * Build the settlement transaction to execute
  */
@@ -35,7 +39,7 @@ async function simulateNormalTransaction(provider, tx) {
   const gasUsed = await provider.estimateGas(tx);
   const totalCost = gasUsed.mul(tx.maxFeePerGas);
 
-  console.log(`  ⛽️ Gas Used: ${gasUsed}  💰 Max Cost: ${formatEther(totalCost)}`);
+  logr(`  ⛽️ Gas Used: ${gasUsed}  💰 Max Cost: ${formatEther(totalCost)}`);
 
   return totalCost;
 }
@@ -45,12 +49,19 @@ async function simulateNormalTransaction(provider, tx) {
  * Send the transaction and wait for response
  */
 async function sendNormalTransaction(signer, tx) {
-  const response = await signer.sendTransaction(tx);
-  const receipt = await response.wait();
-  if (receipt.status === 1) {
-    console.log(`  ✅ Transaction included in block ${receipt.blockNumber}`);
-  } else {
-    console.log(`  ❌ Transaction reverted`);
+  try {
+    const response = await signer.sendTransaction(tx);
+    const receipt = await response.wait();
+
+    if (receipt.status !== 1) {
+      throw Error('Transaction reverted on chain');
+    }
+    
+    logr(`  ✅ Transaction included in block ${receipt.blockNumber}`);
+    return true;
+  } catch(err) {
+    logr(`  ❌ Transaction reverted\n${err}`);
+    return false;
   }
 }
 
@@ -66,22 +77,29 @@ async function sendNormalTransaction(signer, tx) {
  */
 async function submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SETTLER_ADDR, priorityFee = DEFAULT_PRIORITY_FEE, maxSettlementCost = DEFAULT_MAX_SETTLEMENT_COST) {
   const provider = signer.provider;
-
   const fomoSettler = new Contract(fomoContractAddress, FOMO_SETTLER_ABI, signer);
 
-  console.log(`🔨 TRXN: Targeting settlement on ${targetBlock}...`);
+  logr(`🔨 TRXN: Launching settlement...`);
 
-  const feeData = await provider.getFeeData();
-  const tx = await buildTransaction(fomoSettler, blockhash, feeData, priorityFee);
+  let tx, cost;
+  try {
+    const feeData = await provider.getFeeData();
+    tx = await buildTransaction(fomoSettler, blockhash, feeData, priorityFee);
+    logr(tx);
 
-  console.log(tx);
-
-  const cost = await simulateNormalTransaction(provider, tx);
+    cost = await simulateNormalTransaction(provider, tx);
+  } catch(err) {
+    logr(`  ❌ ERROR: Cannot build and simulate trxn\n${err}`);
+    return false;
+  }
+  
 
   if (cost.lt(maxSettlementCost)) {
-    await sendNormalTransaction(signer, tx);
+    let result = await sendNormalTransaction(signer, tx);
+    return result;
   } else {
-    console.log(`  ❌ NOT SETTLING: Total cost above ${formatEther(MAX_SETTLEMENT_COST)} limit`);
+    logr(`  ❌ NOT SETTLING: Total cost above ${formatEther(MAX_SETTLEMENT_COST)} limit`);
+    return false;
   }
 }
 
