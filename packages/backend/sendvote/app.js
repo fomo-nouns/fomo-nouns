@@ -134,7 +134,7 @@ async function updateCount(dbKey, count) {
  * 
  * @param {Integer} count Count of connections
  */
- async function launchSettlement(dbKey, blockhash) {
+ async function launchSettlement(dbKey, signer, blockhash) {
   const updateParams = {
     TableName: VOTE_TABLE_NAME,
     Key: { nounIdWithBlockHash: dbKey },
@@ -148,7 +148,7 @@ async function updateCount(dbKey, count) {
     await ddb.update(updateParams).promise();
 
     // Submit and wait for settlement transaction
-    console.log('Fake attempt to settle!'); // await submitSettlement(blockhash);
+    await submitSettlement(signer, blockhash);
   } catch (err) {
     // If settlement was already attempted, ignore
     if (err.code !== "ConditionalCheckFailedException") {
@@ -204,7 +204,7 @@ exports.handler = async event => {
   let userCount = newValues.totalConnected ?? distributeCount;
   if (!newValues.settled && hasWinningVotes(newValues, userCount)) {
     try {
-      await launchSettlement(dbKey, body.blockhash);
+      await launchSettlement(dbKey, signer, body.blockhash);
     } catch(err) {
       return { statusCode: 500, body: 'Error settling.', message: err.stack };
     }
