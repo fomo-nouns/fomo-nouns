@@ -13,23 +13,20 @@ else
   ACTION=""
 fi
 
-if [[ "ACTION" == "--set" ]]; then
+if [[ "$ACTION" == "--set" ]]; then
   aws secretsmanager create-secret --name "$NAME" --description "$DESCRIPTION" --secret-string "$SECRET"
-elif [[ "ACTION" == "--update" ]]; then
+elif [[ "$ACTION" == "--update" ]]; then
   aws secretsmanager update-secret --secret-id "$NAME" --secret-string "$SECRET"
-elif [[ "ACTION" == "--get" ]]; then
+elif [[ "$ACTION" == "--get" ]]; then
   aws secretsmanager describe-secret --secret-id "$NAME"
 else
   echo '''The script can be run with the following commands:
-    ./private-key-management.sh --set --executor <private_key>
-                                --set --alchemy <private_key>
-      - Create the new private key storage
+    ./key-management.sh --set --executor/--alchemy <private_key>
+      * Create the new private key storage
 
-    ./private-key-management.sh --update --executor <private_key>
-                                --update --alchemy <private_key>
-      - Updates the existing stored private key
+    ./key-management.sh --update --executor/--alchemy <private_key>
+      * Updates the existing stored private key
 
-    ./private-key-management.sh --get --executor
-                                --get --alchemy <private_key>
-      - Gets the description of currently stored key'''
+    ./key-management.sh --get --executor/--alchemy
+      * Gets the description of currently stored key'''
 fi
