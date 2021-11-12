@@ -9,7 +9,7 @@ const {
 } = require('../ethereumConfig.js');
 
 
-const LOG_PROGRESS = false;
+const LOG_PROGRESS = true;
 const logr = x => { if (LOG_PROGRESS) console.log(x); }
 
 
@@ -98,7 +98,7 @@ async function submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SE
     let result = await sendNormalTransaction(signer, tx);
     return result;
   } else {
-    logr(`  ❌ NOT SETTLING: Total cost above ${formatEther(MAX_SETTLEMENT_COST)} limit`);
+    logr(`  ❌ NOT SETTLING: Total cost above ${formatEther(maxSettlementCost)} limit`);
     return false;
   }
 }
