@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { getEthereumPrivateKeys } = require('../../utils/getEthereumPrivateKeys');
+const { getEthereumPrivateKeys } = require('../utils/getEthereumPrivateKeys');
 
 const SecretsManager = require('aws-sdk/clients/secretsmanager');
 

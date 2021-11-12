@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { hasWinningVotes } = require('../../utils/scoreVotes');
+const { hasWinningVotes } = require('../utils/scoreVotes');
 
 
 describe('hasWinningVotes Test', async function() {
