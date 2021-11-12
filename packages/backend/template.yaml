@@ -195,17 +195,6 @@ Resources:
   #----------------------------------------#
   # Lambda: SendVote Websocket Handler
   #----------------------------------------#
-  EthersDepLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: ethers-js-dependency
-      Description: Ethers js depency
-      ContentUri: ethers-layer/
-      CompatibleRuntimes:
-        - nodejs14.x
-      RetentionPolicy: Retain
-    Metadata:
-      BuildMethod: nodejs14.x
   SendVoteFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -213,8 +202,6 @@ Resources:
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs14.x
-      Layers:
-        - !Ref EthersDepLayer
       Environment:
         Variables:
           SOCKET_TABLE_NAME: !Ref SocketTableName
@@ -230,12 +217,6 @@ Resources:
           - 'execute-api:ManageConnections'
           Resource:
           - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${NounsWebSocket}/*'
-        - Effect: Allow
-          Action:
-          - 'secretsmanager:GetSecretValue'
-          Resource:
-          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ExecutorPrivateKey-*'
-          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/AlchemyKey-*'
   SendVotePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -244,6 +225,52 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref SendVoteFunction
       Principal: apigateway.amazonaws.com
+
+  #----------------------------------------#
+  # Lambda: Ethereum Settlement
+  #----------------------------------------#
+  EthersDepLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: ethers-js-dependency
+      Description: Ethers js depency
+      ContentUri: ethers-layer/
+      CompatibleRuntimes:
+        - nodejs14.x
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: nodejs14.x
+  SettlementFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: settlement/
+      Handler: app.handler
+      MemorySize: 256
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref EthersDepLayer
+      Environment:
+        Variables:
+          VOTE_TABLE_NAME: !Ref VoteTableName
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: !Ref VoteTableName
+      - Statement:
+        - Effect: Allow
+          Action:
+          - 'secretsmanager:GetSecretValue'
+          Resource:
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ExecutorPrivateKey-*'
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/AlchemyKey-*'
+  SettlementPermission: # Allow the SendVoteFunction to invoke
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - SendVoteFunction
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref SettlementFunction
+      Principal: lambda.amazonaws.com
+      SourceArn: !GetAtt SendVoteFunction.Arn
 
 #----------------------------------------#
 # CloudFormation Outputs
@@ -268,6 +295,10 @@ Outputs:
   SendVoteFunctionArn:
     Description: "SendVote function ARN"
     Value: !GetAtt SendVoteFunction.Arn
+
+  SettlementFunctionArn:
+    Description: "Settlement function ARN"
+    Value: !GetAtt SettlementFunction.Arn
 
   WebSocketURI:
     Description: "The WSS Protocol URI to connect to"
