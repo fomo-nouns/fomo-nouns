@@ -57,7 +57,13 @@ If so, you've successfully deployed the backend.
 
 **Settlment Test**
 
-The full voting quorum and settlement can be 
+The full voting quorum and settlement can be tested using the integrat-test script using:
+
+```
+node integration-test/test-settle.js wss://<URL>
+```
+
+This script will simulate connecting four users via websocket who vote, and if quorum is achieved, settlement will be launched.
 
 ## Architecture
 
