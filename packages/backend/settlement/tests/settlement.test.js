@@ -1,15 +1,10 @@
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
-const { AlchemyProvider } = require('@ethersproject/providers');
-const { Wallet } = require('ethers');
-
 const { networkReset, impersonateAccount } = require('./utils.js');
 const { submitSettlement } = require('../utils/settlement');
 const { FOMO_SETTLER_ABI, AUCTION_HOUSE_ABI } = require('../utils/abi');
 
-
-// submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SETTLER_ADDR, priorityFee = DEFAULT_PRIORITY_FEE, maxSettlementCost = DEFAULT_MAX_SETTLEMENT_COST)
 
 /**
  * Run Test Suite
@@ -30,24 +25,18 @@ describe("Settlement", function () {
 
 
   /**
-   * Setup: Deploy contract 
+   * Setup
    */
   before("Setup signers", async function() {
-    // let provider = new AlchemyProvider(NETWORK_NAME, FOMO_ALCHEMY_KEY);
-    // executor = new Wallet(FOMO_EXECUTOR_KEY, provider);
     executor = await ethers.provider.getSigner(FOMO_EXECUTOR_ADDRESS);
 
     settler = await ethers.getContractAt(FOMO_SETTLER_ABI, FOMO_SETTLER_ADDRESS);
     auctionHouse = await ethers.getContractAt(AUCTION_HOUSE_ABI, AUCTION_PROXY_ADDRESS);
   });
 
-  beforeEach("Deploy settlement contract", async function() {
-    
-  });
-
 
   /**
-   * Ownable: 
+   * Tests
    */
   describe("Successful Test", async function() {
     it("should settle a pending auction", async function() {
