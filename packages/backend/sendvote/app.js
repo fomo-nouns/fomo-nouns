@@ -55,7 +55,8 @@ async function updateVote(dbKey, voteType) {
  * 
  * @param {Object} data Data to distribute to all clients
  */
-async function distributeVote(endpoint, voteType) {
+async function distributeMessage(endpoint, type, value) {
+  let messageString = JSON.stringify({'type': type, 'value': value});
   let connectionCount = 0;
   let connectionData;
   
@@ -72,7 +73,7 @@ async function distributeVote(endpoint, voteType) {
   
   const postCalls = connectionData.Items.map(async ({ connectionId }) => {
     try {
-      await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: voteType }).promise();
+      await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: messageString }).promise();
       connectionCount++;
     } catch (e) {
       if (e.statusCode === 410) {
@@ -167,7 +168,7 @@ exports.handler = async event => {
   // Distribute votes to clients
   let distributeCount;
   try {
-    distributeCount = await distributeVote(endpoint, vote);
+    distributeCount = await distributeMessage(endpoint, 'vote', vote);
   } catch(err) {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
@@ -177,6 +178,7 @@ exports.handler = async event => {
   if (!newValues.settled && hasWinningVotes(newValues, userCount)) {
     console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
     await callSettlement(nounId, blockhash);
+    await distributeMessage(endpoint, 'status', 'attemptingSettlement');
   }
 
   // Update connection count if not present
