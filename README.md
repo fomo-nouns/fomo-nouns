@@ -29,3 +29,7 @@ export MAINNET_DEPLOYER_KEY="0x<PRIVATE KEY HERE>"
 **[WARNING] DO NOT PUT YOUR PRIVATE KEYS ANYWHERE IN THE SCRIPTS!**
 
 ### Architecture
+
+[Figma Diagram](https://www.figma.com/file/yU3JUsq2HENWYoj1EJUote/FOMO-Nouns?node-id=971%3A1119)
+
+![FOMO Nouns Architecture](https://user-images.githubusercontent.com/84751016/141606334-133336de-e3d7-412d-b612-01a1cce5ca9e.png)
