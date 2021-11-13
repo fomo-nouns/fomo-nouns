@@ -8,7 +8,7 @@ async function main() {
   const contractName = 'NounSettlement';
   const network = hre.network.name;
 
-  const [deployer] = await ethers.getSigners();
+  const [executor, deployer] = await ethers.getSigners();
   const auctionHouseAddress = address.auctionHouseProxy[network];
   const nounsDaoAddress = deployer.address; // Use another test account instead
 
@@ -31,7 +31,7 @@ async function main() {
   const factory = await ethers.getContractFactory(contractName);
 
   const deploymentGas = await factory.signer.estimateGas(
-    factory.getDeployTransaction(deployer.address, nounsDaoAddress, auctionHouseAddress, { gasPrice })
+    factory.getDeployTransaction(executor.address, nounsDaoAddress, auctionHouseAddress, { gasPrice })
   );
   const deploymentCost = deploymentGas.mul(gasPrice);
 
@@ -49,15 +49,15 @@ async function main() {
   // Deploy the contract
   console.log(`Deploying ${contractName}...`);
 
-  const deployedContract = await factory.deploy(deployer.address, nounsDaoAddress, auctionHouseAddress, { gasPrice });
+  const deployedContract = await factory.deploy(executor.address, nounsDaoAddress, auctionHouseAddress, { gasPrice });
   await deployedContract.deployed();
 
   console.log(`${contractName} contract deployed to ${deployedContract.address}`);
 
   console.log(`
-    Executor address: ${deployer.address}
-    AuctionHouse address: ${auctionHouseAddress}
+    Executor address: ${executor.address}
     NounsDAO address: ${nounsDaoAddress}
+    AuctionHouse address: ${auctionHouseAddress}
   `);
 
   // Wait 10 seconds for bytecode to sync
@@ -67,7 +67,7 @@ async function main() {
   // Verify on Etherscan
   await hre.run("verify:verify", {
     address: deployedContract.address,
-    constructorArguments: [deployer.address, nounsDaoAddress, auctionHouseAddress]
+    constructorArguments: [executor.address, nounsDaoAddress, auctionHouseAddress]
   });
 }
 

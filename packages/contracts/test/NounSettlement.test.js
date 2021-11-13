@@ -25,7 +25,7 @@ describe("NounSettlement", function () {
    * Setup: Deploy contract 
    */
   before("Setup signers", async function() {
-    [executor, random1, random2] = await ethers.getSigners();
+    [executor, /*deployer*/, random1, random2] = await ethers.getSigners();
 
     nounsDao = ethers.provider.getSigner(NOUNS_DAO_ADDRESS);
 
