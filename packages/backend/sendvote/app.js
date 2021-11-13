@@ -96,31 +96,6 @@ async function distributeMessage(endpoint, type, value) {
 
 
 /**
- * Update the connection count in the DB 
- * 
- * @param {Integer} count Count of connections
- */
-async function updateCount(dbKey, count) {
-  const updateParams = {
-    TableName: VOTE_TABLE_NAME,
-    Key: { nounIdWithBlockHash: dbKey },
-    ExpressionAttributeValues: { ':newCount': count },
-    ConditionExpression: 'attribute_not_exists(totalConnected)',
-    UpdateExpression: 'set totalConnected = :newCount'
-  };
-
-  try {
-    await ddb.update(updateParams).promise();
-  } catch (err) {
-    // If totalConnected was already updated, ignore error, otherwise throw
-    if (err.code !== "ConditionalCheckFailedException") {
-      throw err;
-    }
-  }
-}
-
-
-/**
  * Invoke the Settlement Lambda function asynchronously
  * 
  * @param {String} nounId ID number of the upcoming to-be-minted Noun
@@ -174,20 +149,10 @@ exports.handler = async event => {
   }
 
   // Launch settlement if new values signal voting has won
-  let userCount = newValues.totalConnected ?? distributeCount;
-  if (!newValues.settled && hasWinningVotes(newValues, userCount)) {
+  if (!newValues.settled && hasWinningVotes(newValues, distributeCount)) {
     console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
     await callSettlement(nounId, blockhash);
     await distributeMessage(endpoint, 'status', 'attemptingSettlement');
-  }
-
-  // Update connection count if not present
-  if (!newValues.totalConnected) {
-    try {
-      await updateCount(dbKey, distributeCount);
-    } catch(err) {
-      return { statusCode: 500, body: 'Error updating connection count.', message: err.stack };
-    }
   }
 
   // Return successfully
