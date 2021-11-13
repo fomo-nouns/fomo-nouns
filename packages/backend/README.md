@@ -7,9 +7,11 @@ This has the code and deployment infrastructure for the FOMO Nouns backend. This
 Dependencies:
  - AWS Account with Appropriate IAM Accesses
  - AWS CLI
- - Private Key for an Executor
+ - Alchemy API Key & Ethereum Account with ETH
 
 ## Setup
+
+First, ensure you've completed the global setup instructions in the root README.
 
 ### 1. Setup AWS CLI and SAM CLI
 
