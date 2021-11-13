@@ -24,10 +24,11 @@ const lambda = new Lambda({ apiVersion: '2015-03-31', region: AWS_REGION });
 
 
 /**
- * Update the DB counter
+ * Update the DB vote counts
  * 
- * @param {Object} data Data to update in the DB
- * @returns {Integer} totalConnection count in the DB
+ * @param {Object} dbKey Combined nounId||blockhash key used to track votes
+ * @param {String} voteType Vote label cast by the user, e.g. voteLike
+ * @returns {Object} Object with the newly updated data from the DB
  */
 async function updateVote(dbKey, voteType) {
   const updateParams = {
@@ -42,7 +43,6 @@ async function updateVote(dbKey, voteType) {
     let newValues = await ddb.update(updateParams).promise();
     return newValues.Attributes;
   } catch (err) {
-    // If totalConnected was already updated, ignore error, otherwise throw
     if (err.code !== "ConditionalCheckFailedException") {
       throw err;
     }

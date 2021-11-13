@@ -87,7 +87,7 @@ async function main() {
   const latestBlockNumber = await waitForNextBlock();
   console.log(`🚀 Block ${latestBlockNumber} just mined`);
 
-  console.log(`🗳 Casting votes...`);
+  console.log(`🗳  Casting votes...`);
   await castVotes(wsArray, newNounId, latestBlockNumber, votes);
   console.log(`✅ Voting complete`);
 
