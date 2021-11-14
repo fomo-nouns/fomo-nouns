@@ -6,7 +6,7 @@ task('settle-next', 'Attempts settlement for the next Noun')
   .setAction(async ({ settler, refund }, { network, ethers }) => {
     const [signer] = await ethers.getSigners();
     const provider = ethers.provider;
-    const socket = new ethers.providers.AlchemyWebSocketProvider(network.name); // new ethers.providers.AlchemyProvider.getWebSocketProvider(network.name, process.env.ALCHEMY_RINKEBY_KEY);
+    const socket = new ethers.providers.AlchemyWebSocketProvider(network.name);
     
     const settlerFactory = await ethers.getContractFactory('NounSettlement', signer);
     const settlerContract = settlerFactory.attach(settler);

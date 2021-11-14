@@ -8,35 +8,27 @@
 
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
-const SecretsManager = require('aws-sdk/clients/secretsmanager');
+const Lambda = require('aws-sdk/clients/lambda');
 
-const { AlchemyProvider } = require('@ethersproject/providers');
-const { Wallet } = require('ethers');
-
-const { NETWORK_NAME } = require('./ethereumConfig.js');
 const { hasWinningVotes } = require('./utils/scoreVotes.js');
-const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');
-const { submitSettlement } = require('./utils/settlement.js');
 
 const {
   AWS_REGION,
   SOCKET_TABLE_NAME,
-  VOTE_TABLE_NAME
+  VOTE_TABLE_NAME,
+  SETTLEMENT_FUNCTION_NAME
 } = process.env;
 
 const ddb = new DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: AWS_REGION });
-const smc = new SecretsManager({ region: AWS_REGION });
-
-// Keep as a 
-var signer;
-
+const lambda = new Lambda({ apiVersion: '2015-03-31', region: AWS_REGION });
 
 
 /**
- * Update the DB counter
+ * Update the DB vote counts
  * 
- * @param {Object} data Data to update in the DB
- * @returns {Integer} totalConnection count in the DB
+ * @param {Object} dbKey Combined nounId||blockhash key used to track votes
+ * @param {String} voteType Vote label cast by the user, e.g. voteLike
+ * @returns {Object} Object with the newly updated data from the DB
  */
 async function updateVote(dbKey, voteType) {
   const updateParams = {
@@ -51,7 +43,6 @@ async function updateVote(dbKey, voteType) {
     let newValues = await ddb.update(updateParams).promise();
     return newValues.Attributes;
   } catch (err) {
-    // If totalConnected was already updated, ignore error, otherwise throw
     if (err.code !== "ConditionalCheckFailedException") {
       throw err;
     }
@@ -64,7 +55,8 @@ async function updateVote(dbKey, voteType) {
  * 
  * @param {Object} data Data to distribute to all clients
  */
-async function distributeVote(endpoint, voteType) {
+async function distributeMessage(endpoint, type, value) {
+  let messageString = JSON.stringify({'type': type, 'value': value});
   let connectionCount = 0;
   let connectionData;
   
@@ -81,7 +73,7 @@ async function distributeVote(endpoint, voteType) {
   
   const postCalls = connectionData.Items.map(async ({ connectionId }) => {
     try {
-      await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: voteType }).promise();
+      await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: messageString }).promise();
       connectionCount++;
     } catch (e) {
       if (e.statusCode === 410) {
@@ -104,59 +96,23 @@ async function distributeVote(endpoint, voteType) {
 
 
 /**
- * Update the connection count in the DB 
+ * Invoke the Settlement Lambda function asynchronously
  * 
- * @param {Integer} count Count of connections
+ * @param {String} nounId ID number of the upcoming to-be-minted Noun
+ * @param {String} blockhash Blockhash of the most recently mined block
  */
-async function updateCount(dbKey, count) {
-  const updateParams = {
-    TableName: VOTE_TABLE_NAME,
-    Key: { nounIdWithBlockHash: dbKey },
-    ExpressionAttributeValues: { ':newCount': count },
-    ConditionExpression: 'attribute_not_exists(totalConnected)',
-    UpdateExpression: 'set totalConnected = :newCount'
+async function callSettlement(nounId, blockhash) {
+  var params = {
+    FunctionName: SETTLEMENT_FUNCTION_NAME,
+    InvokeArgs: JSON.stringify({'nounId': nounId, 'blockhash': blockhash})
   };
 
   try {
-    await ddb.update(updateParams).promise();
+    await lambda.invokeAsync(params).promise();
   } catch (err) {
-    // If totalConnected was already updated, ignore error, otherwise throw
-    if (err.code !== "ConditionalCheckFailedException") {
-      throw err;
-    }
+    throw err;
   }
 }
-
-
-
-/**
- * Launch settlement of the Nouns auction
- * 
- * @param {Integer} count Count of connections
- */
- async function launchSettlement(dbKey, signer, blockhash) {
-  const updateParams = {
-    TableName: VOTE_TABLE_NAME,
-    Key: { nounIdWithBlockHash: dbKey },
-    ExpressionAttributeValues: { ':status': true },
-    ConditionExpression: 'attribute_not_exists(settled)',
-    UpdateExpression: 'set settled = :status'
-  };
-
-  try {
-    // Lock the DB to prevent duplicate settlement
-    await ddb.update(updateParams).promise();
-
-    // Submit and wait for settlement transaction
-    await submitSettlement(signer, blockhash);
-  } catch (err) {
-    // If settlement was already attempted, ignore
-    if (err.code !== "ConditionalCheckFailedException") {
-      throw err;
-    }
-  }
-}
-
 
 
 /**
@@ -167,22 +123,14 @@ async function updateCount(dbKey, count) {
  *      - blockhash
  *      - vote
  */
-
 exports.handler = async event => {
   const body = JSON.parse(event.body);
   const context = event.requestContext;
 
-  const vote = body.vote;
-  const dbKey = `${body.nounId}||${body.blockhash}`;
-  const endpoint = `${context.domainName}/${context.stage}`;
+  const { vote, nounId, blockhash } = body;
 
-  // Setup the Ethereum signer if not yet created
-  if (!signer) {
-    let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys(smc);
-    
-    let provider = new AlchemyProvider(NETWORK_NAME, alchemyKey);
-    signer = new Wallet(executorPrivateKey, provider);
-  }
+  const dbKey = `${nounId}||${blockhash}`;
+  const endpoint = `${context.domainName}/${context.stage}`;
 
   // Update the DB with the latest vote
   let newValues;
@@ -195,29 +143,18 @@ exports.handler = async event => {
   // Distribute votes to clients
   let distributeCount;
   try {
-    distributeCount = await distributeVote(endpoint, vote);
+    distributeCount = await distributeMessage(endpoint, 'vote', vote);
   } catch(err) {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
 
   // Launch settlement if new values signal voting has won
-  let userCount = newValues.totalConnected ?? distributeCount;
-  if (!newValues.settled && hasWinningVotes(newValues, userCount)) {
-    try {
-      await launchSettlement(dbKey, signer, body.blockhash);
-    } catch(err) {
-      return { statusCode: 500, body: 'Error settling.', message: err.stack };
-    }
+  if (!newValues.settled && hasWinningVotes(newValues, distributeCount)) {
+    console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
+    await callSettlement(nounId, blockhash);
+    await distributeMessage(endpoint, 'status', 'attemptingSettlement');
   }
 
-  // Update connection count if not present
-  if (!newValues.totalConnected) {
-    try {
-      await updateCount(dbKey, distributeCount);
-    } catch(err) {
-      return { statusCode: 500, body: 'Error updating connection count.', message: err.stack };
-    }
-  }
-
+  // Return successfully
   return { statusCode: 200, body: 'Vote updated.' };
 };

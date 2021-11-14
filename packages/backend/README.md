@@ -7,9 +7,11 @@ This has the code and deployment infrastructure for the FOMO Nouns backend. This
 Dependencies:
  - AWS Account with Appropriate IAM Accesses
  - AWS CLI
- - Private Key for an Executor
+ - Alchemy API Key & Ethereum Account with ETH
 
 ## Setup
+
+First, ensure you've completed the global setup instructions in the root README.
 
 ### 1. Setup AWS CLI and SAM CLI
 
@@ -26,11 +28,13 @@ Run `key-management.sh` script to store your Alchemy API key and Ethereum Execut
 
 ### 3. Build and Deploy
 
-Run `sam build` in this folder to build the project, and then deploy using `sam deploy --stack-name nouns`. This should configure and deploy all the components necessary for the backend.
+Run `sam build` in this folder to build the project, and then deploy using `sam deploy --guided`. After walking through some configuration and naming options, this will deploy all the components needed for the backend. Any changes can be redeployed by using the stack name you chose using `sam deploy --stack-name <name_here>`.
 
 The final step of the deployment should show **Outputs** with one of the keys being **WebSocketURI**. Note down the value for this key that should look something like `wss://a1b2c3.execute-api.us-east-1.amazonaws.com/Prod`
 
 ### 4. Test
+
+**Basic Test**
 
 Using the `wss://` URL above, run the command `wscat -c wss://<URL>` to open a websocket connection. You should see something like:
 
@@ -53,6 +57,12 @@ You should see a response from the websocket echoing the vote:
 
 If so, you've successfully deployed the backend.
 
-## Architecture
+**Settlment Test**
 
+The full voting quorum and settlement can be tested using the integrat-test script using:
 
+```
+node integration-test/test-settle.js wss://<URL>
+```
+
+This script will simulate connecting four users via websocket who vote, and if quorum is achieved, settlement will be launched.

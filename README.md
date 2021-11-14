@@ -6,17 +6,30 @@ This is the repository for the FOMO Nouns project, passed as part of [Nouns DAO 
 
 ### Setup & Installation
 
-Install the NPM packages `npm install`
+You need five environment variables to run the FOMO Nouns setup:
+ - `FOMO_ALCHEMY_KEY`: API key for Alchemy used for interactions with the Ethereum network
+ - `ETHERSCAN_KEY`: API key for Etherscan used to verify the deployed contract
+ - `FOMO_EXECUTOR_KEY`: Private key for the Ethereum account that will execute the FOMO Nouns transactions
+ - `RINKEBY_DEPLOYER_KEY`: Private key for the Ethereum account that will deploy contracts on Rinkeby (or other test nets)
+ - `MAINNET_DEPLOYER_KEY`: Private key for the Ethereum account that will deploy contracts on Mainnet
 
-You need four environment variables to pull and sign data on Rinkeby and Mainnet. Two key are for Alchemy access, which is used as the monitoring and signer. The other two keys are private keys for the account you want to used for settlement. This account must have sufficient ETH to settle if a Shark is found.
+The private key accounts can all be the same if desired.
 
-You can include them in your `~/.zshrc` or `~/.bash_profile` like:
+The easiest way to use these is add them to your `~/.zshrc` or `~/.bash_profile` like:
 
 ```
-export ALCHEMY_KEY_RINKEBY="<API KEY HERE>"
-export ALCHEMY_KEY_MAINNET="<API KEY HERE>"
-export PRIVATE_KEY_RINKEBY="0x<PRIVATE KEY HERE>"
-export PRIVATE_KEY_MAINNET="0x<PRIVATE KEY HERE>"
+export FOMO_ALCHEMY_KEY="<API KEY HERE>"
+export ETHERSCAN_KEY="<API KEY HERE>"
+
+export FOMO_EXECUTOR_KEY="0x<PRIVATE KEY HERE>"
+export RINKEBY_DEPLOYER_KEY="0x<PRIVATE KEY HERE>"
+export MAINNET_DEPLOYER_KEY="0x<PRIVATE KEY HERE>"
 ```
 
-**[WARNING] DO NOT PUT YOUR PRIVATE KEYS IN THE SCRIPTS!**
+**[WARNING] DO NOT PUT YOUR PRIVATE KEYS ANYWHERE IN THE SCRIPTS!**
+
+### Architecture
+
+[Figma Diagram](https://www.figma.com/file/yU3JUsq2HENWYoj1EJUote/FOMO-Nouns?node-id=971%3A1119)
+
+![FOMO Nouns Architecture](https://user-images.githubusercontent.com/84751016/141606334-133336de-e3d7-412d-b612-01a1cce5ca9e.png)

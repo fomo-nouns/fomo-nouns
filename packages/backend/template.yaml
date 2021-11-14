@@ -25,6 +25,15 @@ Parameters:
     AllowedPattern: ^[A-Za-z_]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
+  SettlementLambdaName:
+    Type: String
+    Default: 'nouns-fomo-SettlementFunction'
+    Description: (Required) The name of the DynamoDB table to store Noun vote results for each possible Noun. Minimum 3 characters
+    MinLength: 3
+    MaxLength: 50
+    AllowedPattern: ^[A-Za-z_-]+$
+    ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
+
 Resources:
 
   #----------------------------------------#
@@ -195,17 +204,6 @@ Resources:
   #----------------------------------------#
   # Lambda: SendVote Websocket Handler
   #----------------------------------------#
-  EthersDepLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: ethers-js-dependency
-      Description: Ethers js depency
-      ContentUri: ethers-layer/
-      CompatibleRuntimes:
-        - nodejs14.x
-      RetentionPolicy: Retain
-    Metadata:
-      BuildMethod: nodejs14.x
   SendVoteFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -213,12 +211,11 @@ Resources:
       Handler: app.handler
       MemorySize: 256
       Runtime: nodejs14.x
-      Layers:
-        - !Ref EthersDepLayer
       Environment:
         Variables:
           SOCKET_TABLE_NAME: !Ref SocketTableName
           VOTE_TABLE_NAME: !Ref VoteTableName
+          SETTLEMENT_FUNCTION_NAME: !Ref SettlementLambdaName
       Policies:
       - DynamoDBCrudPolicy:
           TableName: !Ref SocketTableName
@@ -230,12 +227,12 @@ Resources:
           - 'execute-api:ManageConnections'
           Resource:
           - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${NounsWebSocket}/*'
+      - Statement:
         - Effect: Allow
           Action:
-          - 'secretsmanager:GetSecretValue'
+          - 'lambda:InvokeFunction'
           Resource:
-          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ExecutorPrivateKey-*'
-          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/AlchemyKey-*'
+          - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${SettlementLambdaName}'
   SendVotePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -244,6 +241,44 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref SendVoteFunction
       Principal: apigateway.amazonaws.com
+
+  #----------------------------------------#
+  # Lambda: Ethereum Settlement
+  #----------------------------------------#
+  EthersDepLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: ethers-js-dependency
+      Description: Ethers js depency
+      ContentUri: ethers-layer/
+      CompatibleRuntimes:
+        - nodejs14.x
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: nodejs14.x
+  SettlementFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: settlement/
+      Handler: app.handler
+      MemorySize: 256
+      Runtime: nodejs14.x
+      FunctionName: !Ref SettlementLambdaName
+      Layers:
+        - !Ref EthersDepLayer
+      Environment:
+        Variables:
+          VOTE_TABLE_NAME: !Ref VoteTableName
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: !Ref VoteTableName
+      - Statement:
+        - Effect: Allow
+          Action:
+          - 'secretsmanager:GetSecretValue'
+          Resource:
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ExecutorPrivateKey-*'
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/AlchemyKey-*'
 
 #----------------------------------------#
 # CloudFormation Outputs
@@ -268,6 +303,10 @@ Outputs:
   SendVoteFunctionArn:
     Description: "SendVote function ARN"
     Value: !GetAtt SendVoteFunction.Arn
+
+  SettlementFunctionArn:
+    Description: "Settlement function ARN"
+    Value: !GetAtt SettlementFunction.Arn
 
   WebSocketURI:
     Description: "The WSS Protocol URI to connect to"

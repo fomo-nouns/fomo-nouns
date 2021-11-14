@@ -2,9 +2,6 @@
  * Score the provided votes to determine if they're sufficient to win the
  * tally.
  * 
- * Object must include the number of connected users
- *  - totalConnected
- * 
  * Valid vote types
  *  - voteLove
  *  - voteLike
