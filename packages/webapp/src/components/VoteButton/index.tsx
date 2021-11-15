@@ -35,6 +35,7 @@ const VoteButton: React.FC<{emojiType: EMOJI_TYPE, client: any}> = props => {
 
   const activeVote = useAppSelector(state => state.vote.currentVote);
   const wsConnected = useAppSelector(state => state.websocket.connected);
+  const hash = useAppSelector(state => state.block.blockHash);
   const { emojiType, client } = props;
   const votes = 0;
   const dispatch = useAppDispatch();
@@ -43,7 +44,7 @@ const VoteButton: React.FC<{emojiType: EMOJI_TYPE, client: any}> = props => {
     if (wsConnected){
       const payload = getVoteString(emojiType);
       console.log(payload);
-      const voteMsg = {"action": "sendvote", "nounId": "0", "blockhash": 0, "vote": payload};
+      const voteMsg = {"action": "sendvote", "nounId": "0", "blockhash": hash, "vote": payload};
       client.send(JSON.stringify(voteMsg));
     }
   }
