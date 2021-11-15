@@ -10,6 +10,7 @@ import account from './state/slices/account';
 import application from './state/slices/application';
 import background from './state/slices/background';
 import vote from './state/slices/vote';
+import websocket from './state/slices/websocket';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
@@ -28,7 +29,8 @@ const createRootReducer = (history: History) =>
     account,
     application,
     background,
-    vote
+    vote,
+    websocket
   });
 
 export default function configureStore(preloadedState: any) {
