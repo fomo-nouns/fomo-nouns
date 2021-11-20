@@ -55,8 +55,8 @@ async function updateVote(dbKey, voteType) {
  * 
  * @param {Object} data Data to distribute to all clients
  */
-async function distributeMessage(endpoint, type, value) {
-  let messageString = JSON.stringify({'type': type, 'value': value});
+async function distributeMessage(endpoint, jsonMessage) {
+  let messageString = JSON.stringify(jsonMessage);
   let connectionCount = 0;
   let connectionData;
   
@@ -143,7 +143,7 @@ exports.handler = async event => {
   // Distribute votes to clients
   let distributeCount;
   try {
-    distributeCount = await distributeMessage(endpoint, 'vote', vote);
+    distributeCount = await distributeMessage(endpoint, {'blockhash': blockhash, 'vote': vote});
   } catch(err) {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
@@ -152,7 +152,7 @@ exports.handler = async event => {
   if (!newValues.settled && hasWinningVotes(newValues, distributeCount)) {
     console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
     await callSettlement(nounId, blockhash);
-    await distributeMessage(endpoint, 'status', 'attemptingSettlement');
+    await distributeMessage(endpoint, {'blockhash': blockhash, 'status': 'attemptingSettlement'});
   }
 
   // Return successfully
