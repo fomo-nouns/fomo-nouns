@@ -10,6 +10,7 @@ import account from './state/slices/account';
 import application from './state/slices/application';
 import background from './state/slices/background';
 import block from './state/slices/block';
+import noun from './state/slices/noun';
 import vote from './state/slices/vote';
 import websocket from './state/slices/websocket';
 import { connectRouter } from 'connected-react-router';
@@ -31,6 +32,7 @@ const createRootReducer = (history: History) =>
     application,
     background,
     block,
+    noun,
     vote,
     websocket,
   });
