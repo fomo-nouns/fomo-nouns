@@ -1,45 +1,65 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useEthers } from '@usedapp/core';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { setActiveAccount } from './state/slices/account';
-import block, { setBlockHash, setBlockNumber } from './state/slices/block';
+import { setBlockHash, setBlockNumber } from './state/slices/block';
 import classes from './App.module.css';
 import Noun  from './components/Noun';
 import Title from './components/Title/Title';
 import VoteBar from './components/VoteBar';
 import WalletConnectModal from './components/WalletConnectModal';
-import {w3cwebsocket as W3CWebSocket} from 'websocket';
+import {w3cwebsocket as W3CWebSocket } from 'websocket';
 import { setConnected } from './state/slices/websocket';
-import {provider} from './config';
+import { default as globalConfig, FOMO_WEBSOCKET, PROVIDER_KEY, provider} from './config';
+
+import { providers } from 'ethers';
+import { contract as AuctionContract } from './wrappers/nounsAuction';
+import { setNextNounId } from './state/slices/noun';
+
+// TODO: Make websocket connections more error proof (currently no resilience)
+const client = new W3CWebSocket(FOMO_WEBSOCKET);
+const ethersSocket = new providers.AlchemyWebSocketProvider(globalConfig.chainName, PROVIDER_KEY);
+
 
 function App() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const client = new W3CWebSocket(process.env.REACT_APP_WEB_SOCKET!);
   const { account } = useEthers();
   const dispatch = useAppDispatch();
   const useGreyBg = useAppSelector(state => state.background.useGreyBg);
 
-  const currentBlock = useAppSelector(state => state.block.blockNumber);
+  useEffect(() => { // Only initialize after mount
+    /** On Alchemy WS, reload block information */
+    ethersSocket.on('block', async (blockNumber) => {
+      console.log(`Updating blocknumber ${blockNumber}`);
+      dispatch(setBlockNumber(blockNumber));
 
-  const getAndSetBlockHash = useCallback( async (blockNumber) => {
-    const block = await provider.getBlock(blockNumber)
-    dispatch(setBlockHash(block.hash));
-  }, [dispatch]);
+      const block = await provider.getBlock(blockNumber);
+      console.log(`Updating blockhash ${block?.hash}`);
+      dispatch(setBlockHash(block?.hash));
 
-  useEffect(() => {
-    provider.once('block', (blockNumber) => {
-      if(currentBlock === undefined || blockNumber > currentBlock) {
-        dispatch(setBlockNumber(blockNumber));
-        dispatch(setBlockHash(blockNumber.hash));
-        getAndSetBlockHash(blockNumber);
-      }
+      const auction = await AuctionContract.auction();
+      const nextNounId = auction?.nounId+1;
+      console.log(`Updating nounId ${nextNounId}`);
+      dispatch(setNextNounId(nextNounId));
     });
+
+    /** On Vote WS, update votes or settlement */
     client.onopen = () => {
+      console.log('FOMO Web Socket OPEN.');
       dispatch(setConnected(true));
-    }
     dispatch(setActiveAccount(account));
-  }, [account, dispatch, client, currentBlock, getAndSetBlockHash]);
+    };
+    client.onmessage = function(msg) {
+      console.log(msg);
+    };
+    client.onclose = () => {
+      console.log('FOMO Web Socket CLOSED.');
+    };
+  }, []);
+
+
+
 
   return (
     <div className={`${classes.App} ${useGreyBg ? classes.bgGrey : classes.bgBeige}`}>
