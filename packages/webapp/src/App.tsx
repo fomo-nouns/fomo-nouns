@@ -39,7 +39,7 @@ function App() {
       dispatch(setBlockHash(block?.hash));
 
       const auction = await AuctionContract.auction();
-      const nextNounId = auction?.nounId+1;
+      const nextNounId = parseInt(auction?.nounId)+1;
       console.log(`Updating nounId ${nextNounId}`);
       dispatch(setNextNounId(nextNounId));
     });
