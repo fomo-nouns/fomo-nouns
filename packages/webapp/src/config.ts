@@ -5,18 +5,24 @@ export const LOCAL_CHAIN_ID = 31337;
 type SupportedChains = ChainId.Rinkeby | ChainId.Mainnet | typeof LOCAL_CHAIN_ID;
 
 /** Select the Chain to Use */
-export const CHAIN_ID: SupportedChains = ChainId.Rinkeby; // process.env.REACT_APP_CHAIN_ID
-export const CHAIN_NAME = 'rinkeby';
-export const PROVIDER_NAME = 'alchemy'; // 'infura'
-export const PROVIDER_KEY = process.env.FOMO_ALCHEMY_KEY; // process.env.REACT_APP_INFURA_PROJECT_ID
-export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY ?? '';
-// process.env.REACT_APP_MAINNET_JSONRPC  process.env.REACT_APP_MAINNET_WSRPC 
+export const CHAIN_NAME = process.env.REACT_APP_CHAIN_NAME!;
+export const PROVIDER_NAME = process.env.REACT_APP_PROVIDER_NAME!;
+export const FOMO_WEBSOCKET = process.env.REACT_APP_WEB_SOCKET!;
+export const PROVIDER_KEY = process.env.REACT_APP_PROVIDER_KEY!;
+export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY!;
 /*--------------------------*/
 
+// TODO: Clean this up
+export const CHAIN_ID: SupportedChains =
+    CHAIN_NAME === 'rinkeby' ? ChainId.Rinkeby
+  : CHAIN_NAME === 'mainnet' ? ChainId.Mainnet
+  : CHAIN_NAME === 'local' ? LOCAL_CHAIN_ID : -1;
+
 const createProviderURL = (chainName: string) => {
-  if (PROVIDER_NAME === 'alchemy') return `eth-${chainName}.alchemyapi.io/v2`;
-  else return `${chainName}.infura.io/v3`;
+  if (PROVIDER_NAME === 'alchemy') return `eth-${chainName}.alchemyapi.io/v2/${PROVIDER_KEY}`;
+  else return `${chainName}.infura.io/v3/${PROVIDER_KEY}`;
 }
+
 
 interface Config {
   chainName: string;
@@ -77,4 +83,4 @@ const config: Record<SupportedChains, Config> = {
 
 export default config[CHAIN_ID];
 
-export const provider: providers.BaseProvider = getDefaultProvider(CHAIN_NAME);
+export const provider: providers.BaseProvider = getDefaultProvider(config[CHAIN_ID].jsonRpcUri);
