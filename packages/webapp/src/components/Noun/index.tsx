@@ -2,11 +2,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import loadingNoun from '../../assets/loading-skull-noun.gif';
 import Image from 'react-bootstrap/Image';
-import { utils } from 'ethers';
 import { contract as SeederContract } from '../../wrappers/nounsSeeder';
 import { contract as DesciptorContract } from '../../wrappers/nounsDescriptor';
-import { contract as AuctionContract } from '../../wrappers/nounsAuction';
-import { provider } from '../../config';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveBackground } from '../../state/slices/background';
 import classes from './Noun.module.css';
@@ -19,20 +16,15 @@ const Noun: React.FC<{ alt: string }> = props => {
   const dispatch = useAppDispatch();
   const [img, setImg] = useState('');
 
-  async function getNextNounId() {
-    const res =  await AuctionContract.auction();
-    const nounNumber = utils.bigNumberify(res.nounId).toNumber();
-    return nounNumber + 1;
-    
-  }
   const blockNum = useAppSelector(state => state.block.blockNumber);
+  const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
+
   const generateNoun = useCallback( async() => {
-    const nounId = await getNextNounId();
-    const isNounder = nounId % 10 === 0;
-    const nextNounId = isNounder ? nounId + 1 : nounId;
+    const isNounder = nextNounId % 10 === 0;
+    const adjNextNounId = isNounder ? nextNounId + 1 : nextNounId;
     
     const seed = await SeederContract.generateSeed(
-      nextNounId,
+      adjNextNounId,
       DesciptorContract.address,
       {
         blockTag: 'pending'
