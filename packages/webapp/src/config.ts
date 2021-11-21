@@ -1,12 +1,26 @@
 import { ChainId } from '@usedapp/core';
 import {providers, getDefaultProvider} from 'ethers';
 
+export const LOCAL_CHAIN_ID = 31337;
+type SupportedChains = ChainId.Rinkeby | ChainId.Mainnet | typeof LOCAL_CHAIN_ID;
+
 /** Select the Chain to Use */
-const USE_CHAIN_NAME = 'rinkeby';
-const USE_CHAIN_ID = ChainId.Rinkeby;
+export const CHAIN_ID: SupportedChains = ChainId.Rinkeby; // process.env.REACT_APP_CHAIN_ID
+export const CHAIN_NAME = 'rinkeby';
+export const PROVIDER_NAME = 'alchemy'; // 'infura'
+export const PROVIDER_KEY = process.env.FOMO_ALCHEMY_KEY; // process.env.REACT_APP_INFURA_PROJECT_ID
+export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY ?? '';
+// process.env.REACT_APP_MAINNET_JSONRPC  process.env.REACT_APP_MAINNET_WSRPC 
 /*--------------------------*/
 
+const createProviderURL = (chainName: string) => {
+  if (PROVIDER_NAME === 'alchemy') return `eth-${chainName}.alchemyapi.io/v2`;
+  else return `${chainName}.infura.io/v3`;
+}
+
 interface Config {
+  chainName: string;
+  chainId: number;
   auctionProxyAddress: string;
   nounsDescriptor: string;
   nounsSeeder: string;
@@ -18,22 +32,12 @@ interface Config {
   enableHistory: boolean;
 }
 
-type SupportedChains = ChainId.Rinkeby | ChainId.Mainnet | typeof LOCAL_CHAIN_ID;
-
-export const LOCAL_CHAIN_ID = 31337;
-
-export const CHAIN_ID: SupportedChains = parseInt(process.env.REACT_APP_CHAIN_ID ?? '4');
-
-export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY ?? '';
-
 const config: Record<SupportedChains, Config> = {
   [ChainId.Rinkeby]: {
-    jsonRpcUri:
-      process.env.REACT_APP_RINKEBY_JSONRPC ||
-      `https://rinkeby.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`,
-    wsRpcUri:
-      process.env.REACT_APP_RINKEBY_WSRPC ||
-      `wss://rinkeby.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`,
+    chainName: 'rinkeby',
+    chainId: ChainId.Rinkeby,    
+    jsonRpcUri: `https://${createProviderURL('rinkeby')}`,
+    wsRpcUri: `wss://${createProviderURL('rinkeby')}`,
     auctionProxyAddress: '0x7cb0384b923280269b3BD85f0a7fEaB776588382',
     nounsDescriptor: '0x53cB482c73655D2287AE3282AD1395F82e6a402F',
     nounsSeeder : '0xA98A1b1Cc4f5746A753167BAf8e0C26AcBe42F2E',
@@ -43,21 +47,21 @@ const config: Record<SupportedChains, Config> = {
     enableHistory: process.env.REACT_APP_ENABLE_HISTORY === 'true' || false,
   },
   [ChainId.Mainnet]: {
+    chainName: 'mainnet',
+    chainId: ChainId.Mainnet,
     auctionProxyAddress: '0x830BD73E4184ceF73443C15111a1DF14e495C706',
     nounsDescriptor: '0x0Cfdb3Ba1694c2bb2CFACB0339ad7b1Ae5932B63',
     nounsSeeder: '0xCC8a0FB5ab3C7132c1b2A0109142Fb112c4Ce515',
     tokenAddress: '0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03',
     nounsDaoProxyAddress: '0x6f3E6272A167e8AcCb32072d08E0957F9c79223d',
     nounsDaoExecutorAddress: '0x0BC3807Ec262cB779b38D65b38158acC3bfedE10',
-    jsonRpcUri:
-      process.env.REACT_APP_MAINNET_JSONRPC ||
-      `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`,
-    wsRpcUri:
-      process.env.REACT_APP_MAINNET_WSRPC ||
-      `wss://mainnet.infura.io/ws/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`,
+    jsonRpcUri: `https://${createProviderURL('mainnet')}`,
+    wsRpcUri: `wss://${createProviderURL('mainnet')}`,
     enableHistory: process.env.REACT_APP_ENABLE_HISTORY === 'true' || false,
   },
   [LOCAL_CHAIN_ID]: {
+    chainName: 'local',
+    chainId: LOCAL_CHAIN_ID,
     auctionProxyAddress: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
     tokenAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
     // Temporarily set this to _any_ address until local deployment is configured
@@ -71,6 +75,6 @@ const config: Record<SupportedChains, Config> = {
   },
 };
 
-export default config[USE_CHAIN_ID];
+export default config[CHAIN_ID];
 
-export const provider: providers.BaseProvider = getDefaultProvider(USE_CHAIN_NAME);
+export const provider: providers.BaseProvider = getDefaultProvider(CHAIN_NAME);

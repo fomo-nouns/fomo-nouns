@@ -20,6 +20,7 @@ import { routerMiddleware } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import dotenv from 'dotenv';
+import { default as globalConfig } from './config';
 
 dotenv.config();
 
@@ -58,9 +59,9 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 console.log(process.env.REACT_APP_MAINNET_JSONRPC);
 const config: Config = {
-  readOnlyChainId: ChainId.Mainnet,
+  readOnlyChainId: globalConfig.chainId,
   readOnlyUrls: {
-    [ChainId.Mainnet]: process.env.REACT_APP_MAINNET_JSONRPC || `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_PROJECT_ID}`
+    [globalConfig.chainId]: globalConfig.jsonRpcUri
   }
 };
 
