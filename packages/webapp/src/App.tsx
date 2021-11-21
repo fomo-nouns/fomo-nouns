@@ -48,7 +48,7 @@ function App() {
     client.onopen = () => {
       console.log('FOMO Web Socket OPEN.');
       dispatch(setConnected(true));
-    dispatch(setActiveAccount(account));
+      dispatch(setActiveAccount(account));
     };
     client.onmessage = function(msg) {
       console.log(msg);
@@ -64,7 +64,7 @@ function App() {
   return (
     <div className={`${classes.App} ${useGreyBg ? classes.bgGrey : classes.bgBeige}`}>
       <WalletConnectModal/>
-      <Title content={"Noun, Noun Crystal Ball\nWho's the Nounish of them all?"}/>
+      <Title content={"FOMO Nouns\nShould we mint this Noun?"}/>
       <Noun alt={"Crystal Ball Noun"}/>
       <VoteBar client={client}/>
     </div>

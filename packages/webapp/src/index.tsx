@@ -57,7 +57,6 @@ const store = configureStore({});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-console.log(process.env.REACT_APP_MAINNET_JSONRPC);
 const config: Config = {
   readOnlyChainId: globalConfig.chainId,
   readOnlyUrls: {
