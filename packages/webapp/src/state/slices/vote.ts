@@ -24,9 +24,13 @@ export const voteSlice = createSlice({
     setCurrentVote: (state, action: PayloadAction<VOTE_OPTIONS | undefined | null>) => {
       state.currentVote = action.payload === null ? undefined : action.payload;
     },
+    incrementCount: (state, action: PayloadAction<VOTE_OPTIONS>) => {
+      state.voteCounts[action.payload]++;
+    },
+    resetVotes: (state) => initialState
   },
 });
 
-export const { setCurrentVote } = voteSlice.actions;
+export const { setCurrentVote, incrementCount, resetVotes } = voteSlice.actions;
 
 export default voteSlice.reducer;
