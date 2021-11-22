@@ -1,7 +1,8 @@
-import VoteButton, { EMOJI_TYPE } from '../VoteButton';
+import VoteButton from '../VoteButton';
+import { VOTE_OPTIONS } from '../../state/slices/vote';
 import { useEffect } from 'react';
 import classes from './VoteBar.module.css';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppSelector } from '../../hooks';
 
 const VoteBar:React.FC<{ client: any }> = (props) => {
   const {client} = props;
@@ -10,18 +11,18 @@ const VoteBar:React.FC<{ client: any }> = (props) => {
     console.log("vote changed to: ", activeVote);
   }, [activeVote]);
 
-  const emojiVoteOpts = (
+  const voteOpts = (
       <>
-      <VoteButton emojiType={EMOJI_TYPE.hate} client={client}/>
-      <VoteButton emojiType={EMOJI_TYPE.dislike} client={client}/>
-      <VoteButton emojiType={EMOJI_TYPE.like} client={client}/>
-      <VoteButton emojiType={EMOJI_TYPE.love} client={client}/>
+      <VoteButton voteType={VOTE_OPTIONS.voteHate} client={client}/>
+      <VoteButton voteType={VOTE_OPTIONS.voteDislike} client={client}/>
+      <VoteButton voteType={VOTE_OPTIONS.voteLike} client={client}/>
+      <VoteButton voteType={VOTE_OPTIONS.voteLove} client={client}/>
       </>
   )
 
   return(
     <div className={classes.VoteBar}>
-      {emojiVoteOpts}  
+      {voteOpts}  
     </div>
   );
     

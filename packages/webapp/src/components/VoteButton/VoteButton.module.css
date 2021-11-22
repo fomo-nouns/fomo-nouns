@@ -1,4 +1,4 @@
-.emojiButton{
+.voteButton{
     cursor: pointer;
     background-color: white;
     border: 1px solid black;
@@ -10,7 +10,7 @@
     padding-left: 2vw;
     padding-right: 2vw;
 }
-.emojiButton:hover{
+.voteButton:hover{
     background: rgba(0, 0, 0, 0.15);
 }
 
@@ -21,7 +21,7 @@
     font-weight: bold;
 }
 
-.emojiText{
+.voteEmojiText{
     margin-top: 1vh;
     margin-bottom: 1vh;
     font-size: 32px;
