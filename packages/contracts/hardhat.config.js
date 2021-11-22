@@ -3,7 +3,13 @@ require("@nomiclabs/hardhat-etherscan");
 
 require('./tasks');
 
-const { FOMO_ALCHEMY_KEY, FOMO_EXECUTOR_KEY, ETHERSCAN_KEY } = process.env;
+const {
+  FOMO_ALCHEMY_KEY,
+  FOMO_EXECUTOR_KEY,
+  ETHERSCAN_KEY,
+  RINKEBY_DEPLOYER_KEY,
+  MAINNET_DEPLOYER_KEY
+} = process.env;
 
 /**
  * Print List of Accounts for the Network
