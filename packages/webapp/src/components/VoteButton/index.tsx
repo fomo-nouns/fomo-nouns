@@ -25,10 +25,13 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {
   const wsConnected = useAppSelector(state => state.websocket.connected);
   const hash = useAppSelector(state => state.block.blockHash);
   const nextNounId = useAppSelector(state => state.noun.nextNounId);
+  const voteCounts = useAppSelector(state => state.vote.voteCounts);
+
   const { voteType, client } = props;
-  const votes = 0;
   const dispatch = useAppDispatch();
   const changeVote = () => {
+    if (activeVote) return;
+    
     dispatch(setCurrentVote(voteType));
     if (wsConnected){
       console.log(voteType);
@@ -40,7 +43,7 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {
   return (
       <button className={activeVote === voteType ? clsx(classes.voteButton, classes.selected) : classes.voteButton} onClick={changeVote}>
         <p className={classes.voteEmojiText}> {voteToEmoji[voteType]} </p>
-        <p className={classes.voteText}> {votes} </p>
+        <p className={classes.voteText}> {voteCounts[voteType]} </p>
       </button>
   );
 };
