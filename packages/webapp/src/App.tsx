@@ -15,6 +15,7 @@ import { default as globalConfig, FOMO_WEBSOCKET, PROVIDER_KEY, provider} from '
 import { providers } from 'ethers';
 import { contract as AuctionContract } from './wrappers/nounsAuction';
 import { setNextNounId } from './state/slices/noun';
+import { incrementCount, resetVotes } from './state/slices/vote';
 
 // TODO: Make websocket connections more error proof (currently no resilience)
 const client = new W3CWebSocket(FOMO_WEBSOCKET);
@@ -27,6 +28,7 @@ function App() {
   const { account } = useEthers();
   const dispatch = useAppDispatch();
   const useGreyBg = useAppSelector(state => state.background.useGreyBg);
+  const blockhash = useAppSelector(state => state.block.blockHash);
 
   useEffect(() => { // Only initialize after mount
     /** On Alchemy WS, reload block information */
@@ -42,23 +44,34 @@ function App() {
       const nextNounId = parseInt(auction?.nounId)+1;
       console.log(`Updating nounId ${nextNounId}`);
       dispatch(setNextNounId(nextNounId));
-    });
 
-    /** On Vote WS, update votes or settlement */
-    client.onopen = () => {
-      console.log('FOMO Web Socket OPEN.');
-      dispatch(setConnected(true));
-      dispatch(setActiveAccount(account));
-    };
-    client.onmessage = function(msg) {
-      console.log(msg);
-    };
-    client.onclose = () => {
-      console.log('FOMO Web Socket CLOSED.');
-    };
+      dispatch(resetVotes());
+    });
   }, []);
 
+  /** On Vote WS, update votes or settlement */
+  client.onopen = () => {
+    console.log('FOMO Web Socket OPEN.');
+    dispatch(setConnected(true));
+    dispatch(setActiveAccount(account));
+  };
+  
+  client.onmessage = function(msg) {
+    console.log(msg);
+    try {      
+      const data = JSON.parse(String(msg.data));
+      if ('vote' in data && blockhash === data.blockhash) {
+        dispatch(incrementCount(data.vote));
+      }
+    } catch(err) {
+      console.error('Erroring parsing FOMO websocket message');
+      console.error(err);
+    }
+  };
 
+  client.onclose = () => {
+    console.log('FOMO Web Socket CLOSED.');
+  };
 
 
   return (

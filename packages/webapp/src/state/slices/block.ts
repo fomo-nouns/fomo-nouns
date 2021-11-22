@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface BlockState {
   blockNumber?: number;
-  blockHash?: string
+  blockHash: string;
 }
 
 const initialState: BlockState = {
@@ -18,7 +18,7 @@ export const blockSlice = createSlice({
       state.blockNumber = action.payload;
     },
     setBlockHash: (state, action: PayloadAction<string | null | undefined>) => {
-      state.blockHash = action.payload === null ? undefined : action.payload;
+      state.blockHash = action.payload ?? "";
     },
   },
 });
