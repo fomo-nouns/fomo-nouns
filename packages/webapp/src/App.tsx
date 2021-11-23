@@ -16,6 +16,8 @@ import { providers } from 'ethers';
 import { contract as AuctionContract } from './wrappers/nounsAuction';
 import { setNextNounId } from './state/slices/noun';
 import { incrementCount, resetVotes } from './state/slices/vote';
+import VoteProgressBar from './components/VoteProgressBar';
+import SideContent from './components/SideContent/SideContent';
 
 // TODO: Make websocket connections more error proof (currently no resilience)
 const client = new W3CWebSocket(FOMO_WEBSOCKET);
@@ -41,13 +43,13 @@ function App() {
       dispatch(setBlockHash(block?.hash));
 
       const auction = await AuctionContract.auction();
-      const nextNounId = parseInt(auction?.nounId)+1;
+      const nextNounId = parseInt(auction?.nounId) + 1;
       console.log(`Updating nounId ${nextNounId}`);
       dispatch(setNextNounId(nextNounId));
 
       dispatch(resetVotes());
     });
-  }, []);
+  }, [dispatch]);
 
   /** On Vote WS, update votes or settlement */
   client.onopen = () => {
@@ -78,6 +80,8 @@ function App() {
     <div className={`${classes.App} ${useGreyBg ? classes.bgGrey : classes.bgBeige}`}>
       <WalletConnectModal/>
       <Title content={"FOMO Nouns\nShould we mint this Noun?"}/>
+      <VoteProgressBar progress={60}/>
+      <SideContent content={"How to play copy"}/>
       <Noun alt={"Crystal Ball Noun"}/>
       <VoteBar client={client}/>
     </div>
