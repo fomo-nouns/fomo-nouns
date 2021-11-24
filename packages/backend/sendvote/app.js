@@ -56,8 +56,6 @@ async function updateVote(dbKey, voteType) {
  * @param {Object} data Data to distribute to all clients
  */
 async function distributeMessage(endpoint, jsonMessage) {
-  let messageString = JSON.stringify(jsonMessage);
-  let connectionCount = 0;
   let connectionData;
   
   try {
@@ -70,11 +68,13 @@ async function distributeMessage(endpoint, jsonMessage) {
     apiVersion: '2018-11-29',
     endpoint: endpoint
   });
+
+  const connectionCount = connectionData.Items.length;
+  const messageString = JSON.stringify({...jsonMessage, connections: connectionCount});
   
   const postCalls = connectionData.Items.map(async ({ connectionId }) => {
     try {
       await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: messageString }).promise();
-      connectionCount++;
     } catch (e) {
       if (e.statusCode === 410) {
         console.log(`Found stale connection, deleting ${connectionId}`);
@@ -91,6 +91,7 @@ async function distributeMessage(endpoint, jsonMessage) {
     throw e;
   }
 
+  // Purposely ignores dropped connections to ensure alignment of websocket messages with settlement
   return connectionCount;
 }
 
