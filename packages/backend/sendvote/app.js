@@ -10,7 +10,7 @@ const DynamoDB = require('aws-sdk/clients/dynamodb');
 const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi');
 const Lambda = require('aws-sdk/clients/lambda');
 
-const { hasWinningVotes } = require('./utils/scoreVotes.js');
+const { scoreVotes, hasWinningScore } = require('./utils/scoreVotes.js');
 
 const {
   AWS_REGION,
@@ -49,30 +49,29 @@ async function updateVote(dbKey, voteType) {
   }
 }
 
+async function retrieveConnections() {
+  try {
+    let connectionData = await ddb.scan({ TableName: SOCKET_TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
+    return connectionData.Items;
+  } catch (e) {
+    throw e;
+  }
+}
 
 /**
  * Distribute the data to each client
  * 
  * @param {Object} data Data to distribute to all clients
  */
-async function distributeMessage(endpoint, jsonMessage) {
-  let connectionData;
-  
-  try {
-    connectionData = await ddb.scan({ TableName: SOCKET_TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
-  } catch (e) {
-    throw e;
-  }
+async function distributeMessage(connections, endpoint, jsonMessage) {
+  const messageString = JSON.stringify(jsonMessage);
   
   const apigwManagementApi = new ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
     endpoint: endpoint
   });
-
-  const connectionCount = connectionData.Items.length;
-  const messageString = JSON.stringify({...jsonMessage, connections: connectionCount});
   
-  const postCalls = connectionData.Items.map(async ({ connectionId }) => {
+  const postCalls = connections.map(async ({ connectionId }) => {
     try {
       await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: messageString }).promise();
     } catch (e) {
@@ -90,9 +89,6 @@ async function distributeMessage(endpoint, jsonMessage) {
   } catch (e) {
     throw e;
   }
-
-  // Purposely ignores dropped connections to ensure alignment of websocket messages with settlement
-  return connectionCount;
 }
 
 
@@ -134,26 +130,37 @@ exports.handler = async event => {
   const endpoint = `${context.domainName}/${context.stage}`;
 
   // Update the DB with the latest vote
-  let newValues;
+  let newVotes;
   try {
-    newValues = await updateVote(dbKey, vote);
+    newVotes = await updateVote(dbKey, vote);
   } catch(err) {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
   }
 
-  // Distribute votes to clients
-  let distributeCount;
-  try {
-    distributeCount = await distributeMessage(endpoint, {'blockhash': blockhash, 'vote': vote});
-  } catch(err) {
-    return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
-  }
+  // Retrieve connected useres and score the votes
+  let connections = await retrieveConnections();
+  let voteScore = scoreVotes(newVotes, connections.length);
 
-  // Launch settlement if new values signal voting has won
-  if (!newValues.settled && hasWinningVotes(newValues, distributeCount)) {
+  let msg = {
+    'blockhash': blockhash,
+    'vote': vote,
+    'score': voteScore,
+    'connections': connections.length,
+    'settlementAttempted': false
+  };
+
+  // Launch settlement and upate message if votes are sufficient
+  if (!newVotes.settled && hasWinningScore(voteScore)) {
     console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
     await callSettlement(nounId, blockhash);
-    await distributeMessage(endpoint, {'blockhash': blockhash, 'status': 'attemptingSettlement'});
+    msg['settlementAttempted'] = true;
+  }
+
+  // Distribute votes to clients
+  try {
+    await distributeMessage(connections, endpoint, msg);
+  } catch(err) {
+    return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
 
   // Return successfully
