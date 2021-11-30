@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { hasWinningVotes } = require('../utils/scoreVotes');
+const { scoreVotes, hasWinningScore, hasWinningVotes } = require('../utils/scoreVotes');
 
 
 describe('hasWinningVotes Test', async function() {
@@ -53,5 +53,49 @@ describe('hasWinningVotes Test', async function() {
       let result = hasWinningVotes({voteLike: 58, voteLove: 2}, 100); // 61 total
       expect(result).to.be.true;
     });
-  });  
+  });
+});
+
+describe('hasWinningVotes Test', async function() {
+  it('Should handle empty votes', async function() {
+    let result = scoreVotes({}, 0);
+    expect(result).to.equal(0);
+  });
+
+  it('Should ignore votes with no count', async function() {
+    let result = scoreVotes({voteLike: 4, voteHate: 3}, 0);
+    expect(result).to.equal(0);
+  });
+
+  it('Should calculate score properly', async function() {
+    let result = scoreVotes({voteLove: 2, voteLike: 4, voteDislike: 4, voteHate: 3}, 13);
+    let score = (2*1.5 + 4 - 3) / 13;
+    expect(result).to.equal(score / 0.6);
+  });
+});
+
+describe('hasWinningScore Test', async function() {
+  it('Should return false if below threshold', async function() {
+    let result1 = hasWinningScore(1);
+    expect(result1).to.equal(false);
+
+    let result2 = hasWinningScore(0.63);
+    expect(result2).to.equal(false);
+
+    let result3 = hasWinningScore(-0.2);
+    expect(result3).to.equal(false);
+  });
+
+  it('Should return true if above threshold', async function() {
+    let result1 = hasWinningScore(1.0001);
+    expect(result1).to.equal(true);
+
+    let result2 = hasWinningScore(1.4);
+    expect(result2).to.equal(true);
+  });
+
+  it('Should return false for null values', async function() {
+    let result = hasWinningScore(null);
+    expect(result).to.equal(false);
+  });
 });
