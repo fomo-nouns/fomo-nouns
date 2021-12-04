@@ -14,6 +14,7 @@ import block from './state/slices/block';
 import noun from './state/slices/noun';
 import vote from './state/slices/vote';
 import score from './state/slices/score';
+import settle from './state/slices/settle';
 import websocket from './state/slices/websocket';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
@@ -38,6 +39,7 @@ const createRootReducer = (history: History) =>
     block,
     noun,
     score,
+    settle,
     vote,
     websocket,
   });

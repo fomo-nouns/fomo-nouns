@@ -1,27 +1,28 @@
 import { useEffect } from 'react';
 import { useEthers } from '@usedapp/core';
 import { useAppDispatch, useAppSelector } from './hooks';
-import { setActiveAccount } from './state/slices/account';
-import { setBlockHash, setBlockNumber } from './state/slices/block';
 import classes from './App.module.css';
 import Noun  from './components/Noun';
+import SideContent from './components/SideContent';
+import Timer from './components/Timer';
 import Title from './components/Title';
 import VoteBar from './components/VoteBar';
+import VoteProgressBar from './components/VoteProgressBar';
 import WalletConnectModal from './components/WalletConnectModal';
 import {w3cwebsocket as W3CWebSocket } from 'websocket';
-import { setConnected } from './state/slices/websocket';
 import { default as globalConfig, FOMO_WEBSOCKET, PROVIDER_KEY, provider} from './config';
 
 import { providers } from 'ethers';
 import { contract as AuctionContract } from './wrappers/nounsAuction';
-import { setNextNounId } from './state/slices/noun';
-import { incrementCount, resetVotes } from './state/slices/vote';
-import { setScore, resetScore } from './state/slices/score';
-import VoteProgressBar from './components/VoteProgressBar';
-import SideContent from './components/SideContent';
-import Timer from './components/Timer';
-import dayjs from 'dayjs';
 import { setActiveAuction, setAuctionEnd } from './state/slices/auction';
+import { setActiveAccount } from './state/slices/account';
+import { setBlockHash, setBlockNumber } from './state/slices/block';
+import { setNextNounId } from './state/slices/noun';
+import { setScore, resetScore } from './state/slices/score';
+import { incrementCount, resetVotes } from './state/slices/vote';
+import { setConnected } from './state/slices/websocket';
+import dayjs from 'dayjs';
+import { resetAttemptedSettle, setAttemptedSettle } from './state/slices/settle';
 
 // TODO: Make websocket connections more error proof (currently no resilience)
 const client = new W3CWebSocket(FOMO_WEBSOCKET);
@@ -57,7 +58,19 @@ function App() {
       dispatch(setActiveAuction(activeAuction));
       dispatch(resetVotes());
       dispatch(resetScore());
+      dispatch(resetAttemptedSettle());
     });
+
+    const settledFilter = {
+      address: AuctionContract.address,
+      topics: [
+        '0xc9f72b276a388619c6d185d146697036241880c36654b1a3ffdad07c24038d99'
+      ]
+    };
+
+    ethersSocket.on(settledFilter, (event) => {
+      console.log(event);
+    })
   }, [dispatch]);
 
   /** On Vote WS, update votes or settlement */
@@ -76,6 +89,9 @@ function App() {
       }
       if ('score' in data && blockhash === data.blockhash) {
         dispatch(setScore(data.score));
+      }
+      if (data.settlementAttempted && blockhash === data.blockhash) {
+        dispatch(setAttemptedSettle(true));
       }
     } catch(err) {
       console.error('Erroring parsing FOMO websocket message');

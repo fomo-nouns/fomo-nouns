@@ -1,6 +1,5 @@
 import React from "react";
 import { useAppSelector } from "../../hooks";
-import auction from "../../state/slices/auction";
 import classes from './SideContent.module.css';
 
 
