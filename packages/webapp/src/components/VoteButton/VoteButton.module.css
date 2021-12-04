@@ -10,8 +10,8 @@
     padding-left: 2vw;
     padding-right: 2vw;
 }
-.voteButton:hover{
-    background: rgba(0, 0, 0, 0.15);
+.voteButton:enabled:hover{
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .voteText{

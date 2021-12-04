@@ -21,6 +21,7 @@ const voteToEmoji: Record<VOTE_OPTIONS, string> = {
 };
 
 const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {
+  const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const activeVote = useAppSelector(state => state.vote.currentVote);
   const wsConnected = useAppSelector(state => state.websocket.connected);
   const hash = useAppSelector(state => state.block.blockHash);
@@ -41,7 +42,8 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {
   }
 
   return (
-      <button className={activeVote === voteType ? clsx(classes.voteButton, classes.selected) : classes.voteButton} onClick={changeVote}>
+      <button className={activeVote === voteType ? clsx(classes.voteButton, classes.selected) : classes.voteButton} onClick={changeVote}
+      disabled={activeAuction}>
         <p className={classes.voteEmojiText}> {voteToEmoji[voteType]} </p>
         <p className={classes.voteText}> {voteCounts[voteType]} </p>
       </button>
