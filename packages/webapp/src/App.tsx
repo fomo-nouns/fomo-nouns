@@ -69,6 +69,7 @@ function App() {
     };
 
     ethersSocket.on(settledFilter, (event) => {
+      //TODO: Track if we settled it
       console.log(event);
     })
   }, [dispatch]);
