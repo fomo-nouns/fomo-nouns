@@ -1,0 +1,20 @@
+.Wrapper {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: center;
+    background-color: white;
+    border-radius: 18px;
+    border: 1px solid black;
+    align-self: center;
+    width: 60%;
+    height: max-content;
+    padding: 10px 20px;
+    white-space: pre-line;
+    max-width: 60%;
+    min-width: min-content;
+    word-wrap: break-word;
+}
+.Copy{
+    font-family: Roboto Mono;
+    font-size: 18px;
+}

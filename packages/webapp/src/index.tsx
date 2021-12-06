@@ -8,10 +8,13 @@ import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import account from './state/slices/account';
 import application from './state/slices/application';
+import auction from './state/slices/auction';
 import background from './state/slices/background';
 import block from './state/slices/block';
 import noun from './state/slices/noun';
 import vote from './state/slices/vote';
+import score from './state/slices/score';
+import settle from './state/slices/settle';
 import websocket from './state/slices/websocket';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
@@ -31,9 +34,12 @@ const createRootReducer = (history: History) =>
     router: connectRouter(history),
     account,
     application,
+    auction,
     background,
     block,
     noun,
+    score,
+    settle,
     vote,
     websocket,
   });

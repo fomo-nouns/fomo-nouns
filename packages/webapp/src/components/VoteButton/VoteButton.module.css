@@ -2,16 +2,15 @@
     cursor: pointer;
     background-color: white;
     border: 1px solid black;
-    width: max-content;
-    height: max-content;
+    min-width: 100px;
     border-radius: 30px;
     margin-left: 10px;
     margin-right: 10px;
     padding-left: 2vw;
     padding-right: 2vw;
 }
-.voteButton:hover{
-    background: rgba(0, 0, 0, 0.15);
+.voteButton:enabled:hover{
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .voteText{

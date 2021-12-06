@@ -1,4 +1,3 @@
-// import classes from './Noun.module.css';
 import React, { useCallback, useEffect, useState } from 'react';
 import loadingNoun from '../../assets/loading-skull-noun.gif';
 import Image from 'react-bootstrap/Image';
@@ -18,11 +17,9 @@ const Noun: React.FC<{ alt: string }> = props => {
 
   const blockNum = useAppSelector(state => state.block.blockNumber);
   const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
-
   const generateNoun = useCallback( async() => {
     const isNounder = nextNounId % 10 === 0;
     const adjNextNounId = isNounder ? nextNounId + 1 : nextNounId;
-    
     const seed = await SeederContract.generateSeed(
       adjNextNounId,
       DesciptorContract.address,
@@ -31,10 +28,10 @@ const Noun: React.FC<{ alt: string }> = props => {
       }
       );
       const useGreyBg = seed[0] === 0;
-      dispatch(setActiveBackground(useGreyBg));
       const svg = await DesciptorContract.generateSVGImage(seed);
       setImg(svg);
-    }, [dispatch]);
+      dispatch(setActiveBackground(useGreyBg));
+    }, [dispatch, nextNounId]);
 
     useEffect(() => {
       generateNoun();
@@ -43,8 +40,8 @@ const Noun: React.FC<{ alt: string }> = props => {
   const { alt } = props;
   return (
     <div className={classes.imgWrapper}>
-      {img && <Image className={classes.img} src={`data:image/svg+xml;base64,${img}`} alt={alt} fluid />}
-      {!img && <LoadingNoun />}
+      {nextNounId && <Image className={classes.img} src={`data:image/svg+xml;base64,${img}`} alt={alt} fluid />}
+      {!nextNounId && <LoadingNoun />}
     </div>
   );
 };
