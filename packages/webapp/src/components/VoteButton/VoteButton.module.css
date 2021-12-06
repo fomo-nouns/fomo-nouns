@@ -2,8 +2,7 @@
     cursor: pointer;
     background-color: white;
     border: 1px solid black;
-    width: max-content;
-    height: max-content;
+    min-width: 100px;
     border-radius: 30px;
     margin-left: 10px;
     margin-right: 10px;

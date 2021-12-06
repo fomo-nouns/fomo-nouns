@@ -10,6 +10,9 @@
     height: max-content;
     padding: 10px 20px;
     white-space: pre-line;
+    max-width: 60%;
+    min-width: min-content;
+    word-wrap: break-word;
 }
 .Copy{
     font-family: Roboto Mono;
