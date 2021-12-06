@@ -28,9 +28,9 @@ const Noun: React.FC<{ alt: string }> = props => {
       }
       );
       const useGreyBg = seed[0] === 0;
-      dispatch(setActiveBackground(useGreyBg));
       const svg = await DesciptorContract.generateSVGImage(seed);
       setImg(svg);
+      dispatch(setActiveBackground(useGreyBg));
     }, [dispatch, nextNounId]);
 
     useEffect(() => {
