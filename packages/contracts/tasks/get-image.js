@@ -22,7 +22,7 @@ task("get-image", "Gets the image for a given Nound ID")
     const base64svg = await nounsDescriptor.generateSVGImage(seed);
     let svgHtml = `<img src="data:image/svg+xml;base64,${base64svg}"/>`;
 
-    fs.writeFileSync(`img/noun${taskArgs.noun}.html`, svgHtml, (err) => {
+    fs.writeFileSync(`tasks/img/noun_${taskArgs.noun}.html`, svgHtml, (err) => {
         if (err) throw err;
     });
   });
