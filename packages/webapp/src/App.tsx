@@ -44,12 +44,12 @@ function App() {
       dispatch(setBlockNumber(blockNumber));
 
       const block = await provider.getBlock(blockNumber);
-      console.log(`Updating blockhash ${block?.hash}`);
+      // console.log(`Updating blockhash ${block?.hash}`);
       dispatch(setBlockHash(block?.hash));
 
       const auction = await AuctionContract.auction();
       const nextNounId = parseInt(auction?.nounId) + 1;
-      console.log(`Updating nounId ${nextNounId}`);
+      // console.log(`Updating nounId ${nextNounId}`);
       dispatch(setNextNounId(nextNounId));
 
       const auctionEnd = auction?.endTime.toNumber();

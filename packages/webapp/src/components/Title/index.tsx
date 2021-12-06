@@ -7,8 +7,8 @@ Come back in:`;
 const gameActiveCopy = `FOMO Nouns
 Should we mint this Noun?`;
 const attemptSettlementCopy = `Attempting to settle...`;
-const successCopy = `We minted a Noun!`;
-const otherSettledCopy = `Someone else minted a Noun`;
+// const successCopy = `We minted a Noun!`;
+// const otherSettledCopy = `Someone else minted a Noun`;
 
 const Title: React.FC<{}> = props => {
     const activeAuction = useAppSelector(state => state.auction.activeAuction);

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import classes from './Timer.module.css';
-import { ethers } from "ethers";
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useAppSelector } from "../../hooks";
