@@ -55,3 +55,13 @@
   grid-column: 3;
   grid-row: 1;
 }
+
+.Players{
+  font-family:'Roboto Mono';
+  grid-column: 3;
+  grid-row: 1;
+  align-self: flex-end;
+  justify-self: center;
+  font-size: 16px;
+  font-weight: bold;
+}

@@ -15,12 +15,14 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 
 const WalletConnectModal: React.FC<{}> = props => {
   const activeAccount = useAppSelector(state => state.account.activeAccount);
+  const activeAuction = useAppSelector(state => state.auction.activeAuction);
+  const numConnections = useAppSelector(state => state.connections.numConnections);
   const dispatch = useAppDispatch();
   const { deactivate, activate, account } = useEthers();
   const [showConnectModal, setShowConnectModal] = useState(false);
-  
-  const activateAccount = (connector: AbstractConnector) => {
-    activate(connector);
+
+  const activateAccount = async (connector: AbstractConnector) => {
+    await activate(connector);
     dispatch(setActiveAccount(account));
   }
 
@@ -143,6 +145,8 @@ const WalletConnectModal: React.FC<{}> = props => {
     <>
       {activeAccount ? connectedContent : disconnectedContent}
       {showConnectModal && <Modal title="Connect your wallet" content={wallets} onDismiss={hideModalHandler} />}
+      {!activeAuction && (numConnections <= 1 ? <p className={classes.Players}>{numConnections} player online!</p> :
+                             <p className={classes.Players}>{numConnections} players online!</p>)}
     </>
   )
 };

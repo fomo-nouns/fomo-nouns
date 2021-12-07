@@ -6,7 +6,8 @@ const activeAuctionCopy = `It's not Noun O'Clock yet
 Come back in:`;
 const gameActiveCopy = `FOMO Nouns
 Should we mint this Noun?`;
-const attemptSettlementCopy = `Attempting to settle...`;
+const attemptSettlementCopy = `Attempting
+to settle...`;
 // const successCopy = `We minted a Noun!`;
 // const otherSettledCopy = `Someone else minted a Noun`;
 

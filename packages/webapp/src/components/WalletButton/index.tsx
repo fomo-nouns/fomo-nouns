@@ -41,7 +41,6 @@ const logo = (walletType: WALLET_TYPE) => {
 
 const WalletButton: React.FC<{ onClick: () => void; walletType: WALLET_TYPE }> = props => {
   const { onClick, walletType } = props;
-
   return (
     <Button className={classes.walletButton} onClick={onClick}>
       <img src={logo(walletType)} alt={`${walletType} logo`} />

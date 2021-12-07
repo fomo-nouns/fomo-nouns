@@ -23,6 +23,7 @@ import { incrementCount, resetVotes } from './state/slices/vote';
 import { setConnected } from './state/slices/websocket';
 import dayjs from 'dayjs';
 import { resetAttemptedSettle, setAttemptedSettle } from './state/slices/settle';
+import { setNumConnections } from './state/slices/connections';
 
 // TODO: Make websocket connections more error proof (currently no resilience)
 const client = new W3CWebSocket(FOMO_WEBSOCKET);
@@ -93,6 +94,9 @@ function App() {
       }
       if (data.settlementAttempted && blockhash === data.blockhash) {
         dispatch(setAttemptedSettle(true));
+      }
+      if('connections' in data) {
+        dispatch(setNumConnections(data.connections));
       }
     } catch(err) {
       console.error('Erroring parsing FOMO websocket message');

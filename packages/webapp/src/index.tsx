@@ -11,6 +11,7 @@ import application from './state/slices/application';
 import auction from './state/slices/auction';
 import background from './state/slices/background';
 import block from './state/slices/block';
+import connections from './state/slices/connections';
 import noun from './state/slices/noun';
 import vote from './state/slices/vote';
 import score from './state/slices/score';
@@ -37,6 +38,7 @@ const createRootReducer = (history: History) =>
     auction,
     background,
     block,
+    connections,
     noun,
     score,
     settle,
