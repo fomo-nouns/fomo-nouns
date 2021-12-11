@@ -6,11 +6,6 @@ describe('hasWinningVotes Test', async function() {
 
   describe('Single Vote', async function() {
     it('Like vote should WIN', async function() {
-      let result = hasWinningVotes({voteLove: 1}, 1);
-      expect(result).to.be.true;
-    });
-
-    it('Love vote should WIN', async function() {
       let result = hasWinningVotes({voteLike: 1}, 1);
       expect(result).to.be.true;
     });
@@ -20,8 +15,8 @@ describe('hasWinningVotes Test', async function() {
       expect(result).to.be.false;
     });
 
-    it('Hate vote should LOSE', async function() {
-      let result = hasWinningVotes({voteHate: 1}, 1);
+    it('Shrug vote should LOSE', async function() {
+      let result = hasWinningVotes({voteShrug: 1}, 1);
       expect(result).to.be.false;
     });
   });
@@ -39,19 +34,14 @@ describe('hasWinningVotes Test', async function() {
   });
 
   describe('Vote Type Weighting', async function() {
-    it('Should ignore dislikes', async function() {
+    it('Should ignore shrugs', async function() {
+      let result = hasWinningVotes({voteLike: 61, voteShrug: 1}, 100);
+      expect(result).to.be.true;
+    });
+
+    it('Should let 1 dislike vote counteract 1 like', async function() {
       let result = hasWinningVotes({voteLike: 61, voteDislike: 1}, 100);
-      expect(result).to.be.true;
-    });
-
-    it('Should let 1 hate vote counteract 1 like', async function() {
-      let result = hasWinningVotes({voteLike: 61, voteHate: 1}, 100);
       expect(result).to.be.false;
-    });
-
-    it('Should let 2 love vote count as much as 3 like', async function() {
-      let result = hasWinningVotes({voteLike: 58, voteLove: 2}, 100); // 61 total
-      expect(result).to.be.true;
     });
   });
 });
@@ -63,13 +53,13 @@ describe('hasWinningVotes Test', async function() {
   });
 
   it('Should ignore votes with no count', async function() {
-    let result = scoreVotes({voteLike: 4, voteHate: 3}, 0);
+    let result = scoreVotes({voteLike: 4, voteDislike: 3}, 0);
     expect(result).to.equal(0);
   });
 
   it('Should calculate score properly', async function() {
-    let result = scoreVotes({voteLove: 2, voteLike: 4, voteDislike: 4, voteHate: 3}, 13);
-    let score = (2*1.5 + 4 - 3) / 13;
+    let result = scoreVotes({voteLike: 6, voteShrug: 4, voteDislike: 3}, 13);
+    let score = (6 - 3) / 13;
     expect(result).to.equal(score / 0.6);
   });
 });
