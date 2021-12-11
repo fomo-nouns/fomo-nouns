@@ -2,10 +2,9 @@
  * Evaluate the provided votes to provide a score
  * 
  * Valid vote types
- *  - voteLove
  *  - voteLike
+ *  - voteShrug
  *  - voteDislike
- *  - voteHate
  * 
  * @param {Object} voteObj Object with a count of votes by type. Any key may be
  *    missing if votes of that type are missing.
@@ -13,16 +12,16 @@
  * @returns {Number} Calculated score
  */
 function scoreVotes(voteObj, userCount) {
-  let winThreshold = 0.6;
+  let winThreshold = 0.6; // Max negative votes = userCount * (1-winThreshold)/2
 
   let like = (voteObj.voteLike ?? 0);
-  let love = (voteObj.voteLove ?? 0);
-  let hate = (voteObj.voteHate ?? 0);
+  // shrug == 0 vote
+  let dislike = (voteObj.voteDislike ?? 0);
 
   if (!userCount) {
     return 0;
   } else {
-    let score = (1.5 * love + like - hate) / userCount;
+    let score = (like - dislike) / userCount;
     return score / winThreshold;
   }
 }
