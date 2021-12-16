@@ -53,9 +53,8 @@ describe("NounSettlement", function () {
         expect(await settler.fomoExecutor()).to.equal(executor.address);
       });
 
-      it("Should allow the Executor address to be changed by the DAO", async function() {
-        await impersonateAccount(NOUNS_DAO_ADDRESS);
-        await settler.connect(nounsDao).changeExecutorAddress(random1.address);
+      it("Should allow the Executor address to be changed by the Executor", async function() {
+        await settler.connect(executor).changeExecutorAddress(random1.address);
 
         expect(await settler.fomoExecutor()).to.equal(random1.address);
       });

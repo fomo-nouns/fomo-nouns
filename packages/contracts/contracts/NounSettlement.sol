@@ -72,7 +72,7 @@ contract NounSettlement {
     nounsDao = payable(_newDao);
   }
 
-  function changeExecutorAddress(address _newFomoExecutor) external onlyDAO {
+  function changeExecutorAddress(address _newFomoExecutor) external onlyFOMO {
     fomoExecutor = payable(_newFomoExecutor);
   }
 
