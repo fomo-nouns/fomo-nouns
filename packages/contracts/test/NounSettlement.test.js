@@ -205,13 +205,37 @@ describe("NounSettlement", function () {
         ).to.be.revertedWith("Only executable by FOMO Nouns executor");
       });
 
-      it("Should not allow excessively high gas", async function() {
+      it("Should not allow excessively high gas (Pre-1559)", async function() {
         const lastBlock = await ethers.provider.getBlockNumber();
         const lastHash = await ethers.provider.getBlock(lastBlock);
 
         expect(
           settler.connect(executor).settleAuctionWithRefund(lastHash.hash, {
             gasPrice: ethers.utils.parseUnits('1000', 'gwei')
+          })
+        ).to.be.revertedWith("Gas price above current reasonable limit");
+      });
+
+      it("Should allow a high max fee that is not used (Post-1559)", async function() {
+        const lastBlock = await ethers.provider.getBlockNumber();
+        const lastHash = await ethers.provider.getBlock(lastBlock);
+
+        settler.connect(executor).settleAuctionWithRefund(lastHash.hash, {
+          maxFeePerGas: ethers.utils.parseUnits('1000', 'gwei')
+        })
+        
+        // Auction should be settled
+        const newAuction = await auctionHouse.auction();
+        expect(newAuction.settled).to.be.false;
+      });
+
+      it("Should not allow excessively high priority fee (Post-1559)", async function() {
+        const lastBlock = await ethers.provider.getBlockNumber();
+        const lastHash = await ethers.provider.getBlock(lastBlock);
+
+        expect(
+          settler.connect(executor).settleAuctionWithRefund(lastHash.hash, {
+            maxPriorityFeePerGas: ethers.utils.parseUnits('1000', 'gwei')
           })
         ).to.be.revertedWith("Gas price above current reasonable limit");
       });
