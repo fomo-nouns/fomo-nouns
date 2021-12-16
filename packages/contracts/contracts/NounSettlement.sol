@@ -11,16 +11,16 @@ import "hardhat/console.sol"; // TODO: Remove before deployment
 
 contract NounSettlement {
   address payable public nounsDao;
-  address payable public executor;
+  address payable public fomoExecutor;
   INounsAuctionHouse public immutable auctionHouse;
 
   uint256 public maxPriorityFee;
   uint256 private OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
 
 
-  constructor(address _executor, address _nounsDao, address _nounsAuctionHouseAddress) {
+  constructor(address _fomoExecutor, address _nounsDao, address _nounsAuctionHouseAddress) {
     auctionHouse = INounsAuctionHouse(_nounsAuctionHouseAddress);
-    executor = payable(_executor);
+    fomoExecutor = payable(_fomoExecutor);
     nounsDao = payable(_nounsDao);
 
     maxPriorityFee = 100 * 10**9; // Prevents malicious actor burning all the ETH on gas
@@ -36,7 +36,7 @@ contract NounSettlement {
   }
 
   modifier onlyFOMO() {
-    require(msg.sender == executor, "Only executable by FOMO Nouns executor");
+    require(msg.sender == fomoExecutor, "Only executable by FOMO Nouns executor");
     _;
   }
 
@@ -48,7 +48,7 @@ contract NounSettlement {
 
     uint256 totalGasCost = tx.gasprice * (startGas - endGas + OVERHEAD_GAS);
     console.log("Gas Used %s", startGas - endGas); // TODO: Remove before deployment
-    executor.transfer(totalGasCost);
+    fomoExecutor.transfer(totalGasCost);
   }
 
 
@@ -72,8 +72,8 @@ contract NounSettlement {
     nounsDao = payable(_newDao);
   }
 
-  function changeExecutorAddress(address _newExecutor) external onlyDAO {
-    executor = payable(_newExecutor);
+  function changeExecutorAddress(address _newFomoExecutor) external onlyDAO {
+    fomoExecutor = payable(_newFomoExecutor);
   }
 
   function changeMaxPriorityFee(uint256 _newMaxPriorityFee) external onlyDAO {
