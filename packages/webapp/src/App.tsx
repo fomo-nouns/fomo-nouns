@@ -105,6 +105,7 @@ function App() {
   };
 
   client.onclose = () => {
+    dispatch(setConnected(false));
     console.log('FOMO Web Socket CLOSED.');
   };
 
