@@ -13,10 +13,9 @@ const VoteBar:React.FC<{ client: any }> = (props) => {
 
   const voteOpts = (
       <>
-      <VoteButton voteType={VOTE_OPTIONS.voteHate} client={client}/>
       <VoteButton voteType={VOTE_OPTIONS.voteDislike} client={client}/>
+      <VoteButton voteType={VOTE_OPTIONS.voteShrug} client={client}/>
       <VoteButton voteType={VOTE_OPTIONS.voteLike} client={client}/>
-      <VoteButton voteType={VOTE_OPTIONS.voteLove} client={client}/>
       </>
   )
 

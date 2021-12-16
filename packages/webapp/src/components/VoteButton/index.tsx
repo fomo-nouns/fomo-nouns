@@ -5,17 +5,15 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 
 
 export enum EMOJI_TYPE {
-    hate = '🤢',
     dislike = '👎',
-    like = '👍',
-    love = '😍',
+    shrug = '🤷‍♂️',
+    like = '👍'
 }
 
 const voteToEmoji: Record<VOTE_OPTIONS, string> = {
-  [VOTE_OPTIONS['voteHate']]: '🤢',
   [VOTE_OPTIONS['voteDislike']]: '👎',
-  [VOTE_OPTIONS['voteLike']]: '👍',
-  [VOTE_OPTIONS['voteLove']]: '😍'
+  [VOTE_OPTIONS['voteShrug']]: '🤷‍♂️',
+  [VOTE_OPTIONS['voteLike']]: '👍'
 };
 
 const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {

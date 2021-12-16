@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export enum VOTE_OPTIONS {
-  voteHate = 'voteHate',
   voteDislike = 'voteDislike',
-  voteLike = 'voteLike',
-  voteLove = 'voteLove'
+  voteShrug = 'voteShrug',
+  voteLike = 'voteLike'
 }
 
 interface VoteState {
@@ -14,7 +13,7 @@ interface VoteState {
 
 const initialState: VoteState = {
   currentVote: undefined,
-  voteCounts: {voteLove: 0, voteLike: 0, voteDislike: 0, voteHate: 0} // TODO: Make this programmatic
+  voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0} // TODO: Make this programmatic
 };
 
 export const voteSlice = createSlice({
