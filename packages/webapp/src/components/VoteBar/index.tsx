@@ -2,10 +2,17 @@ import VoteButton from '../VoteButton';
 import { VOTE_OPTIONS } from '../../state/slices/vote';
 import { useEffect } from 'react';
 import classes from './VoteBar.module.css';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { openVoteSocket } from '../../middleware/voteWebsocket';
+
 
 const VoteBar:React.FC<{}> = (props) => {
+  const dispatch = useAppDispatch();
   const activeVote = useAppSelector(state => state.vote.currentVote);
+  const wsConnected = useAppSelector(state => state.websocket.connected);
+
+  const openSocket = () => dispatch(openVoteSocket());
+
   useEffect(() => {
     console.log("vote changed to: ", activeVote);
   }, [activeVote]);
@@ -18,12 +25,15 @@ const VoteBar:React.FC<{}> = (props) => {
       </>
   );
 
+  const reconnectOpt = (
+    <span className={classes.reconnect} onClick={openSocket}>Click Here to Reconnect</span>
+  );
+
   return(
     <div className={classes.VoteBar}>
-      {voteOpts}  
+      { wsConnected ? voteOpts : reconnectOpt }
     </div>
   );
-    
 }
 
 export default VoteBar;
