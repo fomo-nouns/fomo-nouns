@@ -27,13 +27,13 @@ const voteWebsocketMiddleware = () => {
   }
   
   const handleReceiveMessage = store => (msg) => {
-    try {      
+    try {
       const data = JSON.parse(String(msg.data));
       console.log(data);
       if (data.vote) {
         store.dispatch(incrementCount(data.vote));
       }
-      if (data.score) {
+      if ('score' in data) {
         store.dispatch(setScore(data.score));
       }
       if (data.settlementAttempted) {
