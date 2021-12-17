@@ -1,32 +1,29 @@
 .voteButton{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     cursor: pointer;
     background-color: white;
     border: 1px solid black;
+    width: 20%;
     min-width: 100px;
-    border-radius: 30px;
-    margin-left: 10px;
-    margin-right: 10px;
-    padding-left: 2vw;
-    padding-right: 2vw;
+    border-radius: 20px;
+    padding: 0.2em;
 }
 .voteButton:enabled:hover{
     background: rgba(0, 0, 0, 0.1);
 }
 
 .voteText{
-    margin-top: 0;
-    margin-bottom: 1vh;
-    font-size: 18px;
+    font-size: 1.5em;
     font-weight: bold;
 }
 
 .voteEmojiText{
-    margin-top: 1vh;
-    margin-bottom: 1vh;
-    font-size: 32px;
+    font-size: 3em;
 }
 
 .selected{
     border: 2px solid black;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(254, 255, 181, 0.76);
 }
