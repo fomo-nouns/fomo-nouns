@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import classes from './VoteButton.module.css';
 import { VOTE_OPTIONS, setCurrentVote } from '../../state/slices/vote';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-
+import { sendVote } from '../../middleware/voteWebsocket';
 
 export enum EMOJI_TYPE {
     dislike = '👎',
@@ -16,7 +16,7 @@ const voteToEmoji: Record<VOTE_OPTIONS, string> = {
   [VOTE_OPTIONS['voteLike']]: '👍'
 };
 
-const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {
+const VoteButton: React.FC<{voteType: VOTE_OPTIONS}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const activeVote = useAppSelector(state => state.vote.currentVote);
   const wsConnected = useAppSelector(state => state.websocket.connected);
@@ -24,7 +24,7 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {
   const nextNounId = useAppSelector(state => state.noun.nextNounId);
   const voteCounts = useAppSelector(state => state.vote.voteCounts);
 
-  const { voteType, client } = props;
+  const { voteType } = props;
   const dispatch = useAppDispatch();
   const changeVote = () => {
     if (activeVote) return;
@@ -32,8 +32,7 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS, client: any}> = props => {
     dispatch(setCurrentVote(voteType));
     if (wsConnected){
       console.log(voteType);
-      const voteMsg = {"action": "sendvote", "nounId": nextNounId, "blockhash": hash, "vote": voteType};
-      client.send(JSON.stringify(voteMsg));
+      dispatch(sendVote({"nounId": nextNounId, "blockhash": hash, "vote": voteType}));
     }
   }
 
