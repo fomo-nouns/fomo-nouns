@@ -26,6 +26,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import dotenv from 'dotenv';
 import { default as globalConfig } from './config';
 import voteWebsocket from './middleware/voteWebsocket';
+import ethersWebsocketMiddleware from './middleware/ethersWebsocket';
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ export default function configureStore(preloadedState: any) {
       applyMiddleware(
         routerMiddleware(history), // for dispatching history actions
         // ... other middlewares ...
+        ethersWebsocketMiddleware,
         voteWebsocket
       ),
     ),
