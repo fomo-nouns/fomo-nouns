@@ -27,14 +27,15 @@ const createProviderURL = (chainName: string) => {
 interface Config {
   chainName: string;
   chainId: number;
+  jsonRpcUri: string;
+  wsRpcUri: string;
+  fomoSettlerAddress: string;
   auctionProxyAddress: string;
   nounsDescriptor: string;
   nounsSeeder: string;
   tokenAddress: string;
   nounsDaoProxyAddress: string;
   nounsDaoExecutorAddress: string;
-  jsonRpcUri: string;
-  wsRpcUri: string;
   enableHistory: boolean;
 }
 
@@ -44,6 +45,7 @@ const config: Record<SupportedChains, Config> = {
     chainId: ChainId.Rinkeby,    
     jsonRpcUri: `https://${createProviderURL('rinkeby')}`,
     wsRpcUri: `wss://${createProviderURL('rinkeby')}`,
+    fomoSettlerAddress: '0xFa7C3ab143074BcbF09db8450810d78E4B9b19a3',
     auctionProxyAddress: '0x7cb0384b923280269b3BD85f0a7fEaB776588382',
     nounsDescriptor: '0x53cB482c73655D2287AE3282AD1395F82e6a402F',
     nounsSeeder : '0xA98A1b1Cc4f5746A753167BAf8e0C26AcBe42F2E',
@@ -55,29 +57,30 @@ const config: Record<SupportedChains, Config> = {
   [ChainId.Mainnet]: {
     chainName: 'mainnet',
     chainId: ChainId.Mainnet,
+    jsonRpcUri: `https://${createProviderURL('mainnet')}`,
+    wsRpcUri: `wss://${createProviderURL('mainnet')}`,
+    fomoSettlerAddress: '0x0000000000000000000000000000000000000000', // TODO: Update this post deployment
     auctionProxyAddress: '0x830BD73E4184ceF73443C15111a1DF14e495C706',
     nounsDescriptor: '0x0Cfdb3Ba1694c2bb2CFACB0339ad7b1Ae5932B63',
     nounsSeeder: '0xCC8a0FB5ab3C7132c1b2A0109142Fb112c4Ce515',
     tokenAddress: '0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03',
     nounsDaoProxyAddress: '0x6f3E6272A167e8AcCb32072d08E0957F9c79223d',
     nounsDaoExecutorAddress: '0x0BC3807Ec262cB779b38D65b38158acC3bfedE10',
-    jsonRpcUri: `https://${createProviderURL('mainnet')}`,
-    wsRpcUri: `wss://${createProviderURL('mainnet')}`,
     enableHistory: process.env.REACT_APP_ENABLE_HISTORY === 'true' || false,
   },
   [LOCAL_CHAIN_ID]: {
     chainName: 'local',
     chainId: LOCAL_CHAIN_ID,
-    auctionProxyAddress: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
-    tokenAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
-    // Temporarily set this to _any_ address until local deployment is configured
-    nounsDescriptor: '0x53cB482c73655D2287AE3282AD1395F82e6a402F',
-    nounsSeeder: '0xCC8a0FB5ab3C7132c1b2A0109142Fb112c4Ce515',    
-    nounsDaoExecutorAddress: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
-    nounsDaoProxyAddress: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
     jsonRpcUri: 'http://localhost:8545',
-    enableHistory: false,
     wsRpcUri: 'ws://localhost:8545',
+    fomoSettlerAddress: '0xFa7C3ab143074BcbF09db8450810d78E4B9b19a3',
+    auctionProxyAddress: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
+    nounsDescriptor: '0x53cB482c73655D2287AE3282AD1395F82e6a402F',
+    nounsSeeder: '0xCC8a0FB5ab3C7132c1b2A0109142Fb112c4Ce515',
+    tokenAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
+    nounsDaoProxyAddress: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
+    nounsDaoExecutorAddress: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',    
+    enableHistory: false,
   },
 };
 
