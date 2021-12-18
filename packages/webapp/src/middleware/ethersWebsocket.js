@@ -3,7 +3,7 @@ import { default as globalConfig, PROVIDER_KEY, provider} from '../config';
 import { providers } from 'ethers';
 import { contract as AuctionContract } from '../wrappers/nounsAuction';
 import { setActiveAuction, setAuctionEnd } from '../state/slices/auction';
-import { setBlockHash, setBlockNumber } from '../state/slices/block';
+import { setBlockAttr } from '../state/slices/block';
 import { setNextNounId } from '../state/slices/noun';
 import { resetVotes } from '../state/slices/vote'; 
 import dayjs from 'dayjs';
@@ -37,8 +37,7 @@ const ethersWebsocketMiddleware = () => {
     const activeAuction = (auctionEnd - dayjs().unix()) > 0 ? true: false;
     
     console.log(`Updating blocknumber ${blockNumber}`);
-    store.dispatch(setBlockNumber(blockNumber));
-    store.dispatch(setBlockHash(block?.hash));
+    store.dispatch(setBlockAttr({'blocknumber': blockNumber, 'blockhash': block?.hash}));
     store.dispatch(setNextNounId(nextNounId));
     store.dispatch(setAuctionEnd(auctionEnd));
     store.dispatch(setActiveAuction(activeAuction));
