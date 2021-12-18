@@ -9,7 +9,7 @@ import { openVoteSocket } from '../../middleware/voteWebsocket';
 const VoteBar:React.FC<{}> = (props) => {
   const dispatch = useAppDispatch();
   const activeVote = useAppSelector(state => state.vote.currentVote);
-  const wsConnected = useAppSelector(state => state.websocket.connected);
+  const wsConnected = useAppSelector(state => state.vote.connected);
 
   const openSocket = () => dispatch(openVoteSocket());
 

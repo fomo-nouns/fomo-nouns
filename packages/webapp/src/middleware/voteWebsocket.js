@@ -1,8 +1,7 @@
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { FOMO_WEBSOCKET } from '../config';
 
-import { setScore, incrementCount, triggerSettlement } from '../state/slices/vote';
-import { setConnected } from '../state/slices/websocket';
+import { setConnected, setScore, incrementCount, triggerSettlement } from '../state/slices/vote';
 import { setNumConnections } from '../state/slices/connections';
 
 // Define the Actions Intercepted by the Middleware

@@ -19,7 +19,7 @@ const voteToEmoji: Record<VOTE_OPTIONS, string> = {
 const VoteButton: React.FC<{voteType: VOTE_OPTIONS}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const activeVote = useAppSelector(state => state.vote.currentVote);
-  const wsConnected = useAppSelector(state => state.websocket.connected);
+  const wsConnected = useAppSelector(state => state.vote.connected);
   const hash = useAppSelector(state => state.block.blockHash);
   const nextNounId = useAppSelector(state => state.noun.nextNounId);
   const voteCounts = useAppSelector(state => state.vote.voteCounts);
