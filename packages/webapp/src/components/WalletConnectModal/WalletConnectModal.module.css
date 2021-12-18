@@ -25,6 +25,7 @@
 .connectBtn:active,
 .connectBtn:focus {
   cursor: pointer !important;
+  background-color: lightgray !important;
 }
 
 .disconnectBtn {
@@ -42,6 +43,7 @@
 .disconnectBtn:active,
 .disconnectBtn:focus {
   cursor: pointer !important;
+  background-color: lightgray !important;
 }
 
 .greenStatusCircle{

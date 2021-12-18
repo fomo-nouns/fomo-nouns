@@ -12,7 +12,7 @@ const Title: React.FC<{}> = props => {
 
   let titleText = '';
   if (activeAuction) {
-    titleText = `It's not Noun O' Clock yet. Come back in:`;
+    titleText = `It's not Noun O'Clock yet. Come back in:`;
   } else if (attemptedSettle) {
     titleText = `Attempting to settle...`;
   } else if (votingActive) {

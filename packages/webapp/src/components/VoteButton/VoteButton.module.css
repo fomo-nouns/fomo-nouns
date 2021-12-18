@@ -28,5 +28,5 @@
 
 .selected{
     border: 2px solid black;
-    background: rgba(254, 255, 181, 0.76);
+    background: rgb(127, 197, 156, .4);
 }
