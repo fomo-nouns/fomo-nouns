@@ -16,7 +16,7 @@ const Title: React.FC<{}> = props => {
   } else if (attemptedSettle) {
     titleText = `Attempting to settle...`;
   } else if (votingActive) {
-    titleText = `Should mint this Noun?`;
+    titleText = `Should we mint this Noun?`;
   } else if (!activeAuction && !votingActive) {
     titleText = `Time's up! Waiting for next block...`;
   } else {
