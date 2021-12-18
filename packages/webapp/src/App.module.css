@@ -1,11 +1,9 @@
-.App{
-  display: grid;
-  grid-template-columns:.7fr 1fr .5fr;
-  grid-template-rows: .5fr 1fr max-content max-content .5fr;
-  column-gap: 10px;
-  row-gap: 0px;
-  min-width: 100vh;
-  min-height: 100vh;
+.App {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .bgGrey{

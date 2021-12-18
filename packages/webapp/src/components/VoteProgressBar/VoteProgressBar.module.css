@@ -1,13 +1,22 @@
-.ParentWrapper{
-    margin-top: 60px;
-    grid-column: 2;
-    grid-row-start: 2;
+.Wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 11px;
+}
+
+.BarOutline {
+    display: flex;
+    justify-self: center;
     border-radius: 40px;
     background-color: white;
     box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
-    height: 30%;
+    height: 30px;
+    width: 90%;
+    max-width: 1000px;
 }
-.ChildWrapper{
+
+.ProgressBar {
     height: 100%;
     background: linear-gradient(270deg, #F9B9F2 -24.95%, #5603AD 100%);
     border-radius: inherit;

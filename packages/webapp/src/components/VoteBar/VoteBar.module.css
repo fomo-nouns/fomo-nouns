@@ -1,13 +1,14 @@
 .VoteBar {
     display: flex;
     justify-content: space-between;
-    grid-column: 2/3;
-    grid-row: 4;
+    width: 40%;
     min-height: 80px;
-    padding: 1em 20%;
+    min-width: 320px;
+    padding: 1em;
     border-radius: 20px;
     border: 1px solid #000000;
     box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
+    margin-bottom: 20px;
 }
 
 .reconnect {
@@ -17,4 +18,5 @@
     font-family: Roboto Mono;
     font-size: 1.5em;
     font-weight: bold;
+    cursor: pointer;
 }

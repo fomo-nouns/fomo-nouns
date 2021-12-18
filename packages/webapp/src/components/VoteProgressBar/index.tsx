@@ -22,8 +22,10 @@ const VoteProgressBar: React.FC<{}> = props => {
         opacity: opacity 
     };
     return(
-        <div className={classes.ParentWrapper} style={parentStyle}>
-            <div className={classes.ChildWrapper} style={barStyle}/>
+        <div className={classes.Wrapper}>
+            <div className={classes.BarOutline} style={parentStyle}>
+                <div className={classes.ProgressBar} style={barStyle}/>
+            </div>
         </div>
     )
 };

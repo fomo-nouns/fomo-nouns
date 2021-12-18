@@ -142,12 +142,12 @@ const WalletConnectModal: React.FC<{}> = props => {
     </>
   );
   return (
-    <>
+    <div className={classes.WalletArea}>
       {activeAccount ? connectedContent : disconnectedContent}
       {showConnectModal && <Modal title="Connect your wallet" content={wallets} onDismiss={hideModalHandler} />}
-      {!activeAuction && (numConnections <= 1 ? <p className={classes.Players}>{numConnections} player online!</p> :
-                             <p className={classes.Players}>{numConnections} players online!</p>)}
-    </>
+      {!activeAuction && (numConnections <= 1 ? <span className={classes.Players}>{numConnections} player online!</span> :
+                             <span className={classes.Players}>{numConnections} players online!</span>)}
+    </div>
   )
 };
 export default WalletConnectModal;
