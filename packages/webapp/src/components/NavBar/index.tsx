@@ -14,6 +14,12 @@ const NavBar = () => {
 
   const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
 
+  const scrollTo = (ref: string) => () => {
+    const anchor = document.querySelector(ref); console.log(anchor);
+    if (!anchor) return;
+    anchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <div className={classes.HeaderBar}>
       {/* {showConnectModal && activeAccount === undefined && (
@@ -43,10 +49,10 @@ const NavBar = () => {
               </Nav.Link>
             )}
           </Nav.Item>
-          <Nav.Link href="#wtf" className={classes.nounsNavLink}>
+          <Nav.Link onClick={scrollTo('#wtf')} className={classes.nounsNavLink}>
             WTF
           </Nav.Link>
-          <Nav.Link href="#faq" className={classes.nounsNavLink}>
+          <Nav.Link onClick={scrollTo('#faq')} className={classes.nounsNavLink}>
             FAQ
           </Nav.Link>
           <Nav.Link
