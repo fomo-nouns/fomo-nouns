@@ -3,8 +3,7 @@
     font-family: 'Londrina Solid';
 }
 .Wrapper{
-    grid-column: 2;
-    grid-row-start: 1;
     justify-self: center;
     white-space: pre-wrap;
+    padding-bottom: 3%;
 }
