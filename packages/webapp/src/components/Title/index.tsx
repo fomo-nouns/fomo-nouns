@@ -12,13 +12,13 @@ const Title: React.FC<{}> = props => {
 
   let titleText = '';
   if (activeAuction) {
-    titleText = `Voting starts at Noun O'Clock in:`;
+    titleText = `It's not Noun O' Clock yet. Come back in:`;
   } else if (attemptedSettle) {
-    titleText = `Attempting to settle!`;
+    titleText = `Attempting to settle...`;
   } else if (votingActive) {
-    titleText = `Vote if we should mint this Noun!`;
+    titleText = `Should mint this Noun?`;
   } else if (!activeAuction && !votingActive) {
-    titleText = `Times up! Waiting for next block...`;
+    titleText = `Time's up! Waiting for next block...`;
   } else {
     titleText = 'Loading FOMO Nouns...';
   }

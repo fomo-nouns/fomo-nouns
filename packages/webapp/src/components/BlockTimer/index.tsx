@@ -19,7 +19,6 @@ const BlockTimer: React.FC<{}> = props => {
     const timeLeft = 6000 - timeSince;
     
     if(timeLeft <= 0) {
-      console.log('timeleft 0');
       setTimeLeft(0);
       dispatch(endVoting());
     } else {
@@ -33,9 +32,12 @@ const BlockTimer: React.FC<{}> = props => {
   const seconds = Math.floor(timerDuration.seconds());
   const ms = Math.floor(timerDuration.milliseconds());
   
+  const timerThreshold = seconds <= 1;
+
   return(
-    <div className={`${classes.Wrapper} ${votingActive ? classes.ActiveVote : ''}`}>
-      00:00:{seconds}.{ms}
+    <div className={`${classes.Wrapper} ${votingActive ? classes.ActiveVote : ''} 
+    ${timerThreshold ? classes.Threshold: ''}`}>
+      {seconds}.{ms}
     </div>
   )
 };
