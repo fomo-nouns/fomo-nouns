@@ -27,9 +27,6 @@
 }
 
 @media (min-width: 992px) {
-  .img {
-      width: 500px;
-  }
   .textWrapper h1 {
     font-size: 6rem;
   }
@@ -38,6 +35,9 @@
 @media (max-width: 992px) {
   .img {
     width: 80%;
+  }
+  .imgWrapper {
+    padding: 1rem;
   }
   .textWrapper {
     padding: 2rem;
