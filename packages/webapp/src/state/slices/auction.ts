@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import dayjs from 'dayjs';
 
 interface AuctionState {
   activeAuction?: boolean;
@@ -14,15 +15,13 @@ export const auctionSlice = createSlice({
   name: 'auction',
   initialState,
   reducers: {
-    setActiveAuction: (state, action: PayloadAction<boolean | undefined | null>) => {
-      state.activeAuction = action.payload === null ? false : action.payload;
-    },
     setAuctionEnd: (state, action: PayloadAction<number | null>) => {
-        state.auctionEnd = action.payload === null ? 0 : action.payload
+        state.auctionEnd = action.payload === null ? 0 : action.payload;
+        state.activeAuction = dayjs().unix() < state.auctionEnd ? true : false;
     }
   },
 });
 
-export const { setActiveAuction, setAuctionEnd } = auctionSlice.actions;
+export const { setAuctionEnd } = auctionSlice.actions;
 
 export default auctionSlice.reducer;
