@@ -11,6 +11,11 @@
     margin-bottom: 20px;
 }
 
+.VoteBarOverlay {
+    background-color: white;
+    opacity: 50%;
+}
+
 .reconnect {
     width: 100%;
     margin: auto;

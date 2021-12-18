@@ -3,7 +3,6 @@ import { useEthers } from '@usedapp/core';
 import { useAppDispatch, useAppSelector } from './hooks';
 import classes from './App.module.css';
 import Noun  from './components/Noun';
-import Timer from './components/Timer';
 import Title from './components/Title';
 import VoteBar from './components/VoteBar';
 import VoteProgressBar from './components/VoteProgressBar';
@@ -37,7 +36,6 @@ function App() {
       <NavBar />
       <Title/>
       <VoteProgressBar/>
-      <Timer/>
       <Noun alt={"Current Block Noun"}/>
       <VoteBar />
     </div>
