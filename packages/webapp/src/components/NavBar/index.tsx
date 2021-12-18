@@ -32,13 +32,13 @@ const NavBar = () => {
             {treasuryBalance && (
               <Nav.Link
                 href={settlementEtherscanLink}
-                className={`${classes.nounsNavLink} ${classes.contractFunds}`}
+                className={classes.nounsNavLink}
                 target="_blank"
                 rel="noreferrer"
               >
                 CONTRACT Ξ {Number(utils.formatEther(treasuryBalance)).toFixed(2)}
                 {contractFundsLow && (
-                  <span><br/>Please Donate!</span>
+                  <span className={classes.contractFunds}><br/>&nbsp;&nbsp;&nbsp;Please Donate!</span>
                 )}
               </Nav.Link>
             )}
