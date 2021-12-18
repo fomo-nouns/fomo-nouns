@@ -4,8 +4,7 @@ import classes from "./Title.module.css";
 
 const activeAuctionCopy = `It's not Noun O'Clock yet
 Come back in:`;
-const gameActiveCopy = `FOMO Nouns
-Should we mint this Noun?`;
+const gameActiveCopy = `Should we mint this Noun?`;
 const attemptSettlementCopy = `Attempting
 to settle...`;
 // const successCopy = `We minted a Noun!`;
