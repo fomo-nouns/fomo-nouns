@@ -8,6 +8,7 @@ export enum VOTE_OPTIONS {
 
 interface VoteState {
   connected: boolean;
+  numConnections: number;
   currentVote?: VOTE_OPTIONS;
   voteCounts: Record<VOTE_OPTIONS, number>;
   attemptedSettle: boolean;
@@ -16,6 +17,7 @@ interface VoteState {
 
 const initialState: VoteState = {
   connected: false,
+  numConnections: 1,
   currentVote: undefined,
   voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
   attemptedSettle: false,
@@ -27,7 +29,14 @@ export const voteSlice = createSlice({
   initialState,
   reducers: {
     setConnected: (state, action: PayloadAction<boolean | undefined>) => {
-      state.connected = action.payload ? true : false;
+      if (state.connected) {
+        state.connected = true;
+      } else {
+        return initialState;
+      }
+    },
+    setNumConnections: (state, action: PayloadAction<number | undefined>) => {
+      state.numConnections = action.payload === undefined ? 1 : action.payload;
     },
     setCurrentVote: (state, action: PayloadAction<VOTE_OPTIONS | undefined | null>) => {
       state.currentVote = action.payload === null ? undefined : action.payload;
@@ -41,12 +50,13 @@ export const voteSlice = createSlice({
     triggerSettlement: (state, action: PayloadAction<boolean | undefined >) => {
       state.attemptedSettle = true;
     },
-    resetVotes: (state) => initialState
+    resetVotes: (state) => { return { ...initialState, connected: true } }
   },
 });
 
 export const {
   setConnected,
+  setNumConnections,
   setCurrentVote,
   setScore,
   incrementCount,

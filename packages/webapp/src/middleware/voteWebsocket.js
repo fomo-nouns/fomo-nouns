@@ -1,8 +1,7 @@
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { FOMO_WEBSOCKET } from '../config';
 
-import { setConnected, setScore, incrementCount, triggerSettlement } from '../state/slices/vote';
-import { setNumConnections } from '../state/slices/connections';
+import { setConnected, setNumConnections, setScore, incrementCount, triggerSettlement } from '../state/slices/vote';
 
 // Define the Actions Intercepted by the Middleware
 const openVoteSocket = (payload) => ({type: 'voteSocket/open', payload});

@@ -9,7 +9,6 @@ import { Web3Provider } from '@ethersproject/providers';
 import account from './state/slices/account';
 import auction from './state/slices/auction';
 import block from './state/slices/block';
-import connections from './state/slices/connections';
 import noun from './state/slices/noun';
 import vote from './state/slices/vote';
 import { connectRouter } from 'connected-react-router';
@@ -33,7 +32,6 @@ const createRootReducer = (history: History) =>
     account,
     auction,
     block,
-    connections,
     noun,
     vote,
   });

@@ -16,7 +16,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 const WalletConnectModal: React.FC<{}> = props => {
   const activeAccount = useAppSelector(state => state.account.activeAccount);
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
-  const numConnections = useAppSelector(state => state.connections.numConnections);
+  const numConnections = useAppSelector(state => state.vote.numConnections);
   const dispatch = useAppDispatch();
   const { deactivate, activate, account } = useEthers();
   const [showConnectModal, setShowConnectModal] = useState(false);
