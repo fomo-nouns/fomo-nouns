@@ -1,0 +1,9 @@
+.Wrapper{
+    font-size: 1em;
+    justify-self: center;
+    font-family: 'Londrina Solid';
+}
+
+.ActiveVote {
+    color: red;
+}
