@@ -25,8 +25,8 @@ const settledFilter = {
 const ethersWebsocketMiddleware = () => {
   let socket = null;
 
-  const openSocket = () => new providers.AlchemyWebSocketProvider(globalConfig.chainName, PROVIDER_KEY);;
-  const closeSocket = () => { if (socket !== null) socket.close() };
+  const openSocket = () => new providers.AlchemyWebSocketProvider(globalConfig.chainName, PROVIDER_KEY);
+  const closeSocket = () => { if (socket !== null) socket.destroy() };
 
 
   // Define the Handler Methods
