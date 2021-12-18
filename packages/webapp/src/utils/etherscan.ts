@@ -22,6 +22,11 @@ export const buildEtherscanAddressLink = (address: string): string => {
   return new URL(path, BASE_URL).toString();
 };
 
+export const buildEtherscanContractLink = (address: string): string => {
+  const path = `address/${address}#code`;
+  return new URL(path, BASE_URL).toString();
+};
+
 export const buildEtherscanHoldingsLink = (address: string): string => {
   const path = `tokenholdings?a=${address}`;
   return new URL(path, BASE_URL).toString();
