@@ -4,7 +4,7 @@ import Image from 'react-bootstrap/Image';
 import { contract as SeederContract } from '../../wrappers/nounsSeeder';
 import { contract as DesciptorContract } from '../../wrappers/nounsDescriptor';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setActiveBackground } from '../../state/slices/background';
+import { setActiveBackground } from '../../state/slices/noun';
 import classes from './Noun.module.css';
 
 const LoadingNoun = () => {

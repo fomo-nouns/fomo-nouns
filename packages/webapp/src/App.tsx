@@ -20,7 +20,7 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { account } = useEthers();
   const dispatch = useAppDispatch();
-  const useGreyBg = useAppSelector(state => state.background.useGreyBg);
+  const useGreyBg = useAppSelector(state => state.noun.useGreyBg);
 
   useEffect(() => {
     dispatch(setActiveAccount(account));
