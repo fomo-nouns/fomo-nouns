@@ -28,8 +28,8 @@ export const voteSlice = createSlice({
   name: 'vote',
   initialState,
   reducers: {
-    setConnected: (state, action: PayloadAction<boolean | undefined>) => {
-      if (state.connected) {
+    setConnected: (state, action: PayloadAction<boolean>) => {
+      if (action.payload) {
         state.connected = true;
       } else {
         return initialState;
@@ -50,7 +50,7 @@ export const voteSlice = createSlice({
     triggerSettlement: (state, action: PayloadAction<boolean | undefined >) => {
       state.attemptedSettle = true;
     },
-    resetVotes: (state) => { return { ...initialState, connected: true } }
+    resetVotes: (state) => { return { ...initialState, connected: state.connected } }
   },
 });
 

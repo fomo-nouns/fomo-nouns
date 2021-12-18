@@ -27,13 +27,11 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS}> = props => {
   const { voteType } = props;
   const dispatch = useAppDispatch();
   const changeVote = () => {
-    if (activeVote) return;
+    if (activeVote || !wsConnected) return;
     
+    console.log(voteType);
     dispatch(setCurrentVote(voteType));
-    if (wsConnected){
-      console.log(voteType);
-      dispatch(sendVote({"nounId": nextNounId, "blockhash": hash, "vote": voteType}));
-    }
+    dispatch(sendVote({"nounId": nextNounId, "blockhash": hash, "vote": voteType}));
   }
 
   return (
