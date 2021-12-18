@@ -12,7 +12,7 @@ to settle...`;
 
 const Title: React.FC<{}> = props => {
     const activeAuction = useAppSelector(state => state.auction.activeAuction);
-    const attemptedSettle = useAppSelector(state => state.settle.attemptedSettle);
+    const attemptedSettle = useAppSelector(state => state.vote.attemptedSettle);
     return (
         <div className={classes.Wrapper}>
             {activeAuction && <h1 className={classes.Title}>{activeAuctionCopy}</h1>}

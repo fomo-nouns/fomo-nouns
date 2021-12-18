@@ -2,9 +2,8 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { FOMO_WEBSOCKET } from '../config';
 
 import { setScore } from '../state/slices/score';
-import { incrementCount } from '../state/slices/vote';
+import { incrementCount, triggerSettlement } from '../state/slices/vote';
 import { setConnected } from '../state/slices/websocket';
-import { setAttemptedSettle } from '../state/slices/settle';
 import { setNumConnections } from '../state/slices/connections';
 
 // Define the Actions Intercepted by the Middleware
@@ -37,7 +36,7 @@ const voteWebsocketMiddleware = () => {
         store.dispatch(setScore(data.score));
       }
       if (data.settlementAttempted) {
-        store.dispatch(setAttemptedSettle(true));
+        store.dispatch(triggerSettlement());
       }
       if('connections' in data) {
         store.dispatch(setNumConnections(data.connections));

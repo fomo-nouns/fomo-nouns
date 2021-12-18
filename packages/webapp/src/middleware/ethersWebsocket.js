@@ -8,7 +8,6 @@ import { setNextNounId } from '../state/slices/noun';
 import { resetScore } from '../state/slices/score';
 import { resetVotes } from '../state/slices/vote'; 
 import dayjs from 'dayjs';
-import { resetAttemptedSettle } from '../state/slices/settle';
 
 // Define the Actions Intercepted by the Middleware
 const openEthersSocket = (payload) => ({type: 'ethersSocket/open', payload});
@@ -46,7 +45,6 @@ const ethersWebsocketMiddleware = () => {
     store.dispatch(setActiveAuction(activeAuction));
     store.dispatch(resetVotes());
     store.dispatch(resetScore());
-    store.dispatch(resetAttemptedSettle());
   }
 
   const handleSettlementTrxn = store => async (event) => {

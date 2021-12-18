@@ -9,11 +9,13 @@ export enum VOTE_OPTIONS {
 interface VoteState {
   currentVote?: VOTE_OPTIONS;
   voteCounts: Record<VOTE_OPTIONS, number>;
+  attemptedSettle?: boolean;
 }
 
 const initialState: VoteState = {
   currentVote: undefined,
-  voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0} // TODO: Make this programmatic
+  voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
+  attemptedSettle: false,
 };
 
 export const voteSlice = createSlice({
@@ -26,10 +28,18 @@ export const voteSlice = createSlice({
     incrementCount: (state, action: PayloadAction<VOTE_OPTIONS>) => {
       state.voteCounts[action.payload]++;
     },
+    triggerSettlement: (state, action: PayloadAction<boolean | undefined >) => {
+      state.attemptedSettle = true;
+    },
     resetVotes: (state) => initialState
   },
 });
 
-export const { setCurrentVote, incrementCount, resetVotes } = voteSlice.actions;
+export const {
+  setCurrentVote,
+  incrementCount,
+  triggerSettlement,
+  resetVotes
+} = voteSlice.actions;
 
 export default voteSlice.reducer;
