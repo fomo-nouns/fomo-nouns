@@ -12,6 +12,7 @@ interface VoteState {
   currentVote?: VOTE_OPTIONS;
   voteCounts: Record<VOTE_OPTIONS, number>;
   attemptedSettle: boolean;
+  votingActive: boolean;
   score: number;
 }
 
@@ -21,6 +22,7 @@ const initialState: VoteState = {
   currentVote: undefined,
   voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
   attemptedSettle: false,
+  votingActive: true,
   score: 0
 };
 
@@ -50,6 +52,9 @@ export const voteSlice = createSlice({
     triggerSettlement: (state, action: PayloadAction<boolean | undefined >) => {
       state.attemptedSettle = true;
     },
+    endVoting: (state) => {
+      state.votingActive = false;
+    },
     resetVotes: (state) => { return { ...initialState, connected: state.connected } }
   },
 });
@@ -61,6 +66,7 @@ export const {
   setScore,
   incrementCount,
   triggerSettlement,
+  endVoting,
   resetVotes
 } = voteSlice.actions;
 
