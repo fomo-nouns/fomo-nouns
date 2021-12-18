@@ -1,0 +1,45 @@
+.BannerSection {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.textWrapper h1 {
+  font-family: 'Londrina Solid';
+  font-size: 3rem;
+  text-align: center;
+}
+
+.imgWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+.img {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  width: 100%;
+  max-width: 500px;
+}
+
+@media (min-width: 992px) {
+  .img {
+      width: 500px;
+  }
+  .textWrapper h1 {
+    font-size: 6rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .img {
+    width: 80%;
+  }
+  .textWrapper {
+    padding: 2rem;
+  }
+}

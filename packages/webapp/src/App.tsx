@@ -11,6 +11,7 @@ import Title from './components/Title';
 import VoteBar from './components/VoteBar';
 import VoteProgressBar from './components/VoteProgressBar';
 import Documentation from './components/Documentation';
+import Banner from './components/Banner';
 
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket } from './middleware/voteWebsocket';
@@ -40,6 +41,7 @@ function App() {
       <VoteProgressBar/>
       <Noun alt={"Current Block Noun"}/>
       <VoteBar />
+      <Banner />
       <Documentation />
     </div>
   );
