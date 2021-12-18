@@ -26,12 +26,12 @@ function App() {
 
   useEffect(() => {
     dispatch(setActiveAccount(account));
-  }, [account]);
+  }, [dispatch, account]);
 
   useEffect(() => { // Only initialize after mount
     dispatch(openVoteSocket());
     dispatch(openEthersSocket());
-  }, []);
+  }, [dispatch]);
 
 
   return (

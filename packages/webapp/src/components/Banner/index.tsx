@@ -1,5 +1,4 @@
 import classes from './Banner.module.css';
-import { Col } from 'react-bootstrap';
 import lightningNoun from './lightningNoun.png';
 
 

@@ -35,11 +35,11 @@ const Noun: React.FC<{ alt: string }> = props => {
     const svgBinary = buildSVG(parts, palette, background);
     setImg(btoa(svgBinary));
     dispatch(setActiveBackground(seed.background === 0));
-  }, [nextNounId, blockhash]);
+  }, [dispatch, nextNounId, blockhash]);
 
   useEffect(() => {
     generateNoun();
-  }, [blockhash]);
+  }, [generateNoun, blockhash]);
 
 
   return (

@@ -13,7 +13,9 @@ const closeEthersSocket = (payload) => ({type: 'ethersSocket/close', payload});
 
 const settledFilter = {
   address: AuctionContract.address,
+  // address: FomoSettlementContract.address,
   topics: [
+    // utils.id('settleAuctionWithRefund(bytes32)')
     '0xc9f72b276a388619c6d185d146697036241880c36654b1a3ffdad07c24038d99'
   ]
 };
@@ -32,7 +34,7 @@ const ethersWebsocketMiddleware = () => {
     const auction = await AuctionContract.auction();
 
     const nextNounId = parseInt(auction?.nounId) + 1;
-    const auctionEnd = auction?.endTime.toNumber();
+    const auctionEnd = auction?.endTime.toNumber();    
     
     console.log(`Updating blocknumber ${blockNumber}`);
     store.dispatch(setBlockAttr({'blocknumber': blockNumber, 'blockhash': block?.hash}));
@@ -41,7 +43,7 @@ const ethersWebsocketMiddleware = () => {
     store.dispatch(resetVotes());
   }
 
-  const handleSettlementTrxn = store => async (event) => {
+  const handleSettlementTrxn = store => async (event) => { // (log, event)
     console.log(event);
   }
 

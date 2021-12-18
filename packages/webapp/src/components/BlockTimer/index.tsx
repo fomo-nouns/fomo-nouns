@@ -27,7 +27,7 @@ const BlockTimer: React.FC<{}> = props => {
         setTimeLeft(timeLeft - 20);
       }, 20);
     }
-  }, [blockTime, timeLeft]);
+  }, [dispatch, blockTime, timeLeft]);
   
   const timerDuration = dayjs.duration(timeLeft, 'ms');
   const seconds = Math.floor(timerDuration.seconds());
