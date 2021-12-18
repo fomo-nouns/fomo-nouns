@@ -7,7 +7,6 @@ import { Config, DAppProvider } from '@usedapp/core';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 import account from './state/slices/account';
-import application from './state/slices/application';
 import auction from './state/slices/auction';
 import block from './state/slices/block';
 import connections from './state/slices/connections';
@@ -32,7 +31,6 @@ const createRootReducer = (history: History) =>
   combineReducers({
     router: connectRouter(history),
     account,
-    application,
     auction,
     block,
     connections,
