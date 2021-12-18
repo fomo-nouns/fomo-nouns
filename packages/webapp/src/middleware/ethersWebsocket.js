@@ -5,7 +5,6 @@ import { contract as AuctionContract } from '../wrappers/nounsAuction';
 import { setActiveAuction, setAuctionEnd } from '../state/slices/auction';
 import { setBlockHash, setBlockNumber } from '../state/slices/block';
 import { setNextNounId } from '../state/slices/noun';
-import { resetScore } from '../state/slices/score';
 import { resetVotes } from '../state/slices/vote'; 
 import dayjs from 'dayjs';
 
@@ -44,7 +43,6 @@ const ethersWebsocketMiddleware = () => {
     store.dispatch(setAuctionEnd(auctionEnd));
     store.dispatch(setActiveAuction(activeAuction));
     store.dispatch(resetVotes());
-    store.dispatch(resetScore());
   }
 
   const handleSettlementTrxn = store => async (event) => {

@@ -3,7 +3,7 @@ import { useAppSelector } from '../../hooks';
 
 const VoteProgressBar: React.FC<{}> = props => {
     const activeAuction = useAppSelector(state => state.auction.activeAuction);
-    let score = useAppSelector(state => state.score.score) * 100;
+    let score = useAppSelector(state => state.vote.score) * 100;
     if (activeAuction) {
         score = 0;
     } else {

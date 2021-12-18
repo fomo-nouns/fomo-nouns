@@ -1,8 +1,7 @@
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { FOMO_WEBSOCKET } from '../config';
 
-import { setScore } from '../state/slices/score';
-import { incrementCount, triggerSettlement } from '../state/slices/vote';
+import { setScore, incrementCount, triggerSettlement } from '../state/slices/vote';
 import { setConnected } from '../state/slices/websocket';
 import { setNumConnections } from '../state/slices/connections';
 
