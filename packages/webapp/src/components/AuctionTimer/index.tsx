@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import classes from './Timer.module.css';
+import classes from './AuctionTimer.module.css';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useAppSelector } from "../../hooks";
 
 dayjs.extend(duration);
 
-const Timer: React.FC<{}> = props => {
+const AuctionTimer: React.FC<{}> = props => {
     const activeAuction = useAppSelector(state => state.auction.activeAuction);
     const auctionEnd = useAppSelector(state => state.auction.auctionEnd);
     const [auctionTimer, setAuctionTimer] = useState<number>(0);
@@ -45,4 +45,4 @@ const Timer: React.FC<{}> = props => {
     )
 };
 
-export default Timer;
+export default AuctionTimer;

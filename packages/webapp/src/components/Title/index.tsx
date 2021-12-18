@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../../hooks";
 import classes from "./Title.module.css";
+import AuctionTimer from '../AuctionTimer';
 import BlockTimer from '../BlockTimer';
 
 
@@ -11,7 +12,7 @@ const Title: React.FC<{}> = props => {
 
   let titleText = '';
   if (activeAuction) {
-    titleText = `Come back at Noun O'Clock in:`;
+    titleText = `Voting starts at Noun O'Clock in:`;
   } else if (attemptedSettle) {
     titleText = `Attempting to settle!`;
   } else if (votingActive) {
@@ -26,7 +27,7 @@ const Title: React.FC<{}> = props => {
     <div className={classes.Wrapper}>
       <h1 className={classes.Title}>
         {titleText}
-        {!activeAuction ? (<BlockTimer/>) : <></>}
+        {!activeAuction ? (<BlockTimer/>) : (<AuctionTimer/>)}
       </h1>
     </div>
   )

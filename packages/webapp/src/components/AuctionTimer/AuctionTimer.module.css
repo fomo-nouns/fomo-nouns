@@ -1,7 +1,5 @@
 .Wrapper{
-    grid-column: 2;
-    grid-row-start: 2;
-    font-size: 24px;
+    font-size: 1em;
     justify-self: center;
     font-family: 'Londrina Solid';
 }
