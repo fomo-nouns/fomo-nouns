@@ -5,10 +5,13 @@
     cursor: pointer;
     background-color: white;
     border: 1px solid black;
-    width: 20%;
-    min-width: 85px;
     border-radius: 20px;
     padding: 0.2em;
+
+    /* Width */
+    width: 30%;
+    min-width: 85px;
+    max-width: 200px;
 }
 .voteButton:enabled:hover{
     background: rgba(0, 0, 0, 0.1);
