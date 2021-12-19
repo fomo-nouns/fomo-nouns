@@ -15,7 +15,7 @@ import Banner from './components/Banner';
 
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket } from './middleware/voteWebsocket';
-import { openEthersSocket } from './middleware/ethersWebsocket';
+import { openEthereumSocket } from './middleware/ethersWebsocket';
 
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
 
   useEffect(() => { // Only initialize after mount
     dispatch(openVoteSocket());
-    dispatch(openEthersSocket());
+    dispatch(openEthereumSocket());
   }, [dispatch]);
 
 
