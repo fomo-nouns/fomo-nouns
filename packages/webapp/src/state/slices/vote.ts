@@ -55,7 +55,11 @@ export const voteSlice = createSlice({
     endVoting: (state) => {
       state.votingActive = false;
     },
-    resetVotes: (state) => { return { ...initialState, connected: state.connected } }
+    resetVotes: (state) => ({
+      ...initialState,
+      numConnections: state.numConnections,
+      connected: state.connected
+    })
   },
 });
 

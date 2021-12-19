@@ -3,14 +3,14 @@ import { default as globalConfig, PROVIDER_KEY, provider} from '../config';
 import { providers } from 'ethers';
 import { contract as AuctionContract } from '../wrappers/nounsAuction';
 import { setAuctionEnd } from '../state/slices/auction';
-import block, { setBlockAttr } from '../state/slices/block';
+import { setBlockAttr, setEthereumConnected } from '../state/slices/block';
 import { setNextNounId } from '../state/slices/noun';
 import { resetVotes } from '../state/slices/vote'; 
 import { setPrevSettledBlockHash } from '../state/slices/settlement';
 
 // Define the Actions Intercepted by the Middleware
-const openEthersSocket = (payload) => ({type: 'ethersSocket/open', payload});
-const closeEthersSocket = (payload) => ({type: 'ethersSocket/close', payload});
+const openEthereumSocket = (payload) => ({type: 'ethereumSocket/open', payload});
+const closeEthereumSocket = (payload) => ({type: 'ethereumSocket/close', payload});
 
 const settledFilter = {
   address: AuctionContract.address,
@@ -51,13 +51,14 @@ const ethersWebsocketMiddleware = () => {
 
   // Define the Middleware
   return store => next => action => {
-    if (action.type === 'ethersSocket/open') {
+    if (action.type === 'ethereumSocket/open') {
       closeSocket();
       socket = openSocket();
+      store.dispatch(setEthereumConnected(true));
       socket.on('block', handleNewBlock(store));
       socket.on(settledFilter, handleSettlementTrxn(store));
     }
-    else if (action.type === 'ethersSocket/close') {
+    else if (action.type === 'ethereumSocket/close') {
       closeSocket();
     }
     else {
@@ -68,4 +69,4 @@ const ethersWebsocketMiddleware = () => {
 
 
 export default ethersWebsocketMiddleware();
-export { openEthersSocket, closeEthersSocket };
+export { openEthereumSocket, closeEthereumSocket };

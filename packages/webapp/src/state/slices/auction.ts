@@ -7,7 +7,7 @@ interface AuctionState {
 }
 
 const initialState: AuctionState = {
-  activeAuction: true,
+  activeAuction: undefined,
   auctionEnd: 0
 };
 

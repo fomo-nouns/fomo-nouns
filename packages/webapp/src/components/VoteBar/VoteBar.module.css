@@ -1,7 +1,8 @@
 .VoteBar {
     display: flex;
-    justify-content: space-between;
-    width: 40%;
+    justify-content: space-evenly;
+    gap: 10px;
+    width: 30%;
     min-height: 80px;
     min-width: 320px;
     padding: 1em;

@@ -22,6 +22,8 @@ const Noun: React.FC<{ alt: string }> = props => {
 
   const blockhash = useAppSelector(state => state.block.blockHash);
   const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
+  const voteConnected = useAppSelector(state => state.vote.connected);
+  const ethereumConnected = useAppSelector(state => state.block.connected);
 
   const generateNoun = useCallback(async () => {
     if (!blockhash) return;
@@ -40,14 +42,21 @@ const Noun: React.FC<{ alt: string }> = props => {
   useEffect(() => {
     generateNoun();
   }, [generateNoun, blockhash]);
+  
 
-
-  return (
-    <div className={classes.imgWrapper}>
-      {nextNounId && <Image className={classes.img} src={`data:image/svg+xml;base64,${img}`} alt={alt} fluid />}
-      {!nextNounId && <LoadingNoun />}
-    </div>
-  );
+  if (!nextNounId || !ethereumConnected || !voteConnected) {
+    return (
+      <div className={classes.imgWrapper}>
+        <LoadingNoun />
+      </div>
+    );
+  } else {
+    return (
+      <div className={classes.imgWrapper}>
+        <Image className={classes.img} src={`data:image/svg+xml;base64,${img}`} alt={alt} fluid />
+      </div>
+    );
+  }
 };
 
 export default Noun;

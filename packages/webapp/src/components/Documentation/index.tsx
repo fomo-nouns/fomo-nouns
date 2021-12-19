@@ -10,11 +10,11 @@ import { buildEtherscanContractLink } from '../../utils/etherscan';
 
 const Documentation = () => {
   const fomoDiscourseLink = (
-    <Link text="Discourse Discussion" url="https://discourse.nouns.wtf/t/fomo-nouns-force-mint-our-nouns/117" leavesPage={true} />
+    <Link text="Nouns DAO Discourse" url="https://discourse.nouns.wtf/t/fomo-nouns-force-mint-our-nouns/117" leavesPage={true} />
   );
 
   const proposalEightLink = (
-    <Link text="On-chain Proposal" url="https://nouns.wtf/vote/8" leavesPage={true} />
+    <Link text="Proposal #8" url="https://nouns.wtf/vote/8" leavesPage={true} />
   );
 
   const gitHubLink = (
@@ -38,13 +38,13 @@ const Documentation = () => {
           <h1>WTF?</h1>
           <p>
             FOMO Nouns is a social project for the {nounsDaoLink} community. Every Noun
-            O'Clock, when a new Noun is chosen, users can watch new possible Nouns appear with
-            every block and vote for which one they want to see minted. This has to happen
-            <i>really</i> fast, so we hope you'll feel the FOMO.
+            O'Clock, when the next Noun is chosen, users can watch potential Nouns appear
+            with every block and vote for which one to mint. This happens <i>really</i> fast,
+            so we hope you'll feel the FOMO.
           </p>
           <p>
-            The project was sponsored as part of {proposalEightLink} after discussing with the
-            Nouns community at the {fomoDiscourseLink}.
+            This project was approved as part of Nouns DAO {proposalEightLink} after discussion with
+            the Nouns community on the {fomoDiscourseLink}.
           </p>
         </div>
         <Accordion flush>
@@ -52,13 +52,13 @@ const Documentation = () => {
             <Accordion.Header className={classes.accordionHeader} id="faq">Summary</Accordion.Header>
             <Accordion.Body>
               <ul>
-                <li>Every 24h a Nouns auction ends at Noun O'Clock</li>
+                <li>Every 24 hours a Nouns auction ends at Noun O'Clock</li>
                 <li>The auction must be "settled" to start the next auction</li>
-                <li>The next Noun is determined by the block that "settlement" occurs</li>
-                <li>FOMO Nouns let you watch, block-by-block, the possible Nouns we could mint</li>
-                <li>Vote on whether you like each Noun, and if we reach quorum, we'll try to mint it</li>
-                <li>Nouns change quick, so you have to get your votes in REALLY FAST!</li>
-                <li>Occasionally, the chain moves so fast we'll miss a winning Noun. Keep trying!</li>
+                <li>The block that "settlement" occurs in determines the next Noun</li>
+                <li>FOMO Nouns lets you watch, block by block, the next possible Nouns</li>
+                <li>Vote for Nouns you like, and if enough people agree, we'll try to mint it</li>
+                <li>They change REALLY FAST, so get your votes in quickly</li>
+                <li>A winning Noun can't always be minted if the chain moves too fast. Keep trying!</li>
               </ul>
             </Accordion.Body>
           </Accordion.Item>
@@ -66,23 +66,23 @@ const Documentation = () => {
             <Accordion.Header className={classes.accordionHeader}>Voting</Accordion.Header>
             <Accordion.Body>
               <p>
-                The next Noun's appearance is determined by the latest Ethereum block's
-                'blockhash', a unique signature for the block. These blocks are mined every ~13
-                seconds, and once a new block appears, the old Noun is gone forever.
+                After a Nouns auction completes, the community must pick a block to settle the
+                old auction, mint a new Noun, and start the next auction. Every Ethereum block
+                has the potential to mint a different Noun. However, the auction must be settled
+                in that <i>exact</i> block, or the Noun disappears forever. And these new blocks
+                appear every ~13 seconds.
               </p>
               <p>
-                Minting a great Noun means we need to get votes, execute the transaction, and get
-                it into the next mined block all within 13 seconds! As a result, we only give you
-                ~6 seconds to cast your votes, so you need to FOMO <i>quick</i>.
+                We need to gather votes, execute the transaction, and get it mined in the next
+                block <i>all</i> within 13 seconds. This means you only have ~6 seconds to cast
+                your votes. If you miss a great Noun, you may not see it again for another
+                40,393,080 blocks or approximately 17 years.
               </p>
               <p>
-                A winning vote is when 60% of the connected users like a particular Noun. Each 👍
-                counts as +1, and each 🤷‍♂️ counts as +0. However, we only want to mint the best Nouns,
-                so you can also cast a 👎 which <i>reduces</i> the score by -1.
-              </p>
-              <p>
-                This means if 20% of users don't like a Noun, you need all of the remaining 80% of
-                users to like the Noun in order for it to win!
+                A winning vote is when 60% of the connected users like (👍) a Noun. However, we
+                want to mint only the best Nouns, so you can also dislike (👎) it to subtract one
+                from the score. If 20% of users dislike a Noun, you need every single other
+                user (all 80%) to like it in order to reach to 60% threshold.
               </p>
             </Accordion.Body>
           </Accordion.Item>
@@ -90,7 +90,7 @@ const Documentation = () => {
             <Accordion.Header className={classes.accordionHeader}>Donations</Accordion.Header>
             <Accordion.Body>
               <p>
-                Settling the auction requires Ethereum gas fees, which can be expensive! We built 
+                Settling the auction requires Ethereum gas fees, which can be expensive. We built 
                 a {smartContractLink} to trustlessly hold donations from the community to help with
                 these settlement expenses. These funds can <i>only</i> be used for settling a Nouns
                 auction, and only {nounsDaoLink} has access to pull funds from the contract.
@@ -106,7 +106,7 @@ const Documentation = () => {
             <Accordion.Body>
               <p>
                 FOMO Nouns was built entirely in public, and you can find all of the code,
-                architecture, and even fork the application yourself from our {gitHubLink}.
+                architecture, and even deploy the application yourself from our {gitHubLink}.
               </p>
             </Accordion.Body>
           </Accordion.Item>
@@ -114,15 +114,15 @@ const Documentation = () => {
             <Accordion.Header className={classes.accordionHeader}>Nouns Artwork</Accordion.Header>
             <Accordion.Body>
               <p>
-                Nouns are generated randomly based Ethereum block hashes. There are no 'if'
+                Nouns are generated randomly based on Ethereum block hashes. There are no 'if'
                 statements or other rules governing noun trait scarcity, which makes all nouns
                 equally rare. As of this writing, nouns are made up of:
               </p>
               <ul>
-                <li>backgrounds (2) </li>
+                <li>backgrounds (2)</li>
                 <li>bodies (30)</li>
-                <li>accessories (137) </li>
-                <li>heads (234) </li>
+                <li>accessories (137)</li>
+                <li>heads (234)</li>
                 <li>glasses (21)</li>
               </ul>
               <p>
