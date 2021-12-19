@@ -11,6 +11,7 @@ import auction from './state/slices/auction';
 import block from './state/slices/block';
 import noun from './state/slices/noun';
 import vote from './state/slices/vote';
+import settlement from './state/slices/settlement';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
@@ -20,7 +21,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import dotenv from 'dotenv';
 import { default as globalConfig } from './config';
 import voteWebsocket from './middleware/voteWebsocket';
-// import ethersWebsocketMiddleware from './middleware/ethersWebsocket';
+import ethersProviderMiddleware from './middleware/ethersProvider';
 import alchemyWebsocketMiddleware from './middleware/alchemyWebsocket';
 
 
@@ -35,6 +36,7 @@ const createRootReducer = (history: History) =>
     auction,
     block,
     noun,
+    settlement,
     vote,
   });
 
@@ -46,7 +48,8 @@ export default function configureStore(preloadedState: any) {
       applyMiddleware(
         routerMiddleware(history), // for dispatching history actions
         // ... other middlewares ...
-        alchemyWebsocketMiddleware, //ethersWebsocketMiddleware,
+        alchemyWebsocketMiddleware, 
+        ethersProviderMiddleware,
         voteWebsocket
       ),
     ),
