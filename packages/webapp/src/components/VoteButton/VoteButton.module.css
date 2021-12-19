@@ -1,17 +1,19 @@
 .voteButton{
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     cursor: pointer;
     background-color: white;
     border: 1px solid black;
     border-radius: 20px;
-    padding: 0.2em;
 
-    /* Width */
+    height: 110px;
     width: 50%;
     min-width: 85px;
     max-width: 250px;
+
+    box-sizing: border-box;
 }
 .voteButton:enabled:hover{
     background: rgba(0, 0, 0, 0.1);
