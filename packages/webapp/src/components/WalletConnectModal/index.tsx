@@ -12,11 +12,10 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveAccount } from '../../state/slices/account';
 import { AbstractConnector } from '@web3-react/abstract-connector';
+import PlayersConnected from '../PlayersConnected';
 
 const WalletConnectModal: React.FC<{}> = props => {
   const activeAccount = useAppSelector(state => state.account.activeAccount);
-  const activeAuction = useAppSelector(state => state.auction.activeAuction);
-  const numConnections = useAppSelector(state => state.vote.numConnections);
   const dispatch = useAppDispatch();
   const { deactivate, activate, account } = useEthers();
   const [showConnectModal, setShowConnectModal] = useState(false);
@@ -145,8 +144,7 @@ const WalletConnectModal: React.FC<{}> = props => {
     <div className={classes.WalletArea}>
       {activeAccount ? connectedContent : disconnectedContent}
       {showConnectModal && <Modal title="Connect your wallet" content={wallets} onDismiss={hideModalHandler} />}
-      {!activeAuction && (numConnections <= 1 ? <span className={classes.Players}>{numConnections} player online!</span> :
-                             <span className={classes.Players}>{numConnections} players online!</span>)}
+      <PlayersConnected />
     </div>
   )
 };
