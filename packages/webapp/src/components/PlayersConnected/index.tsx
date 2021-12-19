@@ -8,8 +8,8 @@ const PlayersConnected: React.FC<{}> = props => {
 
   if (!activeAuction && voteConnected) {
     return (
-      <span className={classes.Players}>
-        {numConnections} {numConnections <= 1 ? 'player' : 'players'} online!
+      <span className={classes.Connected}>
+        Players: {numConnections}
       </span>
     );
   } else {
