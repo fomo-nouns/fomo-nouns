@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import loadingNoun from '../../assets/loading-skull-noun.gif';
-import Image from 'react-bootstrap/Image';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveBackground } from '../../state/slices/noun';
 import classes from './Noun.module.css';
@@ -9,10 +8,6 @@ import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nouns/assets'
 import { buildSVG } from '@nouns/sdk';
 const { palette } = ImageData;
 
-
-const LoadingNoun = () => {
-  return <Image src={loadingNoun} className={classes.img} alt={'loading noun'}/>;
-};
 
 const Noun: React.FC<{ alt: string }> = props => {
   const { alt } = props;
@@ -44,19 +39,25 @@ const Noun: React.FC<{ alt: string }> = props => {
   }, [generateNoun, blockhash]);
   
 
+  let htmlImg, htmlAlt;
   if (!nextNounId || !ethereumConnected || !voteConnected) {
-    return (
-      <div className={classes.imgWrapper}>
-        <LoadingNoun />
-      </div>
-    );
+    htmlImg = loadingNoun;
+    htmlAlt = 'Loading Noun';
   } else {
-    return (
-      <div className={classes.imgWrapper}>
-        <Image className={classes.img} src={`data:image/svg+xml;base64,${img}`} alt={alt} fluid />
-      </div>
-    );
+    htmlImg = `data:image/svg+xml;base64,${img}`;
+    htmlAlt = alt;
   }
+
+  return (
+    <div className={classes.imgWrapper}>
+        <img className={classes.img}
+          src={htmlImg}
+          alt={htmlAlt}
+          height="500px"
+          width="500px"
+        />
+      </div>
+  );
 };
 
 export default Noun;
