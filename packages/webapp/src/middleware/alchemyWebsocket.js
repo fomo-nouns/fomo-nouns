@@ -12,14 +12,12 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 const openEthereumSocket = (payload) => ({type: 'ethereumSocket/open', payload});
 const closeEthereumSocket = (payload) => ({type: 'ethereumSocket/close', payload});
 
-const settledFilter = {
-  address: AuctionContract.address,
-  // address: FomoSettlementContract.address,
-  topics: [
-    // utils.id('settleAuctionWithRefund(bytes32)')
-    '0xc9f72b276a388619c6d185d146697036241880c36654b1a3ffdad07c24038d99'
-  ]
-};
+// const settledFilter = {
+//   address: FomoSettlementContract.address,
+//   topics: [
+//     utils.id('settleAuctionWithRefund(bytes32)')
+//   ]
+// };
 
 
 // Define the Middleware
@@ -29,7 +27,7 @@ const alchemyWebsocketMiddleware = () => {
   let blockId = 44;  
 
   const openSocket = () => new W3CWebSocket(`wss://eth-${globalConfig.chainName}.alchemyapi.io/v2/${PROVIDER_KEY}`);
-  const closeSocket = () => { if (socket !== null) socket.destroy() };
+  const closeSocket = () => { if (socket !== null) socket.close() };
 
   // Websocket Parsing & Sending Message
   const parseMessage = (msg) => {
