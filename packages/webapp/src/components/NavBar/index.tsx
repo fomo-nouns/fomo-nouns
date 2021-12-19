@@ -7,6 +7,7 @@ import { buildEtherscanHoldingsLink } from '../../utils/etherscan';
 
 import WalletConnectModal from "../WalletConnectModal";
 import fomologo from './fomologo.png';
+import PlayersConnected from '../PlayersConnected';
 
 const NavBar = () => {
   const treasuryBalance = useEtherBalance(config.fomoSettlerAddress);
@@ -34,6 +35,9 @@ const NavBar = () => {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="nav-items" />
         <Navbar.Collapse id="nav-items" className="justify-content-end">
+          <Nav.Item className={classes.nounsNavLink}>
+            <PlayersConnected />
+          </Nav.Item>
           <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
             {treasuryBalance && (
               <Nav.Link
