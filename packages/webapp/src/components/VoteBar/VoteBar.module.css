@@ -14,7 +14,7 @@
 
 .VoteBarOverlay {
     background-color: white;
-    opacity: 50%;
+    opacity: 0.5;
 }
 
 .reconnect {
