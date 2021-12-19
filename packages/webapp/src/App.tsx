@@ -16,7 +16,8 @@ import Banner from './components/Banner';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket } from './middleware/voteWebsocket';
 import SettledAuctionModal from './components/SettledAuctionModal';
-import { openEthereumSocket } from './middleware/ethersWebsocket';
+import { openEthereumProvider } from './middleware/ethersProvider';
+import { openEthereumSocket } from './middleware/alchemyWebsocket';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
   useEffect(() => { // Only initialize after mount
     dispatch(openVoteSocket());
     dispatch(openEthereumSocket());
+    dispatch(openEthereumProvider());
   }, [dispatch]);
 
 

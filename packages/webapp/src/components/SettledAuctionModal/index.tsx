@@ -10,7 +10,7 @@ import { resetPrevSettledBlockHash } from '../../state/slices/settlement';
 const { palette } = ImageData;
 
 const SettledAuctionModal: React.FC<{}> = props => {
-
+  const dispatch = useAppDispatch();
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [successfulSettle, setSuccessfulSettle] = useState(false);
   const [img, setImg] = useState("");
@@ -41,14 +41,15 @@ const SettledAuctionModal: React.FC<{}> = props => {
       const svgBinary = buildSVG(parts, palette, background);
       setImg(btoa(svgBinary));
     }
-    
+
+    console.log("two block hashes: ", attemptedSettleBlockHash, prevSettledBlockHash);
     if (prevSettledBlockHash) {
       getNounImg();
       showModalHandler();
       attemptedSettleBlockHash === prevSettledBlockHash ? setSuccessfulSettle(true) : setSuccessfulSettle(false);
-      resetPrevSettledBlockHash();
+      dispatch(resetPrevSettledBlockHash());
     }
-  }, [attemptedSettleBlockHash, prevSettledBlockHash, nextNounId]);
+  }, [attemptedSettleBlockHash, prevSettledBlockHash, nextNounId, dispatch]);
 
   const copy = successfulSettle ? `Hello, Noun ${localNounId}!` : "We weren't able to mint a Noun in time.";
   const title = successfulSettle ? "We minted a Noun!" : "A new Noun has been minted.";
