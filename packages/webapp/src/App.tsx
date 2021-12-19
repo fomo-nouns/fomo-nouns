@@ -16,6 +16,7 @@ import Banner from './components/Banner';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket } from './middleware/voteWebsocket';
 import { openEthersSocket } from './middleware/ethersWebsocket';
+import SettledAuctionModal from './components/SettledAuctionModal';
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
       <Title/>
       <VoteProgressBar/>
       <Noun alt={"Current Block Noun"}/>
+      <SettledAuctionModal/>
       <VoteBar />
       <Banner />
       <Documentation />

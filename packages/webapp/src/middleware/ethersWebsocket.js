@@ -3,9 +3,10 @@ import { default as globalConfig, PROVIDER_KEY, provider} from '../config';
 import { providers } from 'ethers';
 import { contract as AuctionContract } from '../wrappers/nounsAuction';
 import { setAuctionEnd } from '../state/slices/auction';
-import { setBlockAttr } from '../state/slices/block';
+import block, { setBlockAttr } from '../state/slices/block';
 import { setNextNounId } from '../state/slices/noun';
 import { resetVotes } from '../state/slices/vote'; 
+import { setPrevSettledBlockHash } from '../state/slices/settlement';
 
 // Define the Actions Intercepted by the Middleware
 const openEthersSocket = (payload) => ({type: 'ethersSocket/open', payload});
@@ -27,7 +28,6 @@ const ethersWebsocketMiddleware = () => {
   const openSocket = () => new providers.AlchemyWebSocketProvider(globalConfig.chainName, PROVIDER_KEY);
   const closeSocket = () => { if (socket !== null) socket.destroy() };
 
-
   // Define the Handler Methods
   const handleNewBlock = store => async (blockNumber) => {
     const block = await provider.getBlock(blockNumber);
@@ -43,8 +43,9 @@ const ethersWebsocketMiddleware = () => {
     store.dispatch(resetVotes());
   }
 
-  const handleSettlementTrxn = store => async (event) => { // (log, event)
-    console.log(event);
+  const handleSettlementTrxn = store => async (event) => { 
+    const block = await provider.getBlock(event.blockNumber - 1);
+    store.dispatch(setPrevSettledBlockHash(block.hash));
   }
 
 

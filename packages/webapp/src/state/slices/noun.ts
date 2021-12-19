@@ -10,7 +10,7 @@ const initialState: Noun = {
   useGreyBg: true
 };
 
-export const blockSlice = createSlice({
+export const nounSlice = createSlice({
   name: 'noun',
   initialState,
   reducers: {
@@ -23,6 +23,6 @@ export const blockSlice = createSlice({
   },
 });
 
-export const { setNextNounId, setActiveBackground } = blockSlice.actions;
+export const { setNextNounId, setActiveBackground } = nounSlice.actions;
 
-export default blockSlice.reducer;
+export default nounSlice.reducer;

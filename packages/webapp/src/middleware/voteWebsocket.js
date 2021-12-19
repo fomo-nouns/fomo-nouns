@@ -1,6 +1,6 @@
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { FOMO_WEBSOCKET } from '../config';
-
+import { setAttemptedSettleBlockHash } from '../state/slices/settlement';
 import {
   setConnected,
   setNumConnections,
@@ -41,6 +41,7 @@ const voteWebsocketMiddleware = () => {
       }
       if (data.settlementAttempted) {
         store.dispatch(triggerSettlement());
+        store.dispatch(setAttemptedSettleBlockHash(data.blockhash));
       }
       if('connections' in data) {
         store.dispatch(setNumConnections(data.connections));

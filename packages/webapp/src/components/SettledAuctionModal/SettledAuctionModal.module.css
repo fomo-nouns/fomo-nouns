@@ -1,0 +1,16 @@
+.NounImg {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 15px;
+}
+
+.Copy{
+    font-size: 32px;
+    padding-top: 10px;
+}
+
+.Footer {
+    font-size: 18px;
+}
