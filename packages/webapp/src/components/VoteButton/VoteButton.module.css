@@ -9,9 +9,9 @@
     padding: 0.2em;
 
     /* Width */
-    width: 30%;
+    width: 50%;
     min-width: 85px;
-    max-width: 200px;
+    max-width: 250px;
 }
 .voteButton:enabled:hover{
     background: rgba(0, 0, 0, 0.1);

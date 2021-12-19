@@ -18,10 +18,10 @@ const VoteBar:React.FC<{}> = (props) => {
     console.log("vote changed to: ", selectedVote);
   }, [selectedVote]);
 
-  const voteOpts = (
+  const voteOpts = (neutralOption: boolean) => (
     <>
       <VoteButton voteType={VOTE_OPTIONS.voteDislike} />
-      <VoteButton voteType={VOTE_OPTIONS.voteShrug} />
+      {neutralOption && <VoteButton voteType={VOTE_OPTIONS.voteShrug} />}
       <VoteButton voteType={VOTE_OPTIONS.voteLike} />
     </>
   );
@@ -32,7 +32,7 @@ const VoteBar:React.FC<{}> = (props) => {
 
   return(
     <div className={`${!votingActive ? classes.VoteBarOverlay : ''} ${classes.VoteBar}`}>
-      { wsConnected ? voteOpts : reconnectOpt }
+      { wsConnected ? voteOpts(false) : reconnectOpt }
     </div>
   );
 }
