@@ -16,7 +16,7 @@ const Title: React.FC<{}> = props => {
   let titleText = '';
   if (!voteConnected || !ethereumConnected) {
     titleText = `Awaiting connection...`;
-  } else if (!blockHash || activeAuction === null) {
+  } else if (!blockHash || activeAuction === undefined) {
     titleText = `Loading next block...`;
   } else if (activeAuction) {
     titleText = `Come back at Noun O'Clock in:`;

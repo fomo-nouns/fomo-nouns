@@ -4,20 +4,14 @@ import { contract as AuctionContract } from '../wrappers/nounsAuction';
 import { setAuctionEnd } from '../state/slices/auction';
 import { setEthereumConnected, setBlockAttr } from '../state/slices/block';
 import { setNextNounId } from '../state/slices/noun';
-import { resetVotes } from '../state/slices/vote'; 
+import { resetVotes } from '../state/slices/vote';
+import { resetAuctionEnd } from '../state/slices/auction';
 
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
 // Define the Actions Intercepted by the Middleware
 const openEthereumSocket = (payload) => ({type: 'ethereumSocket/open', payload});
 const closeEthereumSocket = (payload) => ({type: 'ethereumSocket/close', payload});
-
-// const settledFilter = {
-//   address: FomoSettlementContract.address,
-//   topics: [
-//     utils.id('settleAuctionWithRefund(bytes32)')
-//   ]
-// };
 
 
 // Define the Middleware
@@ -84,6 +78,7 @@ const alchemyWebsocketMiddleware = () => {
   const handleClose = store => () => {
     console.log('Alchemy Web Socket CLOSED.');
     store.dispatch(setEthereumConnected(false));
+    store.dispatch(resetAuctionEnd());
   }
 
 

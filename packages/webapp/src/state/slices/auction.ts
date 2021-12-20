@@ -15,6 +15,7 @@ export const auctionSlice = createSlice({
   name: 'auction',
   initialState,
   reducers: {
+    resetAuctionEnd: () => initialState,
     setAuctionEnd: (state, action: PayloadAction<number | null>) => {
         state.auctionEnd = action.payload === null ? 0 : action.payload;
         state.activeAuction = dayjs().unix() < state.auctionEnd ? true : false;
@@ -22,6 +23,6 @@ export const auctionSlice = createSlice({
   },
 });
 
-export const { setAuctionEnd } = auctionSlice.actions;
+export const { resetAuctionEnd, setAuctionEnd } = auctionSlice.actions;
 
 export default auctionSlice.reducer;
