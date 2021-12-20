@@ -14,3 +14,9 @@
 .Footer {
     font-size: 18px;
 }
+
+h3 {
+    font-size: xx-large;
+    font-weight: bold;
+    padding-top: 8px;
+}

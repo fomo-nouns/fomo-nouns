@@ -56,15 +56,16 @@ const SettledAuctionModal: React.FC<{}> = props => {
 
   const settledAuctionContent = (
     <>
+    <h3>{title}</h3>
     <Image src={`data:image/svg+xml;base64,${img}`} className={classes.NounImg} alt={`Minted Noun`}/>
-    <p className={classes.Copy}>{copy}</p>
-    <p className={classes.Footer}>Come back tomorrow to play FOMO Nouns</p>
+    <h3>{copy}</h3>
+    <p className={classes.Footer}>Come back tomorrow to play FOMO Nouns again</p>
     </>
     );
 
   return (
     <div className={classes.ModalWrapper}>
-      {showConnectModal && <Modal title={title} content={settledAuctionContent} onDismiss={hideModalHandler} />}
+      {showConnectModal && <Modal content={settledAuctionContent} onDismiss={hideModalHandler} />}
     </div>
   )
 };
