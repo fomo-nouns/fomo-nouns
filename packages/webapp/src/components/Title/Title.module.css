@@ -7,3 +7,9 @@
     white-space: pre-wrap;
     padding-bottom: 1%;
 }
+
+.TimerSpacer {
+    font-size: 1em;
+    justify-self: center;
+    font-family: 'Londrina Solid';
+}

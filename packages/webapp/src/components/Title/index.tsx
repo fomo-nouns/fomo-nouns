@@ -13,28 +13,37 @@ const Title: React.FC<{}> = props => {
   const ethereumConnected = useAppSelector(state => state.block.connected);
   const blockHash = useAppSelector(state => state.block.blockHash);
 
-  let titleText = '';
+  let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
+
+  let titleText = '', timer = <></>;
   if (!voteConnected || !ethereumConnected) {
     titleText = `Awaiting connection...`;
+    timer = timerSpacer;
   } else if (!blockHash || activeAuction === undefined) {
     titleText = `Loading next block...`;
+    timer = timerSpacer;
   } else if (activeAuction) {
     titleText = `Come back at Noun O'Clock in:`;
+    timer = <AuctionTimer/>;
   } else if (attemptedSettle) {
     titleText = `Attempting to settle...`;
+    timer = timerSpacer;
   } else if (votingActive) {
     titleText = `Should we mint this Noun?`;
+    timer = <BlockTimer/>;
   } else if (!activeAuction && !votingActive) {
     titleText = `Time's up! Waiting for next block...`;
+    timer = <BlockTimer/>;
   } else {
     titleText = 'Loading FOMO Nouns...';
+    timer = <></>;
   }
 
   return (
     <div className={classes.Wrapper}>
       <h1 className={classes.Title}>
         {titleText}
-        {!activeAuction ? (<BlockTimer/>) : (<AuctionTimer/>)}
+        {timer}
       </h1>
     </div>
   )
