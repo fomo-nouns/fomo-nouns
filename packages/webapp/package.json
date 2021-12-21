@@ -24,6 +24,7 @@
     "bootstrap": "^5.1",
     "connected-react-router": "^6.9.1",
     "dayjs": "^1.10.7",
+    "ethereum-bloom-filters": "^1.0.10",
     "ethers": "^5.5.1",
     "history": "^5.0.1",
     "react": "^17.0.2",
