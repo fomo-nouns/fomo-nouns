@@ -32,7 +32,6 @@ const voteWebsocketMiddleware = () => {
   const handleReceiveMessage = store => (msg) => {
     try {
       const data = JSON.parse(String(msg.data));
-      console.log(data);
       if (data.vote) {
         store.dispatch(incrementCount(data.vote));
       }

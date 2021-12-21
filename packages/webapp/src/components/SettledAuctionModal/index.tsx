@@ -42,7 +42,6 @@ const SettledAuctionModal: React.FC<{}> = props => {
       setImg(btoa(svgBinary));
     }
 
-    console.log("two block hashes: ", attemptedSettleBlockHash, prevSettledBlockHash);
     if (prevSettledBlockHash) {
       getNounImg();
       showModalHandler();
@@ -51,15 +50,15 @@ const SettledAuctionModal: React.FC<{}> = props => {
     }
   }, [attemptedSettleBlockHash, prevSettledBlockHash, nextNounId, dispatch]);
 
-  const copy = successfulSettle ? `Hello, Noun ${localNounId}!` : "We weren't able to mint a Noun in time.";
-  const title = successfulSettle ? "We minted a Noun!" : "A new Noun has been minted.";
+  const copy = successfulSettle ? `Hello, Noun ${localNounId} 👋` : `Someone else minted Noun ${localNounId}`;
+  const title = successfulSettle ? "We minted a Noun!" : "We missed it!";
 
   const settledAuctionContent = (
     <>
     <h3>{title}</h3>
     <Image src={`data:image/svg+xml;base64,${img}`} className={classes.NounImg} alt={`Minted Noun`}/>
     <h3>{copy}</h3>
-    <p className={classes.Footer}>Come back tomorrow to play FOMO Nouns again</p>
+    <p className={classes.Footer}>Come back and play again tomorrow!</p>
     </>
     );
 

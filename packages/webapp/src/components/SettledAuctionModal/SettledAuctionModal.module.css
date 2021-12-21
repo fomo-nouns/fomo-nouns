@@ -6,17 +6,14 @@
     border-radius: 15px;
 }
 
-.Copy{
-    font-size: 32px;
-    padding-top: 10px;
-}
-
 .Footer {
+    margin-top: 8px;
+    margin-bottom: 8px;
     font-size: 18px;
 }
 
 h3 {
     font-size: xx-large;
     font-weight: bold;
-    padding-top: 8px;
+    margin-top: 8px;
 }

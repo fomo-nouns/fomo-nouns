@@ -8,9 +8,7 @@ const openEthereumProvider = (payload) => ({type: 'ethereumProvider/open', paylo
 
 const settledFilter = {
   address: AuctionContract.address,
-  // address: FomoSettlementContract.address,
   topics: [
-    // utils.id('settleAuctionWithRefund(bytes32)')
     '0xc9f72b276a388619c6d185d146697036241880c36654b1a3ffdad07c24038d99'
   ]
 };

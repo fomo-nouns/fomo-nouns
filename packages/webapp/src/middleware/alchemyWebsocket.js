@@ -9,6 +9,7 @@ import { resetAuctionEnd } from '../state/slices/auction';
 
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 
+
 // Define the Actions Intercepted by the Middleware
 const openEthereumSocket = (payload) => ({type: 'ethereumSocket/open', payload});
 const closeEthereumSocket = (payload) => ({type: 'ethereumSocket/close', payload});
