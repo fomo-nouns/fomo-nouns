@@ -22,9 +22,10 @@ const BlockTimer: React.FC<{}> = props => {
       setTimeLeft(0);
       dispatch(endVoting());
     } else {
-      setTimeout(() => {
+      let timer = setTimeout(() => {
         setTimeLeft(timeLeft - 20);
       }, 20);
+      return () => clearInterval(timer);
     }
   }, [dispatch, blockTime, timeLeft]);
   
