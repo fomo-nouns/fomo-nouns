@@ -55,12 +55,21 @@ const alchemyWebsocketMiddleware = () => {
     socket.send(newBlockSubscriptionRequest);
   }
 
-  const handleMessage = store => async (msg) => {
+  const handleMessage = store => (msg) => {
     let data = parseMessage(msg);
 
-    if (!data) return;
+    if (!data) return; // Not a new block notification
 
-    const auctionPromise = AuctionContract.auction().then((auction) => {
+    const blockNumber = Number(data.number); // Convert from hex
+    const blockHash = data.hash;
+    const logsBloom = data.logsBloom;
+    console.log(`Updating blocknumber ${blockNumber}`);
+
+    // Check if settlement has occurred
+    store.dispatch(checkForSettlement(logsBloom));
+
+    // Check the latest auction status
+    AuctionContract.auction().then((auction) => {
       const nextNounId = parseInt(auction?.nounId) + 1;
       const auctionEnd = auction?.endTime.toNumber();
 
@@ -68,15 +77,9 @@ const alchemyWebsocketMiddleware = () => {
       store.dispatch(setAuctionEnd(auctionEnd));
     });
 
-    const blockNumber = Number(data.number); // Convert from hex
-    const blockHash = data.hash;    
-    const logsBloom = data.logsBloom;
-    console.log(`Updating blocknumber ${blockNumber}`);
-    store.dispatch(checkForSettlement(logsBloom));
+    // Update the Redux block information
     store.dispatch(setBlockAttr({'blocknumber': blockNumber, 'blockhash': blockHash}));
-    store.dispatch(resetVotes());    
-
-    await auctionPromise;    
+    store.dispatch(resetVotes());
   }
 
   const handleClose = store => () => {
