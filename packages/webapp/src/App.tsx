@@ -40,8 +40,8 @@ function App() {
       <NavBar />
       <Title/>
       <VoteProgressBar/>
-      <Noun alt={"Current Block Noun"}/>
       <SettledAuctionModal/>
+      <Noun alt={"Current Block Noun"}/>
       <VoteBar />
       <Banner />
       <Documentation />

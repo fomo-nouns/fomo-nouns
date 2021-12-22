@@ -1,3 +1,7 @@
+.ModalWrapper {
+    align-content: center;
+}
+
 .NounImg {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
