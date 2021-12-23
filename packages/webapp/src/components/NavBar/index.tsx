@@ -23,9 +23,6 @@ const NavBar = () => {
 
   return (
     <div className={classes.HeaderBar}>
-      {/* {showConnectModal && activeAccount === undefined && (
-        <WalletConnectModal onDismiss={hideModalHandler} />
-      )} */}
       <Navbar collapseOnSelect expand="lg">
         <Navbar.Brand href="/" className={classes.navBarBrand}>
           <img src={fomologo} alt='FOMO Nouns'
@@ -67,7 +64,9 @@ const NavBar = () => {
           >
             NOUNS
           </Nav.Link>
-          <WalletConnectModal />
+          <Nav.Item>
+            <WalletConnectModal />
+          </Nav.Item>
         </Navbar.Collapse>
       </Navbar>
     </div>

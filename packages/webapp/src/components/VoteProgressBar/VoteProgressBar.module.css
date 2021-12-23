@@ -2,7 +2,8 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-bottom: 11px;
+    padding-bottom: 5px;
+    z-index: 10;
 }
 
 .BarOutline {

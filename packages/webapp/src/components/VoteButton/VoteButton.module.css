@@ -1,3 +1,7 @@
+button {
+    padding: 0;
+}
+
 .voteButton{
     display: flex;
     flex-direction: column;

@@ -1,8 +1,8 @@
 .WalletArea {
   display: flex;
-  flex-direction: column;
-  padding: 0;
   align-items: center;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
 }
 
 .clickable {
@@ -10,40 +10,29 @@
 }
 
 .connectBtn {
-  border: black solid 1px;
-  display: inline-block;
-  border-radius: 30px;
-  width: max-content;
-  height: max-content;
-  margin: 10px 10px;
-  background:rgb(256, 256, 256, 0.8);
   cursor: pointer;
-  font-size: 16px;
-  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: inherit;
 }
 .connectBtn:hover,
 .connectBtn:active,
 .connectBtn:focus {
   cursor: pointer !important;
-  background-color: lightgray !important;
 }
 
 .disconnectBtn {
-  border: black solid 1px;
-  border-radius: 30px;
-  width: max-content;
-  height: max-content;
-  margin: 10px 10px;
-  background:rgb(256, 256, 256, 0.8);
   cursor: pointer;
-  font-size: 16px;
-  padding: 8px 15px;
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: inherit;
 }
 .disconnectBtn:hover,
 .disconnectBtn:active,
 .disconnectBtn:focus {
   cursor: pointer !important;
-  background-color: lightgray !important;
 }
 
 .greenStatusCircle{
@@ -55,18 +44,11 @@
   margin-left: 5px;
 }
 
-
-
 .walletConnectWrapper{
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu';
-  justify-self: center;
-  align-self: center;
-  grid-column: 3;
-  grid-row: 1;
-}
-
-.Players{
-  font-family:'Roboto Mono';
-  font-size: 16px;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  border: black 1px solid;
+  padding: 0.1rem 0.5rem;
+  background:rgb(256, 256, 256, 0.8);
+  border-radius: 30px;
 }

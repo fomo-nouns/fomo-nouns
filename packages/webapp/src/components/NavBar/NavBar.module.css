@@ -8,11 +8,10 @@
   color: red;
 }
 
-
-
 .navBarBrand {
   position: relative;
   z-index: 2;
+  padding: 0;
 }
 
 /* connect button displays differently to default NavBarItems, thus the !importants */

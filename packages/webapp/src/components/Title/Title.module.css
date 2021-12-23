@@ -1,11 +1,14 @@
 .Title{
     text-align: center;
     font-family: 'Londrina Solid';
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
 }
+
 .Wrapper{
     justify-self: center;
     white-space: pre-wrap;
-    padding-bottom: 1%;
+    padding-bottom: 0.5rem;
 }
 
 .TimerSpacer {
