@@ -12,11 +12,13 @@ import VoteBar from './components/VoteBar';
 import VoteProgressBar from './components/VoteProgressBar';
 import Documentation from './components/Documentation';
 import Banner from './components/Banner';
+import Footer from './components/Footer';
+import SettledAuctionModal from './components/SettledAuctionModal';
 
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket } from './middleware/voteWebsocket';
-import SettledAuctionModal from './components/SettledAuctionModal';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
+
 
 
 function App() {
@@ -45,6 +47,7 @@ function App() {
       <VoteBar />
       <Banner />
       <Documentation />
+      <Footer/>
     </div>
   );
 }
