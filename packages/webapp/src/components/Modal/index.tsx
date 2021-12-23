@@ -25,7 +25,7 @@ const ModalOverlay: React.FC<{
 };
 
 const Modal: React.FC<{ title?: string; content?: React.ReactNode; onDismiss: () => void }> =
-  props => {
+props => {
     const { title, content, onDismiss } = props;
     return (
       <>
