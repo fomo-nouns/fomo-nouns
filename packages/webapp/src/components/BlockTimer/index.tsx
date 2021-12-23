@@ -31,7 +31,7 @@ const BlockTimer: React.FC<{}> = props => {
   
   const timerDuration = dayjs.duration(timeLeft, 'ms');
   const seconds = Math.floor(timerDuration.seconds());
-  const ms = Math.floor(timerDuration.milliseconds());
+  const ms = Math.floor(timerDuration.milliseconds() / 10);
   
   const timerThreshold = seconds <= 1;
 
