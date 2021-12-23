@@ -3,7 +3,7 @@ import { useEtherBalance } from '@usedapp/core';
 import { Nav, Navbar } from 'react-bootstrap';
 import config from '../../config';
 import { utils } from 'ethers';
-import { buildEtherscanHoldingsLink } from '../../utils/etherscan';
+import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils/etherscan';
 
 import WalletConnectModal from "../WalletConnectModal";
 import fomologo from './fomologo.png';
@@ -11,7 +11,8 @@ import PlayersConnected from '../PlayersConnected';
 
 const NavBar = () => {
   const treasuryBalance = useEtherBalance(config.fomoSettlerAddress);
-  const settlementEtherscanLink = buildEtherscanHoldingsLink(config.fomoSettlerAddress);
+  const settlementHoldingsLink = buildEtherscanHoldingsLink(config.fomoSettlerAddress);
+  const settlementWriteLink = buildEtherscanWriteLink(config.fomoSettlerAddress);
 
   const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
 
@@ -38,17 +39,25 @@ const NavBar = () => {
           <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
             {treasuryBalance && (
               <Nav.Link
-                href={settlementEtherscanLink}
+                href={settlementHoldingsLink}
                 className={classes.nounsNavLink}
                 target="_blank"
                 rel="noreferrer"
               >
                 CONTRACT Ξ {Number(utils.formatEther(treasuryBalance)).toFixed(2)}
-                {contractFundsLow && (
-                  <span className={classes.contractFunds}><br/>&nbsp;&nbsp;&nbsp;Please Donate!</span>
-                )}
               </Nav.Link>
             )}
+          </Nav.Item>
+          
+          <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
+            <Nav.Link
+              href={settlementWriteLink}
+              className={classes.nounsNavLink}
+              target="_blank"
+              rel="noreferrer"
+            >
+              DONATE
+            </Nav.Link>
           </Nav.Item>
           <Nav.Link onClick={scrollTo('#wtf')} className={classes.nounsNavLink}>
             WTF
