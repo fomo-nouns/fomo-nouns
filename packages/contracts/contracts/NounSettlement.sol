@@ -12,15 +12,17 @@ import "hardhat/console.sol"; // TODO: Remove before deployment
 contract NounSettlement {
   address payable public nounsDao;
   address payable public fomoExecutor;
+  address public fomoMultisig;
   INounsAuctionHouse public immutable auctionHouse;
 
   uint256 public maxPriorityFee;
   uint256 private OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
 
 
-  constructor(address _fomoExecutor, address _nounsDao, address _nounsAuctionHouseAddress) {
+  constructor(address _fomoExecutor, address _nounsDao, address _nounsAuctionHouseAddress, address _fomoMultisig) {
     auctionHouse = INounsAuctionHouse(_nounsAuctionHouseAddress);
     fomoExecutor = payable(_fomoExecutor);
+    fomoMultisig = _fomoMultisig;
     nounsDao = payable(_nounsDao);
 
     maxPriorityFee = 100 * 10**9; // Prevents malicious actor burning all the ETH on gas
@@ -32,6 +34,11 @@ contract NounSettlement {
    */
   modifier onlyDAO() {
     require(msg.sender == nounsDao, "Only executable by Nouns DAO");
+    _;
+  }
+
+  modifier onlyMultisig() {
+    require(msg.sender == fomoMultisig, "Only executable by FOMO Multsig");
     _;
   }
 
@@ -59,7 +66,7 @@ contract NounSettlement {
   receive() external payable { }
   fallback() external payable { }
 
-  function pullFunds() external onlyDAO {
+  function pullFunds() external onlyMultisig {
     (bool sent, ) = nounsDao.call{value: address(this).balance}("");
     require(sent, "Funds removal failed.");
   }
@@ -71,12 +78,12 @@ contract NounSettlement {
   function changeDaoAddress(address _newDao) external onlyDAO {
     nounsDao = payable(_newDao);
   }
-
-  function changeExecutorAddress(address _newFomoExecutor) external onlyFOMO {
+  
+  function changeExecutorAddress(address _newFomoExecutor) external onlyMultisig {
     fomoExecutor = payable(_newFomoExecutor);
   }
 
-  function changeMaxPriorityFee(uint256 _newMaxPriorityFee) external onlyDAO {
+  function changeMaxPriorityFee(uint256 _newMaxPriorityFee) external onlyMultisig {
     maxPriorityFee = _newMaxPriorityFee;
   }
 
