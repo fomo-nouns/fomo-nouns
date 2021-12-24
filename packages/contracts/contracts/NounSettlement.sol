@@ -30,10 +30,14 @@ contract NounSettlement {
   /**
     Events for key actions or parameter updates
    */
+
+  /// @notice Contract funds withdrawn to the Nouns Treasury
   event FundsPulled(address _to, uint256 _amount);
 
+  /// @notice FOMO Executor EOA moved to a new address
   event ExecutorChanged(address _newExecutor);
 
+  /// @notice Maximum priority fee allowed for refunds updated
   event MaxPriorityFeeChanged(uint256 _newMaxPriorityFee);
 
 
@@ -63,12 +67,15 @@ contract NounSettlement {
 
 
   /**
-    Fund management to allow donations and liquidation by the DAO
+    Fund management to allow donations and liquidation
    */
+
+  /// @notice Donate funds to cover auction settlement gas fees
   function donateFunds() external payable { }
   receive() external payable { }
   fallback() external payable { }
 
+  /// @notice Pull all funds from contract into the Nouns DAO Treasury
   function pullFunds() external onlyMultisig {
     uint256 balance = address(this).balance;
     (bool sent, ) = nounsDaoTreasury.call{value: balance}("");
@@ -80,11 +87,14 @@ contract NounSettlement {
   /**
     Change addresses or limits for the contract exeuction
    */
+  
+  /// @notice Change address for the FOMO Executor EOA that can request gas refunds
   function changeExecutorAddress(address _newFomoExecutor) external onlyMultisig {
     fomoExecutor = payable(_newFomoExecutor);
     emit ExecutorChanged(fomoExecutor);
   }
 
+  /// @notice Update the maximum allowed priority fee (in wei) for refunds
   function changeMaxPriorityFee(uint256 _newMaxPriorityFee) external onlyMultisig {
     maxPriorityFee = _newMaxPriorityFee;
     emit MaxPriorityFeeChanged(maxPriorityFee);
@@ -94,6 +104,8 @@ contract NounSettlement {
   /**
     Settle the Auction & Mint the Desired Nouns
    */
+
+  /// @notice Settle auction ensuring desired hash is used to generate the new Noun
   function settleAuction(bytes32 _desiredHash) public {
     bytes32 lastHash = blockhash(block.number - 1); // Only settle if desired Noun would be minted
     require(lastHash == _desiredHash, "Prior blockhash did not match intended hash");
@@ -101,6 +113,7 @@ contract NounSettlement {
     auctionHouse.settleCurrentAndCreateNewAuction();
   }
 
+  /// @notice Settle auction, as with settleAuction, AND refund gas to caller
   function settleAuctionWithRefund(bytes32 _desiredHash) external refundGas onlyFOMO {
     settleAuction(_desiredHash);
   }
