@@ -10,20 +10,20 @@ import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
 import "hardhat/console.sol"; // TODO: Remove before deployment
 
 contract NounSettlement {
-  address payable public immutable nounsDaoTreasury;
   address payable public fomoExecutor;
+  address payable public immutable nounsDaoTreasury;
   address public immutable fomoMultisig;
   INounsAuctionHouse public immutable auctionHouse;
 
   uint256 public maxPriorityFee = 40 * 10**9; // Prevents malicious actor burning all the ETH on gas
-  uint256 private immutable OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
+  uint256 private immutable OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,254 in testing
 
 
   constructor(address _fomoExecutor, address _nounsDaoTreasury, address _nounsAuctionHouseAddress, address _fomoMultisig) {
-    auctionHouse = INounsAuctionHouse(_nounsAuctionHouseAddress);
     fomoExecutor = payable(_fomoExecutor);
-    fomoMultisig = _fomoMultisig;
     nounsDaoTreasury = payable(_nounsDaoTreasury);
+    fomoMultisig = _fomoMultisig;
+    auctionHouse = INounsAuctionHouse(_nounsAuctionHouseAddress);
   }
 
 
@@ -37,7 +37,7 @@ contract NounSettlement {
   /// @notice FOMO Executor EOA moved to a new address
   event ExecutorChanged(address _newExecutor);
 
-  /// @notice Maximum priority fee allowed for refunds updated
+  /// @notice Maximum priority fee for refunds updated
   event MaxPriorityFeeChanged(uint256 _newMaxPriorityFee);
 
 
@@ -45,12 +45,12 @@ contract NounSettlement {
     Custom modifiers to handle access and refund
    */
   modifier onlyMultisig() {
-    require(msg.sender == fomoMultisig, "Only executable by FOMO Multsig");
+    require(msg.sender == fomoMultisig, "Only callable by FOMO Multsig");
     _;
   }
 
   modifier onlyFOMO() {
-    require(msg.sender == fomoExecutor, "Only executable by FOMO Nouns executor");
+    require(msg.sender == fomoExecutor, "Only callable by FOMO Nouns executor");
     _;
   }
 
@@ -85,7 +85,7 @@ contract NounSettlement {
 
 
   /**
-    Change addresses or limits for the contract exeuction
+    Change addresses or limits for the contract execution
    */
   
   /// @notice Change address for the FOMO Executor EOA that can request gas refunds

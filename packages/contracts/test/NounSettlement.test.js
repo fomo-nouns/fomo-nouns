@@ -166,7 +166,7 @@ describe("NounSettlement", function () {
 
         let endBalance = await ethers.provider.getBalance(executor.address);
 
-        const tolerance = ethers.utils.parseEther('0.0001');
+        const tolerance = ethers.utils.parseEther('0.001');
 
         // Goal is a non-negative but very small value
         expect( endBalance.sub(startBalance).abs().lt(tolerance) ).to.be.true;
@@ -197,7 +197,7 @@ describe("NounSettlement", function () {
 
         expect(
           settler.connect(random1).settleAuctionWithRefund(lastHash.hash)
-        ).to.be.revertedWith("Only executable by FOMO Nouns executor");
+        ).to.be.revertedWith("Only callable by FOMO Nouns executor");
       });
 
       it("Should not allow excessively high gas (Pre-1559)", async function() {
