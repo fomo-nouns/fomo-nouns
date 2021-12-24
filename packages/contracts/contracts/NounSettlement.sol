@@ -7,7 +7,6 @@ pragma solidity 0.8.9;
 
 import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
 
-import "hardhat/console.sol"; // TODO: Remove before deployment
 
 contract NounSettlement {
   address payable public fomoExecutor;
@@ -61,7 +60,6 @@ contract NounSettlement {
     uint256 endGas = gasleft();
 
     uint256 totalGasCost = tx.gasprice * (startGas - endGas + OVERHEAD_GAS);
-    console.log("Gas Used %s", startGas - endGas); // TODO: Remove before deployment
     fomoExecutor.transfer(totalGasCost);
   }
 
