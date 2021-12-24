@@ -45,7 +45,7 @@ const config: Record<SupportedChains, Config> = {
     chainId: ChainId.Rinkeby,    
     jsonRpcUri: `https://${createProviderURL('rinkeby')}`,
     wsRpcUri: `wss://${createProviderURL('rinkeby')}`,
-    fomoSettlerAddress: '0xFa7C3ab143074BcbF09db8450810d78E4B9b19a3',
+    fomoSettlerAddress: '0x9e0Bce0039e7475a8Fc92436d2709A25cE824876',
     auctionProxyAddress: '0x7cb0384b923280269b3BD85f0a7fEaB776588382',
     nounsDescriptor: '0x53cB482c73655D2287AE3282AD1395F82e6a402F',
     nounsSeeder : '0xA98A1b1Cc4f5746A753167BAf8e0C26AcBe42F2E',
