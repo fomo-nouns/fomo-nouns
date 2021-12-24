@@ -10,7 +10,8 @@ async function main() {
 
   const [executor, deployer] = await ethers.getSigners();
   const auctionHouseAddress = address.auctionHouseProxy[network];
-  const nounsDaoAddress = deployer.address; // Use another test account instead
+  const nounsTreasuryAddress = address.nounsTreasury[network];
+  const fomoMultisigAddress = address.fomoMultisig[network];
 
   console.log(`Preparing to deploy ${contractName} to ${network} with the account ${deployer.address}`);
   console.log(`Account balance: ${(ethers.utils.formatEther(await deployer.getBalance()))}`);
@@ -30,8 +31,15 @@ async function main() {
   // Estimate the deployment cost in ETH
   const factory = await ethers.getContractFactory(contractName);
 
+  const contractParameters = [
+    executor.address,
+    nounsTreasuryAddress,
+    auctionHouseAddress,
+    fomoMultisigAddress
+  ];
+
   const deploymentGas = await factory.signer.estimateGas(
-    factory.getDeployTransaction(executor.address, nounsDaoAddress, auctionHouseAddress, { gasPrice })
+    factory.getDeployTransaction(...contractParameters, { gasPrice })
   );
   const deploymentCost = deploymentGas.mul(gasPrice);
 
@@ -49,15 +57,16 @@ async function main() {
   // Deploy the contract
   console.log(`Deploying ${contractName}...`);
 
-  const deployedContract = await factory.deploy(executor.address, nounsDaoAddress, auctionHouseAddress, { gasPrice });
+  const deployedContract = await factory.deploy(...contractParameters, { gasPrice });
   await deployedContract.deployed();
 
   console.log(`${contractName} contract deployed to ${deployedContract.address}`);
 
   console.log(`
     Executor address: ${executor.address}
-    NounsDAO address: ${nounsDaoAddress}
+    NounsTreasury address: ${nounsTreasuryAddress}
     AuctionHouse address: ${auctionHouseAddress}
+    FOMO Multisig address: ${fomoMultisigAddress}
   `);
 
   // Wait 10 seconds for bytecode to sync
@@ -67,7 +76,7 @@ async function main() {
   // Verify on Etherscan
   await hre.run("verify:verify", {
     address: deployedContract.address,
-    constructorArguments: [executor.address, nounsDaoAddress, auctionHouseAddress]
+    constructorArguments: contractParameters
   });
 }
 
