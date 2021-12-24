@@ -10,7 +10,7 @@ import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
 import "hardhat/console.sol"; // TODO: Remove before deployment
 
 contract NounSettlement {
-  address payable public nounsDao;
+  address payable public nounsDaoTreasury;
   address payable public fomoExecutor;
   address public fomoMultisig;
   INounsAuctionHouse public immutable auctionHouse;
@@ -19,11 +19,11 @@ contract NounSettlement {
   uint256 private OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
 
 
-  constructor(address _fomoExecutor, address _nounsDao, address _nounsAuctionHouseAddress, address _fomoMultisig) {
+  constructor(address _fomoExecutor, address _nounsDaoTreasury, address _nounsAuctionHouseAddress, address _fomoMultisig) {
     auctionHouse = INounsAuctionHouse(_nounsAuctionHouseAddress);
     fomoExecutor = payable(_fomoExecutor);
     fomoMultisig = _fomoMultisig;
-    nounsDao = payable(_nounsDao);
+    nounsDaoTreasury = payable(_nounsDaoTreasury);
 
     maxPriorityFee = 100 * 10**9; // Prevents malicious actor burning all the ETH on gas
   }
@@ -32,11 +32,6 @@ contract NounSettlement {
   /**
     Custom modifiers to handle access and refund
    */
-  modifier onlyDAO() {
-    require(msg.sender == nounsDao, "Only executable by Nouns DAO");
-    _;
-  }
-
   modifier onlyMultisig() {
     require(msg.sender == fomoMultisig, "Only executable by FOMO Multsig");
     _;
@@ -67,7 +62,7 @@ contract NounSettlement {
   fallback() external payable { }
 
   function pullFunds() external onlyMultisig {
-    (bool sent, ) = nounsDao.call{value: address(this).balance}("");
+    (bool sent, ) = nounsDaoTreasury.call{value: address(this).balance}("");
     require(sent, "Funds removal failed.");
   }
 
@@ -75,10 +70,6 @@ contract NounSettlement {
   /**
     Change addresses or limits for the contract exeuction
    */
-  function changeDaoAddress(address _newDao) external onlyDAO {
-    nounsDao = payable(_newDao);
-  }
-  
   function changeExecutorAddress(address _newFomoExecutor) external onlyMultisig {
     fomoExecutor = payable(_newFomoExecutor);
   }
