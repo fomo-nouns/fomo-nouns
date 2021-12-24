@@ -19,6 +19,16 @@ const address = {
     'mainnet': '0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03',
     'rinkeby': '0x632f34c3aee991b10D4b421Bc05413a03d7a37eB',
     'goerli': '0x22932551387D271B4fe512c6af209d0724360183'
+  },
+  nounsTreasury: {
+    'mainnet': '0x0BC3807Ec262cB779b38D65b38158acC3bfedE10',
+    'rinkeby': '0xF598635a5892AB8a363e1222C6aEB798AEDF8a84',
+    'goerli': '0x0'
+  },
+  fomoMultisig: {
+    'mainnet': '0x54D84e89B5fCc4D54a2123e050263F29AA176DA3',
+    'rinkeby': '0x63F9074555023e5aBcDeaD029DF4B012414Ac9Cb',
+    'goerli': '0x0'
   }
 }
 
