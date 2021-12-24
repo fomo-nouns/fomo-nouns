@@ -13,23 +13,8 @@ async function main() {
   const nounsTreasuryAddress = address.nounsTreasury[network];
   const fomoMultisigAddress = address.fomoMultisig[network];
 
-  console.log(`Preparing to deploy ${contractName} to ${network} with the account ${deployer.address}`);
+  console.log(`Preparing to deploy ${contractName} to ${network.toUpperCase()} with the account ${deployer.address}`);
   console.log(`Account balance: ${(ethers.utils.formatEther(await deployer.getBalance()))}`);
-
-  // Get network gas and ask for user desired gas price
-  let gasPrice = await ethers.provider.getGasPrice();
-  const gasInGwei = Math.round(Number(ethers.utils.formatUnits(gasPrice, 'gwei')));
-
-  prompt.start();
-
-  let result = await prompt.get([{ properties: {
-    gasPrice: { type: 'integer', required: true, description: 'Enter a gas price (gwei)', default: gasInGwei },
-  }}]);
-
-  gasPrice = ethers.utils.parseUnits(result.gasPrice.toString(), 'gwei');
-
-  // Estimate the deployment cost in ETH
-  const factory = await ethers.getContractFactory(contractName);
 
   const contractParameters = [
     executor.address,
@@ -38,10 +23,46 @@ async function main() {
     fomoMultisigAddress
   ];
 
+  console.log(`
+  Contract Constructor:
+    [0] Executor address: ${contractParameters[0]}
+    [1] NounsTreasury address: ${contractParameters[1]}
+    [2] AuctionHouse address: ${contractParameters[2]}
+    [4] FOMO Multisig address: ${contractParameters[3]}
+  `);
+
+  // Get network gas and ask for user desired gas price
+  let feeData = await ethers.provider.getFeeData();
+  const baseGasInGwei = Math.round(Number(ethers.utils.formatUnits(feeData.maxFeePerGas, 'gwei')));
+
+  prompt.start();
+
+  let result = await prompt.get([{ properties: {
+    maxBaseFee: { type: 'integer', required: true, description: 'Enter max base gas price (gwei)', default: baseGasInGwei },
+  }}]);
+
+  let maxBaseFee = ethers.utils.parseUnits(result.maxBaseFee.toString(), 'gwei');
+  let maxPriorityFee = ethers.utils.parseUnits('1', 'gwei');
+
+  let gasFees = {
+    maxPriorityFeePerGas: maxPriorityFee,
+    maxFeePerGas: maxBaseFee.add(maxPriorityFee)
+  };
+  
+  console.log(`
+  Gas configuration:
+    maxBaseFee: ${ethers.utils.formatUnits(maxBaseFee, 'gwei')}
+    maxPriorityFeePerGas ${ethers.utils.formatUnits(gasFees.maxPriorityFeePerGas, 'gwei')}
+    maxFeePerGas ${ethers.utils.formatUnits(gasFees.maxFeePerGas, 'gwei')}
+  `);
+
+  // Estimate the deployment cost in ETH
+  const factory = await ethers.getContractFactory(contractName, deployer);
+
   const deploymentGas = await factory.signer.estimateGas(
-    factory.getDeployTransaction(...contractParameters, { gasPrice })
+    factory.getDeployTransaction(...contractParameters, gasFees)
   );
-  const deploymentCost = deploymentGas.mul(gasPrice);
+  const deploymentCost = deploymentGas.mul(gasFees.maxFeePerGas);
 
   console.log(`Estimated cost to deploy ${contractName}: ${ethers.utils.formatEther(deploymentCost)} ETH`);
 
@@ -57,21 +78,14 @@ async function main() {
   // Deploy the contract
   console.log(`Deploying ${contractName}...`);
 
-  const deployedContract = await factory.deploy(...contractParameters, { gasPrice });
+  const deployedContract = await factory.deploy(...contractParameters, gasFees);
   await deployedContract.deployed();
 
   console.log(`${contractName} contract deployed to ${deployedContract.address}`);
 
-  console.log(`
-    Executor address: ${executor.address}
-    NounsTreasury address: ${nounsTreasuryAddress}
-    AuctionHouse address: ${auctionHouseAddress}
-    FOMO Multisig address: ${fomoMultisigAddress}
-  `);
-
   // Wait 10 seconds for bytecode to sync
   console.log('Waiting for Etherscan to sync...');
-  await new Promise(resolve => setTimeout(resolve, 10 * 1000))
+  await new Promise(resolve => setTimeout(resolve, 15 * 1000))
 
   // Verify on Etherscan
   await hre.run("verify:verify", {
