@@ -28,6 +28,16 @@ contract NounSettlement {
 
 
   /**
+    Events for key actions or parameter updates
+   */
+  event FundsPulled(address _to, uint256 _amount);
+
+  event ExecutorChanged(address _newExecutor);
+
+  event MaxPriorityFeeChanged(uint256 _newMaxPriorityFee);
+
+
+  /**
     Custom modifiers to handle access and refund
    */
   modifier onlyMultisig() {
@@ -60,8 +70,10 @@ contract NounSettlement {
   fallback() external payable { }
 
   function pullFunds() external onlyMultisig {
-    (bool sent, ) = nounsDaoTreasury.call{value: address(this).balance}("");
+    uint256 balance = address(this).balance;
+    (bool sent, ) = nounsDaoTreasury.call{value: balance}("");
     require(sent, "Funds removal failed.");
+    emit FundsPulled(nounsDaoTreasury, balance);
   }
 
 
@@ -70,15 +82,17 @@ contract NounSettlement {
    */
   function changeExecutorAddress(address _newFomoExecutor) external onlyMultisig {
     fomoExecutor = payable(_newFomoExecutor);
+    emit ExecutorChanged(fomoExecutor);
   }
 
   function changeMaxPriorityFee(uint256 _newMaxPriorityFee) external onlyMultisig {
     maxPriorityFee = _newMaxPriorityFee;
+    emit MaxPriorityFeeChanged(maxPriorityFee);
   }
 
 
   /**
-    Mint the desired Nouns via Flashbots
+    Settle the Auction & Mint the Desired Nouns
    */
   function settleAuction(bytes32 _desiredHash) public {
     bytes32 lastHash = blockhash(block.number - 1); // Only settle if desired Noun would be minted
