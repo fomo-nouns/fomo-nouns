@@ -10,13 +10,13 @@ import { INounsAuctionHouse } from './interfaces/INounsAuctionHouse.sol';
 import "hardhat/console.sol"; // TODO: Remove before deployment
 
 contract NounSettlement {
-  address payable public nounsDaoTreasury;
+  address payable public immutable nounsDaoTreasury;
   address payable public fomoExecutor;
-  address public fomoMultisig;
+  address public immutable fomoMultisig;
   INounsAuctionHouse public immutable auctionHouse;
 
-  uint256 public maxPriorityFee;
-  uint256 private OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
+  uint256 public maxPriorityFee = 40 * 10**9; // Prevents malicious actor burning all the ETH on gas
+  uint256 private immutable OVERHEAD_GAS = 21000; // Handles gas outside gasleft checks, rounded up from ~20,257 in testing
 
 
   constructor(address _fomoExecutor, address _nounsDaoTreasury, address _nounsAuctionHouseAddress, address _fomoMultisig) {
@@ -24,8 +24,6 @@ contract NounSettlement {
     fomoExecutor = payable(_fomoExecutor);
     fomoMultisig = _fomoMultisig;
     nounsDaoTreasury = payable(_nounsDaoTreasury);
-
-    maxPriorityFee = 100 * 10**9; // Prevents malicious actor burning all the ETH on gas
   }
 
 
