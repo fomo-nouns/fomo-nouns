@@ -45,7 +45,7 @@ const config: Record<SupportedChains, Config> = {
     chainId: ChainId.Rinkeby,    
     jsonRpcUri: `https://${createProviderURL('rinkeby')}`,
     wsRpcUri: `wss://${createProviderURL('rinkeby')}`,
-    fomoSettlerAddress: '0x9e0Bce0039e7475a8Fc92436d2709A25cE824876',
+    fomoSettlerAddress: '0x6567F8eE62cd129049EE924c7B88a23be7DDaE5c',
     auctionProxyAddress: '0x7cb0384b923280269b3BD85f0a7fEaB776588382',
     nounsDescriptor: '0x53cB482c73655D2287AE3282AD1395F82e6a402F',
     nounsSeeder : '0xA98A1b1Cc4f5746A753167BAf8e0C26AcBe42F2E',
@@ -59,7 +59,7 @@ const config: Record<SupportedChains, Config> = {
     chainId: ChainId.Mainnet,
     jsonRpcUri: `https://${createProviderURL('mainnet')}`,
     wsRpcUri: `wss://${createProviderURL('mainnet')}`,
-    fomoSettlerAddress: '0x0000000000000000000000000000000000000000', // TODO: Update this post deployment
+    fomoSettlerAddress: '0xb2341612271e122ff20905c9e389c3d7f0F222a1',
     auctionProxyAddress: '0x830BD73E4184ceF73443C15111a1DF14e495C706',
     nounsDescriptor: '0x0Cfdb3Ba1694c2bb2CFACB0339ad7b1Ae5932B63',
     nounsSeeder: '0xCC8a0FB5ab3C7132c1b2A0109142Fb112c4Ce515',
