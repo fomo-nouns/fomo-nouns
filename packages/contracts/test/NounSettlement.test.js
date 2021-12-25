@@ -5,8 +5,7 @@ const { abi } = require('../scripts/config.js');
 const {
   networkReset,
   impersonateAccount,
-  setEtherBalance,
-  etherBalance
+  setEtherBalance
 } = require('./utils.js');
 
 
@@ -14,10 +13,11 @@ const {
  * Run Test Suite
  */
 describe("NounSettlement", function () {
-  const NOUNS_DAO_ADDRESS = '0x73BCEb1Cd57C711feaC4224D062b0F6ff338501e'; // TODO: Replace with real DAO with proper proposal execution
+  const NOUNS_TREASURY = '0x0BC3807Ec262cB779b38D65b38158acC3bfedE10'; // Rinkeby: 0xF598635a5892AB8a363e1222C6aEB798AEDF8a84
+  const FOMO_MULTISIG = '0x54D84e89B5fCc4D54a2123e050263F29AA176DA3'; // Rinkeby: 0x63F9074555023e5aBcDeaD029DF4B012414Ac9Cb
   const AUCTION_PROXY_ADDRESS = '0x830BD73E4184ceF73443C15111a1DF14e495C706';
 
-  var executor, nounsDao, auctionHouse, random1, random2;
+  var executor, multisig, auctionHouse, random1, random2;
   var settler;
 
 
@@ -27,19 +27,20 @@ describe("NounSettlement", function () {
   before("Setup signers", async function() {
     [executor, /*deployer*/, random1, random2] = await ethers.getSigners();
 
-    nounsDao = ethers.provider.getSigner(NOUNS_DAO_ADDRESS);
+    multisig = ethers.provider.getSigner(FOMO_MULTISIG);
 
     auctionHouse = await ethers.getContractAt(abi.auctionHouseProxy, AUCTION_PROXY_ADDRESS);
   });
 
   beforeEach("Deploy settlement contract", async function() {
-    await networkReset(13287091); // One block prior to Noun 51 settlement at Sep-24-2021 07:14:39 AM +UTC
+    await networkReset(13854828); // One block prior to Noun 148 settlement at Dec-22-2021 11:49:07 AM +UTC
     
     const Settler = await ethers.getContractFactory('NounSettlement', executor);
-    settler = await Settler.deploy(executor.address, NOUNS_DAO_ADDRESS, AUCTION_PROXY_ADDRESS);
+    settler = await Settler.deploy(executor.address, NOUNS_TREASURY, AUCTION_PROXY_ADDRESS, FOMO_MULTISIG);
     await settler.deployed();
 
     await setEtherBalance(settler.address, 21);
+    await setEtherBalance(FOMO_MULTISIG, 21);
   });
 
 
@@ -53,8 +54,9 @@ describe("NounSettlement", function () {
         expect(await settler.fomoExecutor()).to.equal(executor.address);
       });
 
-      it("Should allow the Executor address to be changed by the Executor", async function() {
-        await settler.connect(executor).changeExecutorAddress(random1.address);
+      it("Should allow the Executor address to be changed by the Multisig", async function() {
+        await impersonateAccount(FOMO_MULTISIG);
+        await settler.connect(multisig).changeExecutorAddress(random1.address);
 
         expect(await settler.fomoExecutor()).to.equal(random1.address);
       });
@@ -66,22 +68,13 @@ describe("NounSettlement", function () {
       });
     });
 
-    describe("DAO", async function() {
-      it("Should return the initialized DAO address", async function() {
-        expect(await settler.nounsDao()).to.equal(NOUNS_DAO_ADDRESS);
+    describe("Nouns DAO & Multisig", async function() {
+      it("Should return the initialized Multisig address", async function() {
+        expect(await settler.fomoMultisig()).to.equal(FOMO_MULTISIG);
       });
 
-      it("Should allow the DAO address to be changed by the DAO", async function() {
-        await impersonateAccount(NOUNS_DAO_ADDRESS);
-        await settler.connect(nounsDao).changeDaoAddress(random1.address);
-
-        expect(await settler.nounsDao()).to.equal(random1.address);
-      });
-  
-      it("Should prevent others from changing the DAO address", async function() {
-        expect( settler.connect(random1).changeDaoAddress(random1.address) ).to.be.reverted;
-
-        expect( settler.connect(executor).changeDaoAddress(executor.address) ).to.be.reverted;
+      it("Should return the initialized Nouns DAO Treasury address", async function() {
+        expect(await settler.nounsDaoTreasury()).to.equal(NOUNS_TREASURY);
       });
     });
   });
@@ -110,20 +103,23 @@ describe("NounSettlement", function () {
     });
 
     describe("Withdrawls", async function() {
-      it("Should allow the DAO to withdraw all funds", async function() {
+      it("Should allow the Multisig to withdraw all funds", async function() {
         let contractStartBalance = await ethers.provider.getBalance(settler.address);
-        let daoStartBalance = await ethers.provider.getBalance(NOUNS_DAO_ADDRESS);
+        let daoStartBalance = await ethers.provider.getBalance(NOUNS_TREASURY);
+        let multisigStartBalance = await ethers.provider.getBalance(FOMO_MULTISIG);
 
-        await impersonateAccount(NOUNS_DAO_ADDRESS);
+        await impersonateAccount(FOMO_MULTISIG);
         
-        const tx = await settler.connect(nounsDao).pullFunds();
+        const tx = await settler.connect(multisig).pullFunds();
         const rcp = await tx.wait();
         const gasEth = rcp.gasUsed.mul(tx.gasPrice);
 
         let contractEndBalance = await ethers.provider.getBalance(settler.address);
-        let daoEndBalance = await ethers.provider.getBalance(NOUNS_DAO_ADDRESS);
+        let daoEndBalance = await ethers.provider.getBalance(NOUNS_TREASURY);
+        let multisigEndBalance = await ethers.provider.getBalance(FOMO_MULTISIG);
 
-        expect(daoEndBalance).to.equal(daoStartBalance.add(contractStartBalance).sub(gasEth));
+        expect(daoEndBalance).to.equal(daoStartBalance.add(contractStartBalance));
+        expect(multisigEndBalance).to.equal(multisigStartBalance.sub(gasEth));
         expect(contractEndBalance).to.equal(0);
       });
 
@@ -170,7 +166,7 @@ describe("NounSettlement", function () {
 
         let endBalance = await ethers.provider.getBalance(executor.address);
 
-        const tolerance = ethers.utils.parseEther('0.0001');
+        const tolerance = ethers.utils.parseEther('0.001');
 
         // Goal is a non-negative but very small value
         expect( endBalance.sub(startBalance).abs().lt(tolerance) ).to.be.true;
@@ -201,7 +197,7 @@ describe("NounSettlement", function () {
 
         expect(
           settler.connect(random1).settleAuctionWithRefund(lastHash.hash)
-        ).to.be.revertedWith("Only executable by FOMO Nouns executor");
+        ).to.be.revertedWith("Only callable by FOMO Nouns executor");
       });
 
       it("Should not allow excessively high gas (Pre-1559)", async function() {
