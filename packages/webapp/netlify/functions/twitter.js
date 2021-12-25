@@ -9,7 +9,7 @@ const twitterClient = new TwitterClient( {
 
 exports.handler = async(event, context) => {
     const queryParams = event.queryStringParameters;
-    let nounId = queryParams['id'];
+    const nounId = queryParams['id'];
     const params = {
         q: `from:nounsbot_ bleep ${nounId}`,
         include_entities: true
