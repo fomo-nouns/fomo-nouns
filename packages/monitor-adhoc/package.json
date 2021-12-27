@@ -11,7 +11,9 @@
   "dependencies": {
     "@flashbots/ethers-provider-bundle": "^0.4.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "dayjs": "^1.10.7",
     "ethers": "^5.4.7",
-    "hardhat": "^2.6.4"
+    "hardhat": "^2.6.4",
+    "websocket": "^1.0.34"
   }
 }
