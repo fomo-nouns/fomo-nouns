@@ -1,9 +1,9 @@
 const { parseUnits } = require('@ethersproject/units');
 
 // Configuration Settings
-const NETWORK_NAME = 'rinkeby';
+const NETWORK_NAME = 'mainnet';
 const DEFAULT_PRIORITY_FEE = parseUnits('15', 'gwei');
-const DEFAULT_MAX_SETTLEMENT_COST = parseUnits('0.06', 'ether');
+const DEFAULT_MAX_SETTLEMENT_COST = parseUnits('0.10', 'ether');
 
 // Key Addresses
 const addresses = {
