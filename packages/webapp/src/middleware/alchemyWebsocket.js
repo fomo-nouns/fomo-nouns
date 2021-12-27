@@ -20,7 +20,8 @@ const closeEthereumSocket = (payload) => ({type: 'ethereumSocket/close', payload
 const alchemyWebsocketMiddleware = () => {
   let socket = null;
   let blockSubscription = '0x';
-  let blockId = 44;  
+  let blockId = 44;
+  let latestObservedBlock = 0;
 
   const openSocket = () => new W3CWebSocket(`wss://eth-${globalConfig.chainName}.alchemyapi.io/v2/${PROVIDER_KEY}`);
   const closeSocket = () => { if (socket !== null) socket.close() };
@@ -63,7 +64,14 @@ const alchemyWebsocketMiddleware = () => {
     const blockNumber = Number(data.number); // Convert from hex
     const blockHash = data.hash;
     const logsBloom = data.logsBloom;
-    console.log(`Updating blocknumber ${blockNumber}`);
+
+    if (latestObservedBlock >= blockNumber) {
+      console.log(`Minor block re-org, skipping repeat blocknumber ${blockNumber}`);
+      return;
+    } else {
+      console.log(`Updating blocknumber ${blockNumber}`);
+      latestObservedBlock = blockNumber;
+    }    
 
     // Check if settlement has occurred
     store.dispatch(checkForSettlement(logsBloom));
