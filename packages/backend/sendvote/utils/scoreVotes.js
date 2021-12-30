@@ -21,7 +21,7 @@ function scoreVotes(voteObj, userCount) {
   if (!userCount) {
     return 0;
   } else {
-    let score = (like - dislike) / userCount;
+    let score = (like - 0.5 * dislike) / userCount;
     return score / winThreshold;
   }
 }

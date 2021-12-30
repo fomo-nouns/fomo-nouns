@@ -39,8 +39,8 @@ describe('hasWinningVotes Test', async function() {
       expect(result).to.be.true;
     });
 
-    it('Should let 1 dislike vote counteract 1 like', async function() {
-      let result = hasWinningVotes({voteLike: 61, voteDislike: 1}, 100);
+    it('Should let 2 dislike vote counteract 1 like', async function() {
+      let result = hasWinningVotes({voteLike: 61, voteDislike: 2}, 100);
       expect(result).to.be.false;
     });
   });
@@ -59,7 +59,7 @@ describe('hasWinningVotes Test', async function() {
 
   it('Should calculate score properly', async function() {
     let result = scoreVotes({voteLike: 6, voteShrug: 4, voteDislike: 3}, 13);
-    let score = (6 - 3) / 13;
+    let score = (6 - 0.5 * 3) / 13;
     expect(result).to.equal(score / 0.6);
   });
 });
