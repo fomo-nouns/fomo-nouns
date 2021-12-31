@@ -1,0 +1,17 @@
+.Wrapper{
+    font-size: 1em;
+    justify-self: center;
+    font-family: 'Londrina Solid';
+}
+
+.ActiveVote {
+    background: -webkit-linear-gradient(#fca7f2, #5603AD);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.Threshold {
+    background: -webkit-linear-gradient(#FC5353, #DB1414);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
