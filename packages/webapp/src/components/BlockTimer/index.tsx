@@ -2,43 +2,30 @@ import React, { useEffect, useState } from "react";
 import classes from './BlockTimer.module.css';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { endVoting } from '../../state/slices/vote';
+import { useAppSelector } from "../../hooks";
 
 dayjs.extend(duration);
 
 const BlockTimer: React.FC<{}> = props => {
-  const dispatch = useAppDispatch();
   const blockTime = useAppSelector(state => state.block.blockTime);
-  const votingActive = useAppSelector(state => state.vote.votingActive);
 
-  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [blockDuration, setBlockDuration] = useState<number>(0);
 
   useEffect(() => {
     const timeSince = dayjs().valueOf() - blockTime;
-    const timeLeft = 6000 - timeSince;
     
-    if(timeLeft <= 0) {
-      setTimeLeft(0);
-      dispatch(endVoting());
-    } else {
-      let timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 20);
-      }, 20);
-      return () => clearInterval(timer);
-    }
-  }, [dispatch, blockTime, timeLeft]);
+    let timer = setTimeout(() => {
+      setBlockDuration(timeSince);
+    }, 20);
+    return () => clearInterval(timer);
+  }, [blockTime, blockDuration]);
   
-  const timerDuration = dayjs.duration(timeLeft, 'ms');
+  const timerDuration = dayjs.duration(blockDuration, 'ms');
   const seconds = Math.floor(timerDuration.seconds());
-  const ms = Math.floor(timerDuration.milliseconds() / 10);
-  
-  const timerThreshold = seconds <= 1;
 
   return(
-    <div className={`${classes.Wrapper} ${votingActive ? classes.ActiveVote : ''} 
-    ${timerThreshold ? classes.Threshold: ''}`}>
-      {seconds}.{ms}
+    <div className={`${classes.Wrapper}`}>
+      Block Time: {seconds}s
     </div>
   )
 };
