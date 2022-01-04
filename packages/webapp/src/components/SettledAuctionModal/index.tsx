@@ -53,16 +53,20 @@ const SettledAuctionModal: React.FC<{}> = props => {
   useEffect(() => {
     if (showConnectModal && successfulSettle && localNounId > 0) {
       setShareCopy(encodeURI("gm, I just minted this Noun for @nounsdao by playing FOMO Nouns! "));
-      axios.get('/.netlify/functions/twitter', {params: {id: localNounId}})
-      .then( res => {
-        const data = res.data;
-        setMediaURL(data.mediaUrl);
-        setShowTwitter(mediaURL !== "");
-        //reload the twitter widgets
-        if (window) {
-          (window as any).twttr.widgets.load();
-        }
-      });
+      // wait for 750ms, then fetch image from twitter
+      setTimeout(() => {
+        axios.get('/.netlify/functions/twitter', {params: {id: localNounId}})
+        .then( res => {
+          const data = res.data;
+          setMediaURL(data.mediaUrl);
+          setShowTwitter(mediaURL !== "");
+          //reload the twitter widgets
+          if (window) {
+            (window as any).twttr.widgets.load();
+          }
+        });
+      }, 750);
+      
       setConfetti(true);
     }
   }, [showConnectModal, successfulSettle, showConfetti, localNounId, mediaURL]);
