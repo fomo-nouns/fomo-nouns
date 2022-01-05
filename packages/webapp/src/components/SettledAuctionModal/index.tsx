@@ -65,7 +65,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
             (window as any).twttr.widgets.load();
           }
         });
-      }, 750);
+      }, 15000);
       
       setConfetti(true);
     }
