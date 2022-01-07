@@ -2,7 +2,7 @@ import React from "react";
 import { useAppSelector } from "../../hooks";
 import classes from "./Title.module.css";
 import AuctionTimer from '../AuctionTimer';
-
+import BlockCountdownTimer from '../BlockCountdownTimer';
 
 const Title: React.FC<{}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
@@ -29,7 +29,10 @@ const Title: React.FC<{}> = props => {
     timer = timerSpacer;
   } else if (votingActive) {
     titleText = `Should we mint this Noun?`;
-    timer = timerSpacer;
+    timer = <BlockCountdownTimer/>;
+  } else if (!activeAuction && !votingActive) {
+    titleText = `Time's up! Waiting for next block...`;
+    timer = <BlockCountdownTimer/>;
   } else {
     titleText = 'Loading FOMO Nouns...';
     timer = <></>;
