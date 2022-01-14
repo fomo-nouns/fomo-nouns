@@ -20,7 +20,16 @@ const sendVote = (payload) => ({type: 'voteSocket/send', payload});
 const voteWebsocketMiddleware = () => {
   let socket = null;
 
-  const openSocket = () => new W3CWebSocket(FOMO_WEBSOCKET);
+  const createSocket = () => new W3CWebSocket(FOMO_WEBSOCKET);
+
+  // Define the socket handlers
+  const openSocket = (store) => {
+    socket = createSocket();
+    socket.onopen = handleOpen(store);
+    socket.onmessage = handleReceiveMessage(store);
+    socket.onclose = handleClose(store);
+  }
+
   const closeSocket = () => { if (socket !== null) socket.close() };
 
   // Define the Handler Methods
@@ -72,10 +81,7 @@ const voteWebsocketMiddleware = () => {
   return store => next => action => {
     if (action.type === 'voteSocket/open') {
       closeSocket();
-      socket = openSocket();
-      socket.onopen = handleOpen(store);
-      socket.onmessage = handleReceiveMessage(store);
-      socket.onclose = handleClose(store);
+      openSocket(store);
     }
     else if (action.type === 'voteSocket/close') {
       closeSocket();
