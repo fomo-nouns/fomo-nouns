@@ -17,7 +17,6 @@ const Noun: React.FC<{ alt: string }> = props => {
 
   const blockhash = useAppSelector(state => state.block.blockHash);
   const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
-  const voteConnected = useAppSelector(state => state.vote.connected);
   const ethereumConnected = useAppSelector(state => state.block.connected);
 
   const generateNoun = useCallback(async () => {
@@ -40,7 +39,7 @@ const Noun: React.FC<{ alt: string }> = props => {
   
 
   let htmlImg, htmlAlt;
-  if (!nextNounId || !ethereumConnected || !voteConnected) {
+  if (!nextNounId || !ethereumConnected) {
     htmlImg = loadingNoun;
     htmlAlt = 'Loading Noun';
   } else {

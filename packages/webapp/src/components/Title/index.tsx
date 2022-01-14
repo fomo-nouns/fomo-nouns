@@ -8,14 +8,13 @@ const Title: React.FC<{}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const attemptedSettle = useAppSelector(state => state.vote.attemptedSettle);
   const votingActive = useAppSelector(state => state.vote.votingActive);
-  const voteConnected = useAppSelector(state => state.vote.connected);
   const ethereumConnected = useAppSelector(state => state.block.connected);
   const blockHash = useAppSelector(state => state.block.blockHash);
 
   let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
 
   let titleText = '', timer = <></>;
-  if (!voteConnected || !ethereumConnected) {
+  if (!ethereumConnected) {
     titleText = `Awaiting connection...`;
     timer = timerSpacer;
   } else if (!blockHash || activeAuction === undefined) {
