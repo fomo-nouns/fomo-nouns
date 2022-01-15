@@ -11,6 +11,7 @@ const ApiGatewayManagementApi = require('aws-sdk/clients/apigatewaymanagementapi
 const Lambda = require('aws-sdk/clients/lambda');
 
 const { scoreVotes, hasWinningScore } = require('./utils/scoreVotes.js');
+const { activeUserCount } = require('./utils/connectionFilter.js');
 
 const {
   AWS_REGION,
@@ -51,7 +52,10 @@ async function updateVote(dbKey, voteType) {
 
 async function retrieveConnections() {
   try {
-    let connectionData = await ddb.scan({ TableName: SOCKET_TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
+    let connectionData = await ddb.scan({
+      TableName: SOCKET_TABLE_NAME,
+      ProjectionExpression: 'connectionId, inactive'
+    }).promise();
     return connectionData.Items;
   } catch (e) {
     throw e;
@@ -139,7 +143,8 @@ exports.handler = async event => {
 
   // Retrieve connected useres and score the votes
   let connections = await retrieveConnections();
-  let voteScore = scoreVotes(newVotes, connections.length);
+  let activeCount = activeUserCount(connections);
+  let voteScore = scoreVotes(newVotes, activeCount);
 
   let msg = {
     'blockhash': blockhash,
