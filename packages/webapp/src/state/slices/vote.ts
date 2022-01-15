@@ -14,6 +14,7 @@ interface VoteState {
   attemptedSettle: boolean;
   votingActive: boolean;
   score: number;
+  missedVotes: number;
 }
 
 const initialState: VoteState = {
@@ -23,7 +24,8 @@ const initialState: VoteState = {
   voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
   attemptedSettle: false,
   votingActive: true,
-  score: 0
+  score: 0,
+  missedVotes: 0
 };
 
 export const voteSlice = createSlice({
@@ -57,7 +59,9 @@ export const voteSlice = createSlice({
     resetVotes: (state) => ({
       ...initialState,
       numConnections: state.numConnections,
-      connected: state.connected
+      connected: state.connected,
+      // If user lodged a vote, reset missed vote counter, otherwise increment it
+      missedVotes: (!state.currentVote ? state.missedVotes+1 : initialState.missedVotes)
     })
   },
 });

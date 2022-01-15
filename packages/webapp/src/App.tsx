@@ -16,7 +16,7 @@ import Footer from './components/Footer';
 import SettledAuctionModal from './components/SettledAuctionModal';
 
 import { setActiveAccount } from './state/slices/account';
-import { openVoteSocket } from './middleware/voteWebsocket';
+import { closeVoteSocket, openVoteSocket } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
 
 
@@ -26,6 +26,7 @@ function App() {
   const { account } = useEthers();
   const dispatch = useAppDispatch();
   const useGreyBg = useAppSelector(state => state.noun.useGreyBg);
+  const missedVotes = useAppSelector(state => state.vote.missedVotes);
 
   useEffect(() => {
     dispatch(setActiveAccount(account));
@@ -35,6 +36,13 @@ function App() {
     dispatch(openVoteSocket());
     dispatch(openEthereumSocket());
   }, [dispatch]);
+
+  // Deal with inactive users
+  useEffect(() => {
+    if (missedVotes > 5) {
+      dispatch(closeVoteSocket());
+    }
+  }, [dispatch, missedVotes]);
 
 
   return (
