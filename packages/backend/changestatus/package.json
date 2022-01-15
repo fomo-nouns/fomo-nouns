@@ -1,0 +1,12 @@
+{
+  "name": "changestatus",
+  "version": "1.0.0",
+  "description": "Change a users connection status",
+  "main": "src/app.js",
+  "author": "@_forager",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.739.0"
+  }
+}

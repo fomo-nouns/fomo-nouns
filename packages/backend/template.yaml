@@ -105,12 +105,33 @@ Resources:
       IntegrationUri: 
         Fn::Sub:
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SendVoteFunction.Arn}/invocations
+  ChangeStatusRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref NounsWebSocket
+      RouteKey: changestatus
+      AuthorizationType: NONE
+      OperationName: ChangeStatusRoute
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref ChangeStatusInteg
+  ChangeStatusInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref NounsWebSocket
+      Description: Change Status Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: 
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ChangeStatusFunction.Arn}/invocations
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
     - ConnectRoute
     - SendRoute
     - DisconnectRoute
+    - ChangeStatusRoute
     Properties:
       ApiId: !Ref NounsWebSocket
   Stage:
@@ -199,6 +220,31 @@ Resources:
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Ref OnDisconnectFunction
+      Principal: apigateway.amazonaws.com
+
+  #----------------------------------------#
+  # Lambda: ChangeStatus from Websocket
+  #----------------------------------------#
+  ChangeStatusFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: changestatus/
+      Handler: app.handler
+      MemorySize: 256
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          SOCKET_TABLE_NAME: !Ref SocketTableName
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: !Ref SocketTableName
+  ChangeStatusPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - NounsWebSocket
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ChangeStatusFunction
       Principal: apigateway.amazonaws.com
 
   #----------------------------------------#
@@ -299,6 +345,10 @@ Outputs:
   OnDisconnectFunctionArn:
     Description: "OnDisconnect function ARN"
     Value: !GetAtt OnDisconnectFunction.Arn
+
+  ChangeStatusFunctionArn:
+    Description: "ChangeStatus function ARN"
+    Value: !GetAtt ChangeStatusFunction.Arn
 
   SendVoteFunctionArn:
     Description: "SendVote function ARN"
