@@ -31,10 +31,9 @@ export const voteSlice = createSlice({
   initialState,
   reducers: {
     setConnected: (state, action: PayloadAction<boolean>) => {
-      if (action.payload) {
-        state.connected = true;
-      } else {
-        return initialState;
+      return {
+        ...initialState,
+        connected: action.payload ? true : false
       }
     },
     setNumConnections: (state, action: PayloadAction<number | undefined>) => {
