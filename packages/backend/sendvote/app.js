@@ -50,6 +50,12 @@ async function updateVote(dbKey, voteType) {
   }
 }
 
+
+/**
+ * Retrieve all the current connections
+ * 
+ * @returns {Array} Array of all connections
+ */
 async function retrieveConnections() {
   try {
     let connectionData = await ddb.scan({
@@ -61,6 +67,24 @@ async function retrieveConnections() {
     throw e;
   }
 }
+
+
+/**
+ * Set the provided connectionId to active
+ */
+async function setActive(connectionId) {
+  const updateParams = {
+    TableName: SOCKET_TABLE_NAME,
+    Key: { 'connectionId': connectionId },
+    ExpressionAttributeValues: { ':false': false},
+    UpdateExpression: 'set inactive = :false'
+  };
+
+  ddb.update(updateParams).promise()
+    .then(() => console.log(`${connectionId} marked active.`))
+    .catch(e => console.log(e));
+}
+
 
 /**
  * Distribute the data to each client
@@ -141,8 +165,17 @@ exports.handler = async event => {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
   }
 
-  // Retrieve connected useres and score the votes
+  // Retrieve connected users
   let connections = await retrieveConnections();
+
+  // If the voter was inactive, update the DB and data
+  let thisConnection = connections.find(i => i.connectionId === context.connectionId);
+  if (thisConnection.inactive) {
+    setActive(thisConnection.connectionId);
+    thisConnection.inactive = false;
+  }
+
+  // Score the votes and create the response message
   let activeCount = activeUserCount(connections);
   let voteScore = scoreVotes(newVotes, activeCount);
 
@@ -151,6 +184,7 @@ exports.handler = async event => {
     'vote': vote,
     'score': voteScore,
     'connections': connections.length,
+    'activeVoters': activeCount,
     'settlementAttempted': false
   };
 
