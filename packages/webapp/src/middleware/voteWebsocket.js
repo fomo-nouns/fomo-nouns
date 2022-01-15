@@ -14,6 +14,7 @@ import {
 const openVoteSocket = (payload) => ({type: 'voteSocket/open', payload});
 const closeVoteSocket = (payload) => ({type: 'voteSocket/close', payload});
 const sendVote = (payload) => ({type: 'voteSocket/send', payload});
+const markVoterInactive = (payload) => ({type: 'voteSocket/inactive', payload});
 
 
 // Define the Middleware
@@ -76,6 +77,16 @@ const voteWebsocketMiddleware = () => {
     store.dispatch(setConnected(false));
   }
 
+  const handleInactiveStatus = () => {
+    try {
+      const statusMsg = {"action": "changestatus", "status": "inactive"};
+      socket.send(JSON.stringify(statusMsg));
+    } catch(e) {
+      console.error('Websocket message ill-formed');
+      console.log(e);
+    }
+  }
+
 
   // Define the Middleware
   return store => next => action => {
@@ -89,6 +100,9 @@ const voteWebsocketMiddleware = () => {
     else if (action.type === 'voteSocket/send') {
       handleSendMessage(action.payload);
     }
+    else if (action.type === 'voteSocket/inactive') {
+      handleInactiveStatus();
+    }
     else {
       return next(action);
     }
@@ -97,4 +111,4 @@ const voteWebsocketMiddleware = () => {
 
 
 export default voteWebsocketMiddleware();
-export { openVoteSocket, closeVoteSocket, sendVote };
+export { openVoteSocket, closeVoteSocket, sendVote, markVoterInactive };
