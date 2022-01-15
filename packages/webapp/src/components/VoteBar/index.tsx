@@ -34,12 +34,18 @@ const VoteBar:React.FC<{}> = (props) => {
     <span className={classes.reconnect} onClick={openSocket}>Click Here to Reconnect</span>
   );
 
+  const voteReconnectOpt = (
+    <span className={classes.reconnect} onClick={openSocket}>Click to Enable Voting</span>
+  )
+
   return(
     <div className={`
       ${(!votingActive || activeAuction === undefined) ? classes.VoteBarOverlay : ''}
       ${classes.VoteBar}`}
     >
-      { (voteSocketConnected && ethereumSocketConnected) ? voteOpts(false) : reconnectOpt }
+      { (voteSocketConnected && ethereumSocketConnected) ? voteOpts(false)
+        : !ethereumSocketConnected ? reconnectOpt
+        : voteReconnectOpt }
     </div>
   );
 }
