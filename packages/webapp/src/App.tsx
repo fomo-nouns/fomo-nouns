@@ -16,7 +16,7 @@ import Footer from './components/Footer';
 import SettledAuctionModal from './components/SettledAuctionModal';
 
 import { setActiveAccount } from './state/slices/account';
-import { closeVoteSocket, openVoteSocket } from './middleware/voteWebsocket';
+import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
 
 
@@ -39,8 +39,8 @@ function App() {
 
   // Deal with inactive users
   useEffect(() => {
-    if (missedVotes > 5) {
-      dispatch(closeVoteSocket());
+    if (missedVotes > 3) {
+      dispatch(markVoterInactive());
     }
   }, [dispatch, missedVotes]);
 
