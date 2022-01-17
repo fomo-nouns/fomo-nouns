@@ -18,7 +18,7 @@ const Title: React.FC<{}> = props => {
     titleText = `Awaiting connection...`;
     timer = timerSpacer;
   } else if (!blockHash || activeAuction === undefined) {
-    titleText = `Loading next block...`;
+    titleText = `Waiting for next block...`;
     timer = timerSpacer;
   } else if (activeAuction) {
     titleText = `Come back at Noun O'Clock in:`;
