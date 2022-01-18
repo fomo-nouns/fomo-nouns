@@ -1,16 +1,19 @@
-# mobileapp
+# Setup
 
-A new Flutter project.
+Make sure to follow the installation guide for [Flutter packages](https://docs.flutter.dev/get-started/install).
 
-## Getting Started
+Important: iOS application can only be build on macOS.
 
-This project is a starting point for a Flutter application.
+## Building apps binaries
 
-A few resources to get you started if this is your first Flutter project:
+Run the following command to build Android binaries:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+`
+To be added
+`
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Run the following command to build iOS binaries:
+
+`
+To be added
+`

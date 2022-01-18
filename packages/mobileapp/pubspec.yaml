@@ -1,5 +1,5 @@
 name: mobileapp
-description: A new Flutter project.
+description: Fomo Nouns mobile application.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -29,10 +29,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  bloc: ^8.0.2
+  bloc_test: ^9.0.2
+  bloc_concurrency: ^0.2.0
+  flutter_bloc: ^8.0.1
+  web_socket_channel: ^2.1.0
+  flutter_screenutil: ^5.1.0
+  json_annotation: ^4.4.0
 
 dev_dependencies:
   flutter_test:
@@ -44,6 +48,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  build_runner: ^2.1.7
+  json_serializable: ^6.1.4
+  logger: ^1.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
