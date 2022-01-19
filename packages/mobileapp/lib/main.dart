@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
+import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
 
 void main() {
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         title: 'Fomo Nouns Mobile App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: "Inter",
+          fontFamily: AppFonts.inter,
           primaryColor: AppColors.textColor,
           backgroundColor: AppColors.warmBackground,
         ),

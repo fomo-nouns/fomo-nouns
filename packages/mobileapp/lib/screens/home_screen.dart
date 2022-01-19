@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
+import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/play/play_screen.dart';
 import 'package:mobileapp/screens/settings/settings_screen.dart';
 import 'package:mobileapp/screens/shared_widgets/fades.dart';
@@ -117,7 +118,7 @@ class _NavBarItemState extends State<NavBarItem> {
       child: Text(
         widget.text,
         style: TextStyle(
-          fontFamily: "Londrina Solid",
+          fontFamily: AppFonts.londrina,
           fontSize: 28.sp,
           color: (widget.selfIndex == widget.currentIndex)
               ? AppColors.textColor
