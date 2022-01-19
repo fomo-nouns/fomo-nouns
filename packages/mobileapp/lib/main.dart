@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         title: 'Fomo Nouns Mobile App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          fontFamily: "Inter",
           primaryColor: AppColors.textColor,
           backgroundColor: AppColors.warmBackground,
         ),
