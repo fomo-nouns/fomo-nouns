@@ -14,33 +14,34 @@ class _VoteBarState extends State<VoteBar> {
   @override
   Widget build(BuildContext context) {
     return SidePadding(
-        child: Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(20.w)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.black.withOpacity(0.15),
-            offset: Offset(0.0, 4.h),
-            blurRadius: 4.w,
-          )
-        ],
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).backgroundColor,
+          borderRadius: BorderRadius.all(Radius.circular(20.w)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.15),
+              offset: Offset(0.0, 4.h),
+              blurRadius: 4.w,
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            VoteButton(
+              text: "👎",
+              numberOfVotes: 2,
+              onClick: () {},
+            ),
+            VoteButton(
+              text: "👍",
+              numberOfVotes: 16,
+              onClick: () {},
+            )
+          ],
+        ),
       ),
-      child: Row(
-        children: [
-          VoteButton(
-            text: "👎",
-            numberOfVotes: 2,
-            onClick: () {},
-          ),
-          VoteButton(
-            text: "👍",
-            numberOfVotes: 16,
-            onClick: () {},
-          )
-        ],
-      ),
-    ));
+    );
   }
 }
 
