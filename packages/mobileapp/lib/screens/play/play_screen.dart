@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mobileapp/screens/play/widgets/noun.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 
 class PlayScreen extends StatelessWidget {
@@ -9,7 +11,7 @@ class PlayScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialWidget(
       child: Center(
-        child: Text("Play Screen"),
+        child: Noun(),
       ),
     );
   }
