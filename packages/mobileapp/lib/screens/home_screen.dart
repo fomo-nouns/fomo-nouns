@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _children = [];
 
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -42,40 +42,44 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           backgroundColor: Theme.of(context).backgroundColor,
-          bottomNavigationBar: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              NavBarItem(
-                text: "Play",
-                onTap: () {
-                  setState(() {
-                    _currentIndex = 0;
-                  });
-                },
-                currentIndex: _currentIndex,
-                selfIndex: 0,
-              ),
-              NavBarItem(
-                text: "Settings",
-                onTap: () {
-                  setState(() {
-                    _currentIndex = 1;
-                  });
-                },
-                currentIndex: _currentIndex,
-                selfIndex: 1,
-              ),
-              NavBarItem(
-                text: "Wtf?",
-                onTap: () {
-                  setState(() {
-                    _currentIndex = 2;
-                  });
-                },
-                currentIndex: _currentIndex,
-                selfIndex: 2,
-              ),
-            ],
+          bottomNavigationBar: SizedBox(
+            height: 60.h,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                NavBarItem(
+                  text: "Play",
+                  onTap: () {
+                    setState(() {
+                      _currentIndex = 0;
+                    });
+                  },
+                  currentIndex: _currentIndex,
+                  selfIndex: 0,
+                ),
+                NavBarItem(
+                  text: "Settings",
+                  onTap: () {
+                    setState(() {
+                      _currentIndex = 1;
+                    });
+                  },
+                  currentIndex: _currentIndex,
+                  selfIndex: 1,
+                ),
+                NavBarItem(
+                  text: "Wtf?",
+                  onTap: () {
+                    setState(() {
+                      _currentIndex = 2;
+                    });
+                  },
+                  currentIndex: _currentIndex,
+                  selfIndex: 2,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -106,15 +110,18 @@ class _NavBarItemState extends State<NavBarItem> {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: widget.onTap,
-      style: const ButtonStyle(
+      style: ButtonStyle(
         enableFeedback: false,
+        overlayColor: MaterialStateProperty.all(AppColors.transparent),
       ),
       child: Text(
         widget.text,
         style: TextStyle(
+          fontFamily: "Londrina Solid",
+          fontSize: 28.sp,
           color: (widget.selfIndex == widget.currentIndex)
               ? AppColors.textColor
-              : AppColors.textColor,
+              : AppColors.shadeOne,
         ),
       ),
     );

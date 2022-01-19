@@ -9,7 +9,7 @@ Widget get fadeOverlayBottom {
       heightFactor: 1,
       child: IgnorePointer(
         child: Container(
-          height: ScreenUtil().setHeight(60),
+          height: 10.h,
           decoration: const BoxDecoration(
             // Box decoration takes a gradient
             gradient: LinearGradient(

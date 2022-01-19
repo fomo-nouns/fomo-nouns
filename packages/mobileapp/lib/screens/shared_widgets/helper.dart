@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Widget that help to correctly show elements that require
 /// Material parent widget on iOS.
@@ -25,9 +26,8 @@ class SidePadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        // horizontal: ScreenUtil().setWidth(40),
-        horizontal: 10,
+      padding: EdgeInsets.symmetric(
+        horizontal: 10.w,
       ),
       child: child,
     );
