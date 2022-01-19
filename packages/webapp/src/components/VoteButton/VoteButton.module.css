@@ -2,6 +2,7 @@ button {
     padding: 0;
 }
 
+
 .voteButton{
     display: flex;
     flex-direction: column;
@@ -19,10 +20,12 @@ button {
 
     box-sizing: border-box;
 }
-.voteButton:enabled:hover{
-    background: rgba(0, 0, 0, 0.1);
-}
 
+@media (hover: hover) {
+    .voteButton:enabled:hover:not(.selected){
+        background: rgba(0, 0, 0, 0.1);
+    }
+}
 .voteText{
     font-size: 1.5em;
     font-weight: bold;

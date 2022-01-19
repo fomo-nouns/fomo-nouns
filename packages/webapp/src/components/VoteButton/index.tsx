@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import classes from './VoteButton.module.css';
-import { VOTE_OPTIONS, setCurrentVote } from '../../state/slices/vote';
+import vote, { VOTE_OPTIONS, setCurrentVote } from '../../state/slices/vote';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { sendVote } from '../../middleware/voteWebsocket';
 
@@ -27,6 +27,7 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS}> = props => {
   const votingActive = useAppSelector(state => state.vote.votingActive);
 
   const { voteType } = props;
+  const voteNotSelected = (currentVote !== undefined) && currentVote !== voteType;
   const dispatch = useAppDispatch();
   const changeVote = () => {
     if (currentVote || !wsConnected) return;
@@ -37,7 +38,7 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS}> = props => {
 
   return (
       <button className={currentVote === voteType ? clsx(classes.voteButton, classes.selected) : classes.voteButton} onClick={changeVote}
-      disabled={!votingActive || activeAuction}>
+      disabled={voteNotSelected || (!votingActive || activeAuction)}>
         <span className={classes.voteEmojiText}> {voteToEmoji[voteType]} </span>
         <span className={classes.voteText}> {voteCounts[voteType]} </span>
       </button>
