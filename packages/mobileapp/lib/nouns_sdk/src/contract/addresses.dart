@@ -32,6 +32,7 @@ class ContractAddress implements ContractAddresses {
   String? nounsToken;
 
   ContractAddress(int chainId) {
+    // TODO: add Rinkeby and Local
     if (chainId == ChainId.mainnet) {
       nounsToken = '0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03';
       nounsSeeder = '0xCC8a0FB5ab3C7132c1b2A0109142Fb112c4Ce515';

@@ -27,7 +27,7 @@ class SidePadding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 10.w,
+        horizontal: 30.w,
       ),
       child: child,
     );
