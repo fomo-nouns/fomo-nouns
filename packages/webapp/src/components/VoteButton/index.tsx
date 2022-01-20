@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import classes from './VoteButton.module.css';
-import vote, { VOTE_OPTIONS, setCurrentVote } from '../../state/slices/vote';
+import { VOTE_OPTIONS, setCurrentVote } from '../../state/slices/vote';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { sendVote } from '../../middleware/voteWebsocket';
 
