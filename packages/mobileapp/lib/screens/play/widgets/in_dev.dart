@@ -27,7 +27,8 @@ class InDev extends StatelessWidget {
             "Voting functionality is currently under development",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: const Color(0xffDD0000).withOpacity(0.70),
+              color: const Color(0xffDD0000).withOpacity(0.7),
+              fontWeight: FontWeight.w300,
             ),
           ),
         ),
