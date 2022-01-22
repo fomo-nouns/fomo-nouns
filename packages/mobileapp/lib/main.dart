@@ -1,11 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseMessaging.instance.subscribeToTopic('onAuctionEnd');
+  print(await FirebaseMessaging.instance.getToken());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
