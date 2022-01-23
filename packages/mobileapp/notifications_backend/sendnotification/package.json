@@ -1,0 +1,12 @@
+{
+  "name": "sendnotification",
+  "version": "1.0.0",
+  "description": "Send notification to Firebase Cloud Messages topic with provided timestamp",
+  "main": "src/app.js",
+  "author": "@nikitattt",
+  "license": "MIT",
+  "scripts": {},
+  "devDependencies": {
+    "firebase-admin": "^10.0.2"
+  }
+}

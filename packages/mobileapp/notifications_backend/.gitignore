@@ -1,0 +1,4 @@
+# Private service key with access to Firebase project
+SendNotification/serviceAccount.json
+
+packages

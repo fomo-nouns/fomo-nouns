@@ -1,0 +1,12 @@
+{
+  "name": "checkauctionend",
+  "version": "1.0.0",
+  "description": "Polls data from NounsDao subgraph and check if auction end time has changed",
+  "main": "src/app.js",
+  "author": "@nikitattt",
+  "license": "MIT",
+  "scripts": {},
+  "devDependencies": {
+    "axios": "^0.25.0"
+  }
+}
