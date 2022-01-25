@@ -13,10 +13,13 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await FirebaseMessaging.instance.subscribeToTopic('5minutesBeforeEnd');
-  await FirebaseMessaging.instance.subscribeToTopic('onAuctionEnd');
+  await FirebaseMessaging.instance
+      .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd);
+  await FirebaseMessaging.instance
+      .subscribeToTopic(NotificationTopics.onAuctionEnd);
+
   print(await FirebaseMessaging.instance.getToken());
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
             child: widget!,
           );
         },
-        title: 'Fomo Nouns Mobile App',
+        title: 'Fomo Nouns',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: AppFonts.inter,

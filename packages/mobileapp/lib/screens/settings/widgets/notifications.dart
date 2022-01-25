@@ -43,21 +43,21 @@ class _Selectors extends StatelessWidget {
     return Column(
       children: [
         _Selector(
-          type: "onAuctionEnd",
+          type: NotificationTopics.onAuctionEnd,
           text: "On auction end",
           value: false,
           onChange: (newValue) {},
         ),
         SizedBox(height: 10.h),
         _Selector(
-          type: "onAuctionEnd",
+          type: NotificationTopics.tenMinutesBeforeEnd,
           text: "5 min before end",
           value: true,
           onChange: (newValue) {},
         ),
         SizedBox(height: 10.h),
         _Selector(
-          type: "onAuctionEnd",
+          type: NotificationTopics.fiveMinutesBeforeEnd,
           text: "10 min before end",
           value: true,
           onChange: (newValue) {},
@@ -99,11 +99,17 @@ class __SelectorState extends State<_Selector> {
 
   void _onRiveInit(Artboard artboard) {
     final controller = _value
-        ? StateMachineController.fromArtboard(artboard, 'OnSwitch')
-        : StateMachineController.fromArtboard(artboard, 'OffSwitch');
+        ? StateMachineController.fromArtboard(
+            artboard,
+            RiveStateMachines.onSwitch,
+          )
+        : StateMachineController.fromArtboard(
+            artboard,
+            RiveStateMachines.offSwitch,
+          );
 
     artboard.addController(controller!);
-    _on = controller.findInput<bool>('On') as SMIBool;
+    _on = controller.findInput<bool>(RiveStateMachines.onInstance) as SMIBool;
   }
 
   @override
@@ -137,8 +143,8 @@ class __SelectorState extends State<_Selector> {
             height: 55.w,
             width: 85.w,
             child: RiveAnimation.asset(
-              'assets/rive/switch.riv',
-              animations: [''],
+              RivePaths.settingsSwitch,
+              animations: const [''],
               onInit: _onRiveInit,
               fit: BoxFit.fitHeight,
               alignment: Alignment.centerRight,
