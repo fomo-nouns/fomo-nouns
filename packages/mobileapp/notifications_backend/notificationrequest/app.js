@@ -7,18 +7,15 @@ const { STATE_MACHINE_ARN } = process.env;
 const sf = new AWS.StepFunctions();
 
 exports.handler = (event, context, callback) => {
-    let body = JSON.parse(event.body.toString())
+    let body = JSON.parse(event.body)
 
     const id = parseInt(body.previousAuctionId) + 1;
     const endTimeUnix = parseInt(body.endTimeUnix);
-
-    const endTimeISO = new Date((endTimeUnix - 10) * 1000).toISOString();
 
     const payload = {
         "auction": {
             "id": id,
             "endTimeUnix": endTimeUnix,
-            "endTimeISO": endTimeISO,
             "toEndInTime": true,
             "missedMarginally": false
         }

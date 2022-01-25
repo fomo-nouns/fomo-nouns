@@ -13,6 +13,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await FirebaseMessaging.instance.subscribeToTopic('5minutesBeforeEnd');
   await FirebaseMessaging.instance.subscribeToTopic('onAuctionEnd');
   print(await FirebaseMessaging.instance.getToken());
   runApp(MyApp());

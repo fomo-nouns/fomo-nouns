@@ -7,6 +7,12 @@ fbAdmin.initializeApp({
     credential: fbAdmin.credential.cert(serviceAccount)
 });
 
+const CASES = {
+    ON_END: 'onAuctionEnd',
+    TEN_MIN_BEFORE_END: '10minutesBeforeEnd',
+    FIVE_MIN_BEFORE_END: '5minutesBeforeEnd'
+};
+
 exports.handler = (event, context, callback) => {
     var auction = event.auction;
 
@@ -14,12 +20,34 @@ exports.handler = (event, context, callback) => {
 
     const topic = auction.topic;
 
-    const message = {
-        notification: {
-            title: 'Fomo Nouns is starting!',
-            body: 'Join to help us select the next noun.'
-        },
-    };
+    var message;
+
+    switch (topic) {
+        case CASES.ON_END:
+            message = {
+                notification: {
+                    title: 'Fomo Nouns is starting!',
+                    body: "Let's gooooo selecting the next noun!"
+                },
+            };
+            break;
+        case CASES.TEN_MIN_BEFORE_END:
+            message = {
+                notification: {
+                    title: 'Nouns auction is about to end in 10 minutes!',
+                    body: "Prepare the guns for Fomo! But don't forget it may take more time to end."
+                },
+            };
+            break;
+        case CASES.FIVE_MIN_BEFORE_END:
+            message = {
+                notification: {
+                    title: 'Nouns auction is about to end in 5 minutes!',
+                    body: "Prepare the guns for Fomo! But don't forget it may take more time to end."
+                },
+            };
+            break;
+    }
 
     // Send a message to devices subscribed to the provided topic.
     fcm.sendToTopic(topic, message)

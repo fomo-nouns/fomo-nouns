@@ -18,20 +18,26 @@ exports.handler = async event => {
                 query{
                     auction(id: ${auction.id}) {
                         endTime
+                        settled
                     }
                 }`
         }
     });
     const currentEndTimeUnix = parseInt(lastData.data.data.auction.endTime);
+    const auctionSettled = lastData.data.data.auction.settled;
 
-    if (true) {
-        // if (currentEndTimeUnix == auction.endTimeUnix) {
-    } else if (currentEndTimeUnix > (auction.endTimeUnix + 10)) {
-        auction.missedMarginally = true;
+    const currentUnix = Math.floor(Date.now() / 1000);
+
+    if (currentUnix <= (currentEndTimeUnix + 10) && !auctionSettled) {
+        if (currentEndTimeUnix == auction.endTimeUnix && !auction.toEndInTime) {
+            auction.toEndInTime = true;
+        } else if (currentEndTimeUnix > auction.endTimeUnix) {
+            auction.toEndInTime = false;
+            auction.endTimeUnix = currentEndTimeUnix;
+            auction.endTimeISO = new Date((currentEndTimeUnix - 10) * 1000).toISOString();
+        }
     } else {
-        auction.toEndInTime = false;
-        auction.endTimeUnix = currentEndTimeUnix;
-        auction.endTimeISO = new Date((currentEndTimeUnix - 10) * 1000).toISOString();
+        auction.missedMarginally = true;
     }
 
     return {

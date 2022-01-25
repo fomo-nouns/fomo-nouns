@@ -1,0 +1,10 @@
+{
+  "name": "prepareisotime",
+  "version": "1.0.0",
+  "description": "Adds timestamp for StepFunction Wait function to correctly delay notification",
+  "main": "src/app.js",
+  "author": "@nikitattt",
+  "license": "MIT",
+  "scripts": {},
+  "devDependencies": {}
+}
