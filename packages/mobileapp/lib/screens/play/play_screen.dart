@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:mobileapp/screens/play/widgets/in_dev.dart';
 import 'package:mobileapp/screens/play/widgets/noun.dart';
 import 'package:mobileapp/screens/play/widgets/vote_bar.dart';
+import 'package:mobileapp/screens/play/widgets/web_view_play.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 
 class PlayScreen extends StatelessWidget {
@@ -10,15 +11,16 @@ class PlayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialWidget(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Noun(),
-          VoteBar(),
-          InDev(),
-        ],
-      ),
+    return const MaterialWidget(
+      child: WebViewPlay(),
+      // Column(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: const [
+      //     // Noun(),
+      //     // VoteBar(),
+      //     // InDev(),
+      //   ],
+      // ),
     );
   }
 }

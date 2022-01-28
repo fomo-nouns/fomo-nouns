@@ -7,6 +7,14 @@ import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
 import 'firebase_options.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  // print("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -18,7 +26,8 @@ void main() async {
   await FirebaseMessaging.instance
       .subscribeToTopic(NotificationTopics.onAuctionEnd);
 
-  print(await FirebaseMessaging.instance.getToken());
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
 }
 

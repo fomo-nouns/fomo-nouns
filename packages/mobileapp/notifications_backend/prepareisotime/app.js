@@ -12,7 +12,7 @@ exports.handler = async (event) => {
 
     switch (auction.topic) {
         case CASES.ON_END:
-            auction.endTimeISO = new Date((endTimeUnix - 10) * 1000).toISOString();
+            auction.endTimeISO = new Date((endTimeUnix + 5) * 1000).toISOString();
             break;
         case CASES.TEN_MIN_BEFORE_END:
             auction.endTimeISO = new Date((endTimeUnix - 600) * 1000).toISOString();

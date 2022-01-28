@@ -28,13 +28,13 @@ exports.handler = async event => {
 
     const currentUnix = Math.floor(Date.now() / 1000);
 
-    if (currentUnix <= (currentEndTimeUnix + 10) && !auctionSettled) {
+    if (currentUnix <= (currentEndTimeUnix + 20) && !auctionSettled) {
         if (currentEndTimeUnix == auction.endTimeUnix && !auction.toEndInTime) {
             auction.toEndInTime = true;
         } else if (currentEndTimeUnix > auction.endTimeUnix) {
             auction.toEndInTime = false;
             auction.endTimeUnix = currentEndTimeUnix;
-            auction.endTimeISO = new Date((currentEndTimeUnix - 10) * 1000).toISOString();
+            auction.endTimeISO = new Date((currentEndTimeUnix + 5) * 1000).toISOString();
         }
     } else {
         auction.missedMarginally = true;
