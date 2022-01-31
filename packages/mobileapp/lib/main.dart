@@ -42,8 +42,7 @@ Future _setForegroundNotifications() async {
       ?.createNotificationChannel(channel);
 }
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future _setUpFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -56,6 +55,12 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   _setForegroundNotifications();
+}
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  _setUpFirebase();
 
   runApp(const MyApp());
 }
