@@ -40,6 +40,7 @@ dependencies:
   rive: ^0.8.1
   firebase_core: ^1.11.0
   firebase_messaging: ^11.2.5
+  flutter_local_notifications: ^9.2.0
 
   flutter_inappwebview: ^5.3.2
   url_launcher: ^6.0.18

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
@@ -15,6 +16,32 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // print("Handling a background message: ${message.messageId}");
 }
 
+/// Setting HeadsUp(foreground) notifications show
+Future _setForegroundNotifications() async {
+  // For iOS
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  //For Android
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel',
+    'High Importance Notifications',
+    description: 'This channel is used for important notifications.',
+    importance: Importance.max,
+  );
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -27,6 +54,8 @@ void main() async {
       .subscribeToTopic(NotificationTopics.onAuctionEnd);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  _setForegroundNotifications();
 
   runApp(const MyApp());
 }
