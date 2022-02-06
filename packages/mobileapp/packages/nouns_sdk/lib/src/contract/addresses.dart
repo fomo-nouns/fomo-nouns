@@ -1,4 +1,4 @@
-import 'package:mobileapp/nouns_sdk/src/contract/types.dart';
+import 'types.dart';
 
 class ContractAddress implements ContractAddresses {
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mobileapp/screens/settings/widgets/notifications.dart';
+import 'package:mobileapp/screens/settings/notifications/notifications.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 
 class SettingsScreen extends StatelessWidget {

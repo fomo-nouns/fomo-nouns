@@ -1,0 +1,16 @@
+name: notifications_repository
+description: Provide access to notifications
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.13.0 <3.0.0"
+dependencies:
+  firebase_core: ^1.11.0
+  firebase_messaging: ^11.2.5
+  flutter_local_notifications: ^9.2.0
+# dev_dependencies:
+#   build_runner: ^2.1.2
+#   json_serializable: ^5.0.0
+#   test: ^1.17.0
+

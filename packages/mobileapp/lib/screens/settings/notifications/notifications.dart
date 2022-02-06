@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
+import 'package:notifications_repository/notifications_repository.dart';
 import 'package:rive/rive.dart';
 
 class NotificationsSection extends StatelessWidget {

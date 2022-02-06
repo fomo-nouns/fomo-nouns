@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
+import 'package:notifications_repository/notifications_repository.dart';
 import 'firebase_options.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -43,10 +44,6 @@ Future _setForegroundNotifications() async {
 }
 
 Future _setUpFirebase() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
   await FirebaseMessaging.instance
       .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd);
   await FirebaseMessaging.instance
@@ -57,8 +54,16 @@ Future _setUpFirebase() async {
   _setForegroundNotifications();
 }
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // final NotificationsRepository notificationsRepository =
+  //     NotificationsRepository();
+
+  // notificationsRepository.setUpFirebase();
 
   _setUpFirebase();
 
