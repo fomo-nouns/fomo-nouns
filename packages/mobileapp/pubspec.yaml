@@ -49,6 +49,8 @@ dependencies:
 
   notifications_repository:
     path: packages/notifications_repository
+  settings_repository:
+    path: packages/settings_repository
   nouns_sdk:
     path: packages/nouns_sdk
 

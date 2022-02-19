@@ -3,7 +3,7 @@ import 'package:notifications_repository/src/functions.dart';
 import 'package:notifications_repository/src/models/models.dart';
 
 class NotificationsRepository {
-  Future setUpFirebase() async {
+  Future<void> setUpFirebase() async {
     await FirebaseMessaging.instance
         .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd);
     await FirebaseMessaging.instance
@@ -14,11 +14,11 @@ class NotificationsRepository {
     setForegroundNotifications();
   }
 
-  Future subscribeToTopic(String topic) async {
+  Future<void> subscribeToTopic(String topic) async {
     return await FirebaseMessaging.instance.subscribeToTopic(topic);
   }
 
-  Future unsubscribeFromTopic(String topic) async {
+  Future<void> unsubscribeFromTopic(String topic) async {
     return await FirebaseMessaging.instance.subscribeToTopic(topic);
   }
 }

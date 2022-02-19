@@ -1,0 +1,12 @@
+name: settings_repository
+description: Provide access to settings state stored on device
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.13.0 <3.0.0"
+dependencies:
+  hive: ^2.0.5
+dev_dependencies:
+  build_runner: ^2.1.2
+  hive_generator: ^1.1.2

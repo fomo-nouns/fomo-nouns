@@ -21,3 +21,21 @@ class RiveStateMachines {
 
   static const String onInstance = "On";
 }
+
+class HiveBoxes {
+  HiveBoxes._();
+
+  static const String settings = "settings";
+}
+
+class HiveKeys {
+  HiveKeys._();
+
+  static const String notificationOnAuctionEnd = "notificationOnAuctionEnd";
+
+  static const String notificationFiveMinBeforeEnd =
+      "notificationFiveMinBeforeEnd";
+
+  static const String notificationTenMinBeforeEnd =
+      "notificationTenMinBeforeEnd";
+}

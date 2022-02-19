@@ -8,6 +8,7 @@ import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
 import 'package:notifications_repository/notifications_repository.dart';
+import 'package:settings_repository/settings_repository.dart';
 import 'firebase_options.dart';
 
 //TODO: remove class after end of notifications debug
@@ -155,6 +156,10 @@ void main() async {
   );
 
   await Hive.initFlutter();
+
+  SettingsRepository settingsRepository = SettingsRepository();
+  await settingsRepository.prepareDb();
+
   //TODO: remove registration after end of notifications debug
   Hive.registerAdapter(NotificationMessageAdapter());
   await Hive.openBox<NotificationMessage>('notifications_test');
