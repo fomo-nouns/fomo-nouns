@@ -5,20 +5,20 @@ import 'package:notifications_repository/src/models/models.dart';
 class NotificationsRepository {
   Future<void> setUpFirebase() async {
     await FirebaseMessaging.instance
-        .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd);
+        .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd.name);
     await FirebaseMessaging.instance
-        .subscribeToTopic(NotificationTopics.onAuctionEnd);
+        .subscribeToTopic(NotificationTopics.onAuctionEnd.name);
 
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     setForegroundNotifications();
   }
 
-  Future<void> subscribeToTopic(String topic) async {
-    return await FirebaseMessaging.instance.subscribeToTopic(topic);
+  Future<void> subscribeToTopic(NotificationTopics topic) async {
+    return await FirebaseMessaging.instance.subscribeToTopic(topic.name);
   }
 
-  Future<void> unsubscribeFromTopic(String topic) async {
-    return await FirebaseMessaging.instance.subscribeToTopic(topic);
+  Future<void> unsubscribeFromTopic(NotificationTopics topic) async {
+    return await FirebaseMessaging.instance.subscribeToTopic(topic.name);
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
+import 'package:mobileapp/screens/settings/notifications/bloc/notifications_bloc.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:rive/rive.dart';
@@ -43,22 +45,45 @@ class _Selectors extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _Selector(
-          type: NotificationTopics.onAuctionEnd,
-          text: "On auction end",
-          value: false,
-          onChange: (newValue) {},
-        ),
+        BlocBuilder<NotificationsBloc, NotificationsState>(
+            buildWhen: (previousState, state) {
+          // if (previousState is NotificationsStateLoadSuccess ||
+          //     state is NotificationsStateLoadSuccess) {
+          //   if (previousState.state[NotificationTopics.onAuctionEnd] !=
+          //       state.state[NotificationTopics.onAuctionEnd]) {
+          //     return true;
+          //   }
+          // }
+          // return false;
+          return true;
+        }, builder: (context, state) {
+          if (state is NotificationsStateLoadSuccess) {
+            return _Selector(
+              type: NotificationTopics.onAuctionEnd.name,
+              text: "On auction end",
+              value: state.state[NotificationTopics.onAuctionEnd]!,
+              onChange: (newValue) {
+                context
+                    .read<NotificationsBloc>()
+                    .add(NotificationsTopicStateChanged(
+                      topic: NotificationTopics.onAuctionEnd,
+                      value: newValue,
+                    ));
+              },
+            );
+          }
+          return const Text("Couldn't load the data");
+        }),
         SizedBox(height: 10.h),
         _Selector(
-          type: NotificationTopics.tenMinutesBeforeEnd,
+          type: NotificationTopics.tenMinutesBeforeEnd.name,
           text: "5 min before end",
           value: true,
           onChange: (newValue) {},
         ),
         SizedBox(height: 10.h),
         _Selector(
-          type: NotificationTopics.fiveMinutesBeforeEnd,
+          type: NotificationTopics.fiveMinutesBeforeEnd.name,
           text: "10 min before end",
           value: true,
           onChange: (newValue) {},

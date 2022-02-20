@@ -3,6 +3,11 @@ part of 'notifications_bloc.dart';
 @immutable
 abstract class NotificationsEvent {}
 
-class NotificationsTopicSwitchedOn extends NotificationsEvent {}
+class NotificationsOpened extends NotificationsEvent {}
 
-class NotificationsTopicSwitchedOff extends NotificationsEvent {}
+class NotificationsTopicStateChanged extends NotificationsEvent {
+  final NotificationTopics topic;
+  final bool value;
+
+  NotificationsTopicStateChanged({required this.topic, required this.value});
+}

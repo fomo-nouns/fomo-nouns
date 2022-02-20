@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -140,9 +141,9 @@ Future _setForegroundNotifications() async {
 
 Future _setUpFirebase() async {
   await FirebaseMessaging.instance
-      .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd);
+      .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd.name);
   await FirebaseMessaging.instance
-      .subscribeToTopic(NotificationTopics.onAuctionEnd);
+      .subscribeToTopic(NotificationTopics.onAuctionEnd.name);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -164,18 +165,32 @@ void main() async {
   Hive.registerAdapter(NotificationMessageAdapter());
   await Hive.openBox<NotificationMessage>('notifications_test');
 
-  // final NotificationsRepository notificationsRepository =
-  //     NotificationsRepository();
+  final NotificationsRepository notificationsRepository =
+      NotificationsRepository();
 
   // notificationsRepository.setUpFirebase();
 
   _setUpFirebase();
 
-  runApp(const MyApp());
+  runApp(
+    App(
+      notificationsRepository: notificationsRepository,
+      settingsRepository: settingsRepository,
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({
+    Key? key,
+    required NotificationsRepository notificationsRepository,
+    required SettingsRepository settingsRepository,
+  })  : _notificationsRepository = notificationsRepository,
+        _settingsRepository = settingsRepository,
+        super(key: key);
+
+  final NotificationsRepository _notificationsRepository;
+  final SettingsRepository _settingsRepository;
 
   // This widget is the root of the application.
   @override
@@ -184,25 +199,35 @@ class MyApp extends StatelessWidget {
       designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: () => MaterialApp(
-        builder: (context, widget) {
-          ScreenUtil.setContext(context);
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: widget!,
-          );
-        },
-        title: 'Fomo Nouns',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: AppFonts.inter,
-          primaryColor: AppColors.textColor,
-          backgroundColor: AppColors.warmBackground,
+      builder: () => MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<NotificationsRepository>.value(
+            value: _notificationsRepository,
+          ),
+          RepositoryProvider<SettingsRepository>.value(
+            value: _settingsRepository,
+          ),
+        ],
+        child: MaterialApp(
+          builder: (context, widget) {
+            ScreenUtil.setContext(context);
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: widget!,
+            );
+          },
+          title: 'Fomo Nouns',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: AppFonts.inter,
+            primaryColor: AppColors.textColor,
+            backgroundColor: AppColors.warmBackground,
+          ),
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const HomeScreen(),
+          },
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const HomeScreen(),
-        },
       ),
     );
   }
