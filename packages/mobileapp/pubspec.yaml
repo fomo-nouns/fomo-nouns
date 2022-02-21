@@ -34,12 +34,13 @@ dependencies:
   bloc_test: ^9.0.2
   bloc_concurrency: ^0.2.0
   flutter_bloc: ^8.0.1
+  equatable: ^2.0.3
   web_socket_channel: ^2.1.0
   flutter_screenutil: ^5.1.0
   json_annotation: ^4.4.0
   rive: ^0.8.1
   firebase_core: ^1.11.0
-  firebase_messaging: ^11.2.5
+  firebase_messaging: ^11.2.6
   flutter_local_notifications: ^9.2.0
   hive: ^2.0.5
   hive_flutter: ^1.1.0

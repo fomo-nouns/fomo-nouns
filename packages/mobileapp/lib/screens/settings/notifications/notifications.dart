@@ -61,7 +61,7 @@ class _Selectors extends StatelessWidget {
             return _Selector(
               type: NotificationTopics.onAuctionEnd.name,
               text: "On auction end",
-              value: state.state[NotificationTopics.onAuctionEnd]!,
+              value: state.state.onAuctionEnd,
               onChange: (newValue) {
                 context
                     .read<NotificationsBloc>()

@@ -1,7 +1,3 @@
-enum HiveNotificationsKeys {
-  notificationOnAuctionEnd,
-  notificationFiveMinBeforeEnd,
-  notificationTenMinBeforeEnd
-}
+enum HiveNotificationsKeys { state }
 
 enum HiveGeneralKeys { versionCode }

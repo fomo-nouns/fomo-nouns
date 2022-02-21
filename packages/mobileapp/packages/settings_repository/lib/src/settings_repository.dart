@@ -10,6 +10,7 @@ class SettingsRepository {
   /// Opens the Hive boxes and prepares everything for work
   Future<void> prepareDb() async {
     _box = await Hive.openBox(HiveSettingsBoxes.settings.name);
+    Hive.registerAdapter(DbNotificationsStateAdapter());
 
     int notExist = -1;
     var box = await Hive.openBox(HiveGeneralBoxes.saveData.name);
@@ -30,24 +31,14 @@ class SettingsRepository {
   }
 
   /// Load latest data stored in database
-  Future<Map<HiveNotificationsKeys, bool>> load() async {
-    Map<HiveNotificationsKeys, bool> map = {};
-
-    HiveNotificationsKeys.values.forEach((key) {
-      if (_box.containsKey(key.name)) {
-        bool switchValue = _box.get(key.name);
-        map.addAll({key: switchValue});
-      }
-    });
-
-    return map;
+  Future<DbNotificationsState> load() async {
+    return _box.get(HiveNotificationsKeys.state);
   }
 
   /// Update data stored under [key] value
   /// and returns updated state
-  Future<Map<HiveNotificationsKeys, bool>> update(
-      HiveNotificationsKeys key, bool value) async {
-    await _box.put(key.name, value);
+  Future<DbNotificationsState> update(DbNotificationsState state) async {
+    _box.put(HiveNotificationsKeys.state, state);
 
     return load();
   }
@@ -59,6 +50,14 @@ class SettingsRepository {
     HiveNotificationsKeys.values.forEach((key) {
       _box.put(key.name, false);
     });
+
+    DbNotificationsState state = DbNotificationsState(
+      onAuctionEnd: false,
+      fiveMinBeforeEnd: false,
+      tenMinBeforeEnd: false,
+    );
+
+    _box.put(HiveNotificationsKeys.state, state);
 
     return;
   }
