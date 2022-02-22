@@ -1,37 +1,62 @@
 part of 'notifications_bloc.dart';
 
-@immutable
-abstract class NotificationsState extends Equatable {}
+enum NotificationsStatus { initial, success, updateFailure }
 
-class NotificationsInitial extends NotificationsState {
-  @override
-  List<Object> get props => [];
-}
+class NotificationsState extends Equatable {
+  const NotificationsState({
+    this.status = NotificationsStatus.initial,
+    this.onAuctionEnd = false,
+    this.fiveMinutesBeforeEnd = false,
+    this.tenMinutesBeforeEnd = false,
+  });
 
-class NotificationsStateLoadSuccess extends NotificationsState {
-  final DbNotificationsState state;
+  final NotificationsStatus status;
+  final bool onAuctionEnd;
+  final bool fiveMinutesBeforeEnd;
+  final bool tenMinutesBeforeEnd;
 
-  NotificationsStateLoadSuccess(this.state);
-
-  @override
-  List<Object> get props => [state];
-  // final bool onAuctionEndState;
-  // final bool fiveMinutesBeforeEndState;
-  // final bool tenMinutesBeforeEndState;
-
-  // NotificationsStateLoadSuccess({
-  //   required this.onAuctionEndState,
-  //   required this.fiveMinutesBeforeEndState,
-  //   required this.tenMinutesBeforeEndState,
+  // NotificationsState({
+  //   required this.onAuctionEnd,
+  //   required this.fiveMinutesBeforeEnd,
+  //   required this.tenMinutesBeforeEnd,
   // });
+
+  @override
+  List<Object> get props => [
+        status,
+        onAuctionEnd,
+        fiveMinutesBeforeEnd,
+        tenMinutesBeforeEnd,
+      ];
+
+  NotificationsState copyWith({
+    NotificationsStatus? status,
+    bool? onAuctionEnd,
+    bool? fiveMinutesBeforeEnd,
+    bool? tenMinutesBeforeEnd,
+  }) {
+    return NotificationsState(
+      status: status ?? this.status,
+      onAuctionEnd: onAuctionEnd ?? this.onAuctionEnd,
+      fiveMinutesBeforeEnd: fiveMinutesBeforeEnd ?? this.fiveMinutesBeforeEnd,
+      tenMinutesBeforeEnd: tenMinutesBeforeEnd ?? this.tenMinutesBeforeEnd,
+    );
+  }
 }
 
-class NotificationsStateLoadFailure extends NotificationsState {
-  @override
-  List<Object> get props => [];
-}
+// class NotificationsInitial extends NotificationsState {
+//   @override
+//   List<Object> get props => [];
+// }
 
-class NotificationsStateUpdateFailure extends NotificationsState {
-  @override
-  List<Object> get props => [];
-}
+// class NotificationsStateLoadSuccess extends NotificationsState {}
+
+// class NotificationsStateLoadFailure extends NotificationsState {
+//   @override
+//   List<Object> get props => [];
+// }
+
+// class NotificationsStateUpdateFailure extends NotificationsState {
+//   @override
+//   List<Object> get props => [];
+// }

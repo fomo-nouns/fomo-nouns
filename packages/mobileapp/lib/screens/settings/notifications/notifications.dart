@@ -57,11 +57,11 @@ class _Selectors extends StatelessWidget {
           // return false;
           return true;
         }, builder: (context, state) {
-          if (state is NotificationsStateLoadSuccess) {
+          if (state.status == NotificationsStatus.success) {
             return _Selector(
               type: NotificationTopics.onAuctionEnd.name,
               text: "On auction end",
-              value: state.state.onAuctionEnd,
+              value: state.onAuctionEnd,
               onChange: (newValue) {
                 context
                     .read<NotificationsBloc>()
