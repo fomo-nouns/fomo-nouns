@@ -9,8 +9,8 @@ class SettingsRepository {
   ///
   /// Opens the Hive boxes and prepares everything for work
   Future<void> prepareDb() async {
-    _box = await Hive.openBox(HiveSettingsBoxes.settings.name);
     Hive.registerAdapter(DbNotificationsStateAdapter());
+    _box = await Hive.openBox(HiveSettingsBoxes.settings.name);
 
     int notExist = -1;
     var box = await Hive.openBox(HiveGeneralBoxes.saveData.name);
@@ -32,13 +32,13 @@ class SettingsRepository {
 
   /// Load latest data stored in database
   Future<DbNotificationsState> load() async {
-    return _box.get(HiveNotificationsKeys.state);
+    return _box.get(HiveNotificationsKeys.state.name);
   }
 
   /// Update data stored under [key] value
   /// and returns updated state
   Future<DbNotificationsState> update(DbNotificationsState state) async {
-    _box.put(HiveNotificationsKeys.state, state);
+    _box.put(HiveNotificationsKeys.state.name, state);
 
     return load();
   }
@@ -47,17 +47,13 @@ class SettingsRepository {
   ///
   /// Saves required data to database about settings state
   Future<void> _initializeDb() async {
-    HiveNotificationsKeys.values.forEach((key) {
-      _box.put(key.name, false);
-    });
-
     DbNotificationsState state = DbNotificationsState(
       onAuctionEnd: false,
       fiveMinBeforeEnd: false,
       tenMinBeforeEnd: false,
     );
 
-    _box.put(HiveNotificationsKeys.state, state);
+    _box.put(HiveNotificationsKeys.state.name, state);
 
     return;
   }

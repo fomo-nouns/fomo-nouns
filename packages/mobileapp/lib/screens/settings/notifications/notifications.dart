@@ -46,47 +46,95 @@ class _Selectors extends StatelessWidget {
     return Column(
       children: [
         BlocBuilder<NotificationsBloc, NotificationsState>(
-            buildWhen: (previousState, state) {
-          // if (previousState is NotificationsStateLoadSuccess ||
-          //     state is NotificationsStateLoadSuccess) {
-          //   if (previousState.state[NotificationTopics.onAuctionEnd] !=
-          //       state.state[NotificationTopics.onAuctionEnd]) {
-          //     return true;
-          //   }
-          // }
-          // return false;
-          return true;
-        }, builder: (context, state) {
-          if (state.status == NotificationsStatus.success) {
-            return _Selector(
-              type: NotificationTopics.onAuctionEnd.name,
-              text: "On auction end",
-              value: state.onAuctionEnd,
-              onChange: (newValue) {
-                context
-                    .read<NotificationsBloc>()
-                    .add(NotificationsTopicStateChanged(
-                      topic: NotificationTopics.onAuctionEnd,
-                      value: newValue,
-                    ));
-              },
-            );
-          }
-          return const Text("Couldn't load the data");
-        }),
-        SizedBox(height: 10.h),
-        _Selector(
-          type: NotificationTopics.tenMinutesBeforeEnd.name,
-          text: "5 min before end",
-          value: true,
-          onChange: (newValue) {},
+          buildWhen: (previousState, state) {
+            if (previousState.status.isInitial) return true;
+
+            if (previousState.onAuctionEnd != state.onAuctionEnd) {
+              return true;
+            } else {
+              return false;
+            }
+          },
+          builder: (context, state) {
+            if (state.status.isSuccess) {
+              return _Selector(
+                type: NotificationTopics.onAuctionEnd.name,
+                text: "On auction end",
+                value: state.onAuctionEnd,
+                onChange: (newValue) {
+                  context
+                      .read<NotificationsBloc>()
+                      .add(NotificationsTopicStateChanged(
+                        topic: NotificationTopics.onAuctionEnd,
+                        value: newValue,
+                      ));
+                },
+              );
+            }
+            return const Text("Error loading the data");
+          },
         ),
         SizedBox(height: 10.h),
-        _Selector(
-          type: NotificationTopics.fiveMinutesBeforeEnd.name,
-          text: "10 min before end",
-          value: true,
-          onChange: (newValue) {},
+        BlocBuilder<NotificationsBloc, NotificationsState>(
+          buildWhen: (previousState, state) {
+            if (previousState.status.isInitial) return true;
+
+            if (previousState.tenMinutesBeforeEnd !=
+                state.tenMinutesBeforeEnd) {
+              return true;
+            } else {
+              return false;
+            }
+          },
+          builder: (context, state) {
+            if (state.status.isSuccess) {
+              return _Selector(
+                type: NotificationTopics.tenMinutesBeforeEnd.name,
+                text: "10 min before end",
+                value: state.tenMinutesBeforeEnd,
+                onChange: (newValue) {
+                  context
+                      .read<NotificationsBloc>()
+                      .add(NotificationsTopicStateChanged(
+                        topic: NotificationTopics.tenMinutesBeforeEnd,
+                        value: newValue,
+                      ));
+                },
+              );
+            }
+            return const Text("Error loading the data");
+          },
+        ),
+        SizedBox(height: 10.h),
+        BlocBuilder<NotificationsBloc, NotificationsState>(
+          buildWhen: (previousState, state) {
+            if (previousState.status.isInitial) return true;
+
+            if (previousState.fiveMinutesBeforeEnd !=
+                state.fiveMinutesBeforeEnd) {
+              return true;
+            } else {
+              return false;
+            }
+          },
+          builder: (context, state) {
+            if (state.status.isSuccess) {
+              return _Selector(
+                type: NotificationTopics.fiveMinutesBeforeEnd.name,
+                text: "5 min before end",
+                value: state.tenMinutesBeforeEnd,
+                onChange: (newValue) {
+                  context
+                      .read<NotificationsBloc>()
+                      .add(NotificationsTopicStateChanged(
+                        topic: NotificationTopics.fiveMinutesBeforeEnd,
+                        value: newValue,
+                      ));
+                },
+              );
+            }
+            return const Text("Error loading the data");
+          },
         ),
       ],
     );
@@ -157,6 +205,7 @@ class __SelectorState extends State<_Selector> {
             setState(() {
               _value = !_value;
               _on?.change(_value);
+              widget.onChange(_value);
             });
           },
           child: Container(

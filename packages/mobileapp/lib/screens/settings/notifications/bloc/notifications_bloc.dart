@@ -52,8 +52,10 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     );
 
     if (event.value) {
-      _notificationsRepository.subscribeToTopic(event.topic).then((_) {
-        _settingsRepository.update(newDbState).then((dbState) {
+      await _notificationsRepository
+          .subscribeToTopic(event.topic)
+          .then((_) async {
+        await _settingsRepository.update(newDbState).then((dbState) {
           emit(NotificationsState(
             status: NotificationsStatus.success,
             onAuctionEnd: dbState.onAuctionEnd,
@@ -65,8 +67,10 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
       });
     } else {
-      _notificationsRepository.subscribeToTopic(event.topic).then((_) {
-        _settingsRepository.update(newDbState).then((dbState) {
+      await _notificationsRepository
+          .unsubscribeFromTopic(event.topic)
+          .then((_) async {
+        await _settingsRepository.update(newDbState).then((dbState) {
           emit(NotificationsState(
             status: NotificationsStatus.success,
             onAuctionEnd: dbState.onAuctionEnd,

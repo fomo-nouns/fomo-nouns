@@ -1,5 +1,19 @@
 part of 'notifications_bloc.dart';
 
+extension NotificationsStatusX on NotificationsStatus {
+  bool get isSuccess => [
+        NotificationsStatus.success,
+      ].contains(this);
+
+  bool get isInitial => [
+        NotificationsStatus.initial,
+      ].contains(this);
+
+  bool get isError => [
+        NotificationsStatus.updateFailure,
+      ].contains(this);
+}
+
 enum NotificationsStatus { initial, success, updateFailure }
 
 class NotificationsState extends Equatable {
