@@ -32,6 +32,9 @@ class SettingsRepository {
 
   /// Load latest data stored in database
   Future<DbNotificationsState> load() async {
+    DbNotificationsState state = _box.get(HiveNotificationsKeys.state.name);
+    print(
+        "-- Latest db state: \nonAuctionEnd: ${state.onAuctionEnd} \nfiveMinBeforeEnd: ${state.fiveMinBeforeEnd} \ntenMinBeforeEnd: ${state.tenMinBeforeEnd}");
     return _box.get(HiveNotificationsKeys.state.name);
   }
 
