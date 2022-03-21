@@ -56,7 +56,8 @@ class _Selectors extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state.status.isSuccess) {
+            print(state);
+            if (state.status.isSuccess || state.status.isInitial) {
               return Selector(
                 type: NotificationTopics.onAuctionEnd.name,
                 text: "On auction end",
@@ -87,7 +88,7 @@ class _Selectors extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state.status.isSuccess) {
+            if (state.status.isSuccess || state.status.isInitial) {
               return Selector(
                 type: NotificationTopics.fiveMinutesBeforeEnd.name,
                 text: "5 min before end",
@@ -118,7 +119,7 @@ class _Selectors extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            if (state.status.isSuccess) {
+            if (state.status.isSuccess || state.status.isInitial) {
               return Selector(
                 type: NotificationTopics.tenMinutesBeforeEnd.name,
                 text: "10 min before end",

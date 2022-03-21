@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
 import 'package:notifications_repository/notifications_repository.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:settings_repository/settings_repository.dart';
 import 'firebase_options.dart';
 
@@ -111,8 +113,9 @@ void main() async {
 
   await Hive.initFlutter();
 
+  //TODO: delete if settings repository won't be used
   SettingsRepository settingsRepository = SettingsRepository();
-  await settingsRepository.prepareDb();
+  // await settingsRepository.prepareDb();
 
   //TODO: remove registration after end of notifications debug
   Hive.registerAdapter(NotificationMessageAdapter());
@@ -125,11 +128,17 @@ void main() async {
 
   _setUpFirebase();
 
-  runApp(
-    App(
-      notificationsRepository: notificationsRepository,
-      settingsRepository: settingsRepository,
+  final storage = await HydratedStorage.build(
+    storageDirectory: await getApplicationDocumentsDirectory(),
+  );
+  HydratedBlocOverrides.runZoned(
+    () => runApp(
+      App(
+        notificationsRepository: notificationsRepository,
+        settingsRepository: settingsRepository,
+      ),
     ),
+    storage: storage,
   );
 }
 

@@ -22,10 +22,8 @@ class SettingsScreen extends StatelessWidget {
             children: [
               BlocProvider(
                 create: (BuildContext context) => NotificationsBloc(
-                  notificationsRepository:
-                      context.read<NotificationsRepository>(),
-                  settingsRepository: context.read<SettingsRepository>(),
-                )..add(NotificationsOpened()),
+                  context.read<NotificationsRepository>(),
+                ),
                 child: const NotificationsSection(),
               )
             ],

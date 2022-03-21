@@ -1,21 +1,14 @@
 part of 'notifications_bloc.dart';
 
 extension NotificationsStatusX on NotificationsStatus {
-  bool get isSuccess => [
-        NotificationsStatus.success,
-      ].contains(this);
-
-  bool get isInitial => [
-        NotificationsStatus.initial,
-      ].contains(this);
-
-  bool get isError => [
-        NotificationsStatus.updateFailure,
-      ].contains(this);
+  bool get isSuccess => this == NotificationsStatus.success;
+  bool get isInitial => this == NotificationsStatus.initial;
+  bool get isError => this == NotificationsStatus.updateFailure;
 }
 
 enum NotificationsStatus { initial, success, updateFailure }
 
+@JsonSerializable()
 class NotificationsState extends Equatable {
   const NotificationsState({
     this.status = NotificationsStatus.initial,
@@ -28,12 +21,6 @@ class NotificationsState extends Equatable {
   final bool onAuctionEnd;
   final bool fiveMinutesBeforeEnd;
   final bool tenMinutesBeforeEnd;
-
-  // NotificationsState({
-  //   required this.onAuctionEnd,
-  //   required this.fiveMinutesBeforeEnd,
-  //   required this.tenMinutesBeforeEnd,
-  // });
 
   @override
   List<Object> get props => [
@@ -56,21 +43,9 @@ class NotificationsState extends Equatable {
       tenMinutesBeforeEnd: tenMinutesBeforeEnd ?? this.tenMinutesBeforeEnd,
     );
   }
+
+  factory NotificationsState.fromJson(Map<String, dynamic> json) =>
+      _$NotificationsStateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NotificationsStateToJson(this);
 }
-
-// class NotificationsInitial extends NotificationsState {
-//   @override
-//   List<Object> get props => [];
-// }
-
-// class NotificationsStateLoadSuccess extends NotificationsState {}
-
-// class NotificationsStateLoadFailure extends NotificationsState {
-//   @override
-//   List<Object> get props => [];
-// }
-
-// class NotificationsStateUpdateFailure extends NotificationsState {
-//   @override
-//   List<Object> get props => [];
-// }

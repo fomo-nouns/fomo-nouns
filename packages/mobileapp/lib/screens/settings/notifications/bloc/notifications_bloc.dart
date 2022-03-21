@@ -1,68 +1,43 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:settings_repository/settings_repository.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'notifications_event.dart';
 part 'notifications_state.dart';
+part 'notifications_bloc.g.dart';
 
-class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
-  NotificationsBloc({
-    required NotificationsRepository notificationsRepository,
-    required SettingsRepository settingsRepository,
-  })  : _notificationsRepository = notificationsRepository,
-        _settingsRepository = settingsRepository,
+class NotificationsBloc
+    extends HydratedBloc<NotificationsEvent, NotificationsState> {
+  NotificationsBloc(
+    NotificationsRepository notificationsRepository,
+  )   : _notificationsRepository = notificationsRepository,
         super(const NotificationsState()) {
-    on<NotificationsOpened>(_onNotificationsSettingsOpened);
-    on<NotificationsTopicStateChanged>(_onTopicStateChanged);
+    on<NotificationsTopicStateChanged>(
+      _onTopicStateChanged,
+      transformer: sequential(),
+    );
   }
 
   final NotificationsRepository _notificationsRepository;
-  final SettingsRepository _settingsRepository;
-
-  void _onNotificationsSettingsOpened(
-    NotificationsOpened event,
-    Emitter<NotificationsState> emit,
-  ) async {
-    DbNotificationsState dbState = await _settingsRepository.load();
-
-    emit(NotificationsState(
-      status: NotificationsStatus.success,
-      onAuctionEnd: dbState.onAuctionEnd,
-      fiveMinutesBeforeEnd: dbState.fiveMinBeforeEnd,
-      tenMinutesBeforeEnd: dbState.tenMinBeforeEnd,
-    ));
-  }
 
   void _onTopicStateChanged(
     NotificationsTopicStateChanged event,
     Emitter<NotificationsState> emit,
   ) async {
-    DbNotificationsState newDbState = DbNotificationsState(
-      onAuctionEnd: event.topic == NotificationTopics.onAuctionEnd
-          ? event.value
-          : state.onAuctionEnd,
-      fiveMinBeforeEnd: event.topic == NotificationTopics.fiveMinutesBeforeEnd
-          ? event.value
-          : state.fiveMinutesBeforeEnd,
-      tenMinBeforeEnd: event.topic == NotificationTopics.tenMinutesBeforeEnd
-          ? event.value
-          : state.tenMinutesBeforeEnd,
-    );
-
     if (event.value) {
       await _notificationsRepository
           .subscribeToTopic(event.topic)
           .then((_) async {
-        await _settingsRepository.update(newDbState).then((dbState) {
-          emit(NotificationsState(
-            status: NotificationsStatus.success,
-            onAuctionEnd: dbState.onAuctionEnd,
-            fiveMinutesBeforeEnd: dbState.fiveMinBeforeEnd,
-            tenMinutesBeforeEnd: dbState.tenMinBeforeEnd,
-          ));
-        });
+        emit(_updatedState(
+          status: NotificationsStatus.success,
+          topic: event.topic,
+          value: event.value,
+        ));
       }).onError((error, stackTrace) {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
       });
@@ -70,17 +45,39 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       await _notificationsRepository
           .unsubscribeFromTopic(event.topic)
           .then((_) async {
-        await _settingsRepository.update(newDbState).then((dbState) {
-          emit(NotificationsState(
-            status: NotificationsStatus.success,
-            onAuctionEnd: dbState.onAuctionEnd,
-            fiveMinutesBeforeEnd: dbState.fiveMinBeforeEnd,
-            tenMinutesBeforeEnd: dbState.tenMinBeforeEnd,
-          ));
-        });
+        emit(_updatedState(
+          status: NotificationsStatus.success,
+          topic: event.topic,
+          value: event.value,
+        ));
       }).onError((error, stackTrace) {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
       });
     }
   }
+
+  NotificationsState _updatedState({
+    required NotificationsStatus status,
+    required NotificationTopics topic,
+    required bool value,
+  }) {
+    return NotificationsState(
+      status: status,
+      onAuctionEnd:
+          topic == NotificationTopics.onAuctionEnd ? value : state.onAuctionEnd,
+      fiveMinutesBeforeEnd: topic == NotificationTopics.fiveMinutesBeforeEnd
+          ? value
+          : state.fiveMinutesBeforeEnd,
+      tenMinutesBeforeEnd: topic == NotificationTopics.tenMinutesBeforeEnd
+          ? value
+          : state.tenMinutesBeforeEnd,
+    );
+  }
+
+  @override
+  NotificationsState? fromJson(Map<String, dynamic> json) =>
+      NotificationsState.fromJson(json);
+
+  @override
+  Map<String, dynamic>? toJson(NotificationsState state) => state.toJson();
 }

@@ -33,11 +33,12 @@ dependencies:
   bloc: ^8.0.2
   bloc_test: ^9.0.2
   bloc_concurrency: ^0.2.0
+  hydrated_bloc: ^8.1.0
   flutter_bloc: ^8.0.1
+  path_provider: ^2.0.9
   equatable: ^2.0.3
   web_socket_channel: ^2.1.0
   flutter_screenutil: ^5.1.0
-  json_annotation: ^4.4.0
   rive: ^0.8.1
   firebase_core: ^1.11.0
   firebase_messaging: ^11.2.6
@@ -66,7 +67,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
   build_runner: ^2.1.7
-  json_serializable: ^6.1.4
+  json_serializable: ^6.1.5
+  json_annotation: ^4.4.0
   logger: ^1.1.0
   hive_generator: ^1.1.2
 
