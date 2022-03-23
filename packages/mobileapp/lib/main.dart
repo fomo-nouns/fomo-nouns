@@ -95,11 +95,6 @@ Future _setForegroundNotifications() async {
 }
 
 Future _setUpFirebase() async {
-  await FirebaseMessaging.instance
-      .subscribeToTopic(NotificationTopics.fiveMinutesBeforeEnd.name);
-  await FirebaseMessaging.instance
-      .subscribeToTopic(NotificationTopics.onAuctionEnd.name);
-
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   _setForegroundNotifications();

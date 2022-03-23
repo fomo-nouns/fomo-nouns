@@ -19,6 +19,6 @@ class NotificationsRepository {
   }
 
   Future<void> unsubscribeFromTopic(NotificationTopics topic) async {
-    return await FirebaseMessaging.instance.subscribeToTopic(topic.name);
+    return await FirebaseMessaging.instance.unsubscribeFromTopic(topic.name);
   }
 }
