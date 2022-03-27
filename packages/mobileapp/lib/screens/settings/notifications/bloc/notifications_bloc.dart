@@ -36,6 +36,8 @@ class NotificationsBloc
           topic: event.topic,
           value: event.value,
         ));
+      }).timeout(const Duration(seconds: 3), onTimeout: () {
+        emit(state.copyWith(status: NotificationsStatus.updateFailure));
       }).onError((error, stackTrace) {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
       });
@@ -48,6 +50,8 @@ class NotificationsBloc
           topic: event.topic,
           value: event.value,
         ));
+      }).timeout(const Duration(seconds: 3), onTimeout: () {
+        emit(state.copyWith(status: NotificationsStatus.updateFailure));
       }).onError((error, stackTrace) {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
       });

@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -152,6 +153,7 @@ class App extends StatelessWidget {
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
+    final botToastBuilder = BotToastInit();
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       minTextAdapt: true,
@@ -168,10 +170,23 @@ class App extends StatelessWidget {
         child: MaterialApp(
           builder: (context, widget) {
             ScreenUtil.setContext(context);
-            return MediaQuery(
+            Widget child = MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
               child: widget!,
             );
+            child = botToastBuilder(context, child);
+            return child;
+            // return MediaQuery(
+            //   data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            //   child: RepositoryProvider<FToast>(
+            //     create: (context) {
+            //       FToast fToast = FToast();
+            //       fToast.init(context);
+            //       return fToast;
+            //     },
+            //     child: widget!,
+            //   ),
+            // );
           },
           title: 'Fomo Nouns',
           debugShowCheckedModeBanner: false,

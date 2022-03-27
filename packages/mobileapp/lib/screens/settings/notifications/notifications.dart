@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +6,7 @@ import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/settings/notifications/bloc/notifications_bloc.dart';
 import 'package:mobileapp/screens/settings/widgets/selector.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
+import 'package:mobileapp/screens/shared_widgets/toast.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 
 class NotificationsSection extends StatelessWidget {
@@ -14,12 +14,28 @@ class NotificationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: fix error showing
+    // context
+    //     .read<NotificationsBloc>()
+    //     .stream
+    //     .every((state) => state.status.isError)
+    //     .then((_) => showAlertToast("Couldn’t save notification preference"));
     return SidePadding(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _title,
           const _Selectors(),
+          //TODO: fix error showing
+          BlocListener<NotificationsBloc, NotificationsState>(
+            listener: (context, state) {
+              print(state);
+              if (state.status.isError) {
+                showAlertToast("Couldn’t save notification preference");
+              }
+            },
+            child: Container(),
+          ),
         ],
       ),
     );
@@ -47,7 +63,10 @@ class _Selectors extends StatelessWidget {
       children: [
         BlocBuilder<NotificationsBloc, NotificationsState>(
           buildWhen: (previousState, state) {
-            if (previousState.status.isInitial) return true;
+            if (previousState.status.isInitial ||
+                previousState.status.isError) {
+              return true;
+            }
 
             if (previousState.onAuctionEnd != state.onAuctionEnd) {
               return true;
@@ -56,23 +75,19 @@ class _Selectors extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            print(state);
-            if (state.status.isSuccess || state.status.isInitial) {
-              return Selector(
-                type: NotificationTopics.onAuctionEnd.name,
-                text: "On auction end",
-                value: state.onAuctionEnd,
-                onChange: (newValue) {
-                  context
-                      .read<NotificationsBloc>()
-                      .add(NotificationsTopicStateChanged(
-                        topic: NotificationTopics.onAuctionEnd,
-                        value: newValue,
-                      ));
-                },
-              );
-            }
-            return const Text("Error loading the data");
+            return Selector(
+              type: NotificationTopics.onAuctionEnd.name,
+              text: "On auction end",
+              value: state.onAuctionEnd,
+              onChange: (newValue) {
+                context
+                    .read<NotificationsBloc>()
+                    .add(NotificationsTopicStateChanged(
+                      topic: NotificationTopics.onAuctionEnd,
+                      value: newValue,
+                    ));
+              },
+            );
           },
         ),
         SizedBox(height: 10.h),
