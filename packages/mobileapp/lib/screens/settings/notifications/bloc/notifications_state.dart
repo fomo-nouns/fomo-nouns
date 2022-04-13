@@ -4,9 +4,10 @@ extension NotificationsStatusX on NotificationsStatus {
   bool get isSuccess => this == NotificationsStatus.success;
   bool get isInitial => this == NotificationsStatus.initial;
   bool get isError => this == NotificationsStatus.updateFailure;
+  bool get isUpdating => this == NotificationsStatus.updating;
 }
 
-enum NotificationsStatus { initial, success, updateFailure }
+enum NotificationsStatus { initial, success, updateFailure, updating }
 
 @JsonSerializable()
 class NotificationsState extends Equatable {

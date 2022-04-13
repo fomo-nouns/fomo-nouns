@@ -6,7 +6,6 @@ import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/settings/notifications/bloc/notifications_bloc.dart';
 import 'package:mobileapp/screens/settings/widgets/selector.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
-import 'package:mobileapp/screens/shared_widgets/toast.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 
 class NotificationsSection extends StatelessWidget {
@@ -14,28 +13,12 @@ class NotificationsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: fix error showing
-    // context
-    //     .read<NotificationsBloc>()
-    //     .stream
-    //     .every((state) => state.status.isError)
-    //     .then((_) => showAlertToast("Couldn’t save notification preference"));
     return SidePadding(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _title,
           const _Selectors(),
-          //TODO: fix error showing
-          BlocListener<NotificationsBloc, NotificationsState>(
-            listener: (context, state) {
-              print(state);
-              if (state.status.isError) {
-                showAlertToast("Couldn’t save notification preference");
-              }
-            },
-            child: Container(),
-          ),
         ],
       ),
     );
@@ -63,19 +46,19 @@ class _Selectors extends StatelessWidget {
       children: [
         BlocBuilder<NotificationsBloc, NotificationsState>(
           buildWhen: (previousState, state) {
-            if (previousState.status.isInitial ||
-                previousState.status.isError) {
+            if (state.status.isError) {
               return true;
-            }
-
-            if (previousState.onAuctionEnd != state.onAuctionEnd) {
-              return true;
-            } else {
+            } else if (previousState.onAuctionEnd == state.onAuctionEnd) {
               return false;
+            } else if (state.status.isUpdating || state.status.isSuccess) {
+              return false;
+            } else {
+              return true;
             }
           },
           builder: (context, state) {
             return Selector(
+              key: UniqueKey(),
               type: NotificationTopics.onAuctionEnd.name,
               text: "On auction end",
               value: state.onAuctionEnd,
@@ -93,63 +76,63 @@ class _Selectors extends StatelessWidget {
         SizedBox(height: 10.h),
         BlocBuilder<NotificationsBloc, NotificationsState>(
           buildWhen: (previousState, state) {
-            if (previousState.status.isInitial) return true;
-
-            if (previousState.fiveMinutesBeforeEnd !=
-                state.fiveMinutesBeforeEnd) {
+            if (state.status.isError) {
               return true;
-            } else {
+            } else if (previousState.fiveMinutesBeforeEnd ==
+                state.fiveMinutesBeforeEnd) {
               return false;
+            } else if (state.status.isUpdating || state.status.isSuccess) {
+              return false;
+            } else {
+              return true;
             }
           },
           builder: (context, state) {
-            if (state.status.isSuccess || state.status.isInitial) {
-              return Selector(
-                type: NotificationTopics.fiveMinutesBeforeEnd.name,
-                text: "5 min before end",
-                value: state.fiveMinutesBeforeEnd,
-                onChange: (newValue) {
-                  context
-                      .read<NotificationsBloc>()
-                      .add(NotificationsTopicStateChanged(
-                        topic: NotificationTopics.fiveMinutesBeforeEnd,
-                        value: newValue,
-                      ));
-                },
-              );
-            }
-            return const Text("Error loading the data");
+            return Selector(
+              key: UniqueKey(),
+              type: NotificationTopics.fiveMinutesBeforeEnd.name,
+              text: "5 min before end",
+              value: state.fiveMinutesBeforeEnd,
+              onChange: (newValue) {
+                context
+                    .read<NotificationsBloc>()
+                    .add(NotificationsTopicStateChanged(
+                      topic: NotificationTopics.fiveMinutesBeforeEnd,
+                      value: newValue,
+                    ));
+              },
+            );
           },
         ),
         SizedBox(height: 10.h),
         BlocBuilder<NotificationsBloc, NotificationsState>(
           buildWhen: (previousState, state) {
-            if (previousState.status.isInitial) return true;
-
-            if (previousState.tenMinutesBeforeEnd !=
-                state.tenMinutesBeforeEnd) {
+            if (state.status.isError) {
               return true;
-            } else {
+            } else if (previousState.tenMinutesBeforeEnd ==
+                state.tenMinutesBeforeEnd) {
               return false;
+            } else if (state.status.isUpdating || state.status.isSuccess) {
+              return false;
+            } else {
+              return true;
             }
           },
           builder: (context, state) {
-            if (state.status.isSuccess || state.status.isInitial) {
-              return Selector(
-                type: NotificationTopics.tenMinutesBeforeEnd.name,
-                text: "10 min before end",
-                value: state.tenMinutesBeforeEnd,
-                onChange: (newValue) {
-                  context
-                      .read<NotificationsBloc>()
-                      .add(NotificationsTopicStateChanged(
-                        topic: NotificationTopics.tenMinutesBeforeEnd,
-                        value: newValue,
-                      ));
-                },
-              );
-            }
-            return const Text("Error loading the data");
+            return Selector(
+              key: UniqueKey(),
+              type: NotificationTopics.tenMinutesBeforeEnd.name,
+              text: "10 min before end",
+              value: state.tenMinutesBeforeEnd,
+              onChange: (newValue) {
+                context
+                    .read<NotificationsBloc>()
+                    .add(NotificationsTopicStateChanged(
+                      topic: NotificationTopics.tenMinutesBeforeEnd,
+                      value: newValue,
+                    ));
+              },
+            );
           },
         ),
       ],

@@ -2,6 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:mobileapp/screens/shared_widgets/toast.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -27,6 +28,7 @@ class NotificationsBloc
     NotificationsTopicStateChanged event,
     Emitter<NotificationsState> emit,
   ) async {
+    emit(state.copyWith(status: NotificationsStatus.updating));
     if (event.value) {
       await _notificationsRepository
           .subscribeToTopic(event.topic)
@@ -38,8 +40,10 @@ class NotificationsBloc
         ));
       }).timeout(const Duration(seconds: 3), onTimeout: () {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
+        _showErrorToast();
       }).onError((error, stackTrace) {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
+        _showErrorToast();
       });
     } else {
       await _notificationsRepository
@@ -52,8 +56,10 @@ class NotificationsBloc
         ));
       }).timeout(const Duration(seconds: 3), onTimeout: () {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
+        _showErrorToast();
       }).onError((error, stackTrace) {
         emit(state.copyWith(status: NotificationsStatus.updateFailure));
+        _showErrorToast();
       });
     }
   }
@@ -74,6 +80,10 @@ class NotificationsBloc
           ? value
           : state.tenMinutesBeforeEnd,
     );
+  }
+
+  void _showErrorToast() {
+    showAlertToast("Couldn’t save notification preference");
   }
 
   @override
