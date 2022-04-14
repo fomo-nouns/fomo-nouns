@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/settings/notifications/bloc/notifications_bloc.dart';
+import 'package:mobileapp/screens/settings/notifications/how_notifications_work_screen.dart';
 import 'package:mobileapp/screens/settings/widgets/selector.dart';
+import 'package:mobileapp/screens/shared_widgets/buttons.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 
@@ -19,6 +22,18 @@ class NotificationsSection extends StatelessWidget {
         children: [
           _title,
           const _Selectors(),
+          SizedBox(height: 20.h),
+          FlatTextButton(
+              text: "How notifications work",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  platformPageRoute(
+                    context: context,
+                    builder: (_) => const HowNotificationsWorkScreen(),
+                  ),
+                );
+              }),
         ],
       ),
     );

@@ -20,6 +20,11 @@ class AppColors {
   static const Color toastAlert = Color.fromRGBO(255, 0, 0, 0.7);
 
   static const Color purple = Color(0xff853BA8);
-
   static const Color fuchsia = Color(0xffD90D7B);
+
+  static const Color greyOne = Color(0xff5B5B5B);
+  static const Color greyTwo = Color(0xff828282);
+  static const Color greyThree = Color(0xff8F8F8F);
+  static const Color greyFour = Color(0xffBBBBBB);
+  static const Color softGrey = Color(0xffE9E9E9);
 }

@@ -44,6 +44,9 @@ dependencies:
   firebase_messaging: ^11.2.6
   flutter_local_notifications: ^9.2.0
   bot_toast: ^4.0.1
+  flutter_svg: ^1.0.3
+  flutter_platform_widgets: ^1.12.1
+
   hive: ^2.0.5
   hive_flutter: ^1.1.0
 
@@ -86,6 +89,7 @@ flutter:
   assets:
     - assets/img/
     - assets/rive/
+    - assets/svg/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

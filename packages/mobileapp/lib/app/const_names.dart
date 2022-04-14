@@ -39,3 +39,9 @@ class HiveKeys {
   static const String notificationTenMinBeforeEnd =
       "notificationTenMinBeforeEnd";
 }
+
+class SvgPaths {
+  SvgPaths._();
+
+  static const String arrowRight = "assets/svg/arrow_right.svg";
+}
