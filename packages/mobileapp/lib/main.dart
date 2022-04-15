@@ -193,7 +193,7 @@ class App extends StatelessWidget {
           theme: ThemeData(
             fontFamily: AppFonts.inter,
             primaryColor: AppColors.textColor,
-            backgroundColor: AppColors.warmBackground,
+            backgroundColor: AppColors.coolBackground,
           ),
           initialRoute: '/',
           routes: {
