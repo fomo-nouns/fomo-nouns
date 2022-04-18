@@ -21,6 +21,7 @@ class _WebViewPlayState extends State<WebViewPlay> {
         useShouldOverrideUrlLoading: true,
         mediaPlaybackRequiresUserGesture: false,
         disableVerticalScroll: true,
+        supportZoom: false,
       ),
       android: AndroidInAppWebViewOptions(
         useHybridComposition: true,

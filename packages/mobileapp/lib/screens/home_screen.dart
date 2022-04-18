@@ -48,7 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
           bottomNavigationBar: SizedBox(
             height: 60.h,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // With more items better set to MainAxisAlignment.spaceAround
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: Platform.isIOS
                   ? CrossAxisAlignment.start
                   : CrossAxisAlignment.center,
@@ -73,16 +74,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   currentIndex: _currentIndex,
                   selfIndex: 1,
                 ),
-                NavBarItem(
-                  text: "Wtf?",
-                  onTap: () {
-                    setState(() {
-                      _currentIndex = 2;
-                    });
-                  },
-                  currentIndex: _currentIndex,
-                  selfIndex: 2,
-                ),
+                // NavBarItem(
+                //   text: "Wtf?",
+                //   onTap: () {
+                //     setState(() {
+                //       _currentIndex = 2;
+                //     });
+                //   },
+                //   currentIndex: _currentIndex,
+                //   selfIndex: 2,
+                // ),
               ],
             ),
           ),
