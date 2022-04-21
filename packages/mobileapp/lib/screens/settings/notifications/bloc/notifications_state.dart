@@ -23,6 +23,9 @@ class NotificationsState extends Equatable {
   final bool fiveMinutesBeforeEnd;
   final bool tenMinutesBeforeEnd;
 
+  bool get hasActiveNotifications =>
+      onAuctionEnd || fiveMinutesBeforeEnd || tenMinutesBeforeEnd;
+
   @override
   List<Object> get props => [
         status,

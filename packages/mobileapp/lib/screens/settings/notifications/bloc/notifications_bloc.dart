@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:mobileapp/screens/shared_widgets/toast.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'dart:io' show Platform;
 
 part 'notifications_event.dart';
 part 'notifications_state.dart';
@@ -30,38 +31,64 @@ class NotificationsBloc
   ) async {
     emit(state.copyWith(status: NotificationsStatus.updating));
     if (event.value) {
-      await _notificationsRepository
-          .subscribeToTopic(event.topic)
-          .then((_) async {
-        emit(_updatedState(
-          status: NotificationsStatus.success,
-          topic: event.topic,
-          value: event.value,
-        ));
-      }).timeout(const Duration(seconds: 3), onTimeout: () {
-        emit(state.copyWith(status: NotificationsStatus.updateFailure));
-        _showErrorToast();
-      }).onError((error, stackTrace) {
-        emit(state.copyWith(status: NotificationsStatus.updateFailure));
-        _showErrorToast();
-      });
+      if (Platform.isIOS && !state.hasActiveNotifications) {
+        bool hasPermission = await _notificationsRepository.hasIOSPermission();
+
+        if (hasPermission) {
+          _subscribeToTopic(event, emit);
+        } else {
+          bool status = await _notificationsRepository.requestIOSPermission();
+
+          if (status) {
+            _subscribeToTopic(event, emit);
+          } else {
+            _onPermissionError(emit);
+          }
+        }
+      } else {
+        _subscribeToTopic(event, emit);
+      }
     } else {
-      await _notificationsRepository
-          .unsubscribeFromTopic(event.topic)
-          .then((_) async {
-        emit(_updatedState(
-          status: NotificationsStatus.success,
-          topic: event.topic,
-          value: event.value,
-        ));
-      }).timeout(const Duration(seconds: 3), onTimeout: () {
-        emit(state.copyWith(status: NotificationsStatus.updateFailure));
-        _showErrorToast();
-      }).onError((error, stackTrace) {
-        emit(state.copyWith(status: NotificationsStatus.updateFailure));
-        _showErrorToast();
-      });
+      _unsubscribeFromTopic(event, emit);
     }
+  }
+
+  void _subscribeToTopic(
+    NotificationsTopicStateChanged event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    await _notificationsRepository
+        .subscribeToTopic(event.topic)
+        .then((_) async {
+      emit(_updatedState(
+        status: NotificationsStatus.success,
+        topic: event.topic,
+        value: event.value,
+      ));
+    }).timeout(const Duration(seconds: 3), onTimeout: () {
+      _onError(emit);
+    }).onError((error, stackTrace) {
+      _onError(emit);
+    });
+  }
+
+  void _unsubscribeFromTopic(
+    NotificationsTopicStateChanged event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    await _notificationsRepository
+        .unsubscribeFromTopic(event.topic)
+        .then((_) async {
+      emit(_updatedState(
+        status: NotificationsStatus.success,
+        topic: event.topic,
+        value: event.value,
+      ));
+    }).timeout(const Duration(seconds: 3), onTimeout: () {
+      _onError(emit);
+    }).onError((error, stackTrace) {
+      _onError(emit);
+    });
   }
 
   NotificationsState _updatedState({
@@ -82,8 +109,14 @@ class NotificationsBloc
     );
   }
 
-  void _showErrorToast() {
+  void _onError(Emitter<NotificationsState> emit) async {
+    emit(state.copyWith(status: NotificationsStatus.updateFailure));
     showAlertToast("Couldn’t save notification preference");
+  }
+
+  void _onPermissionError(Emitter<NotificationsState> emit) async {
+    emit(state.copyWith(status: NotificationsStatus.updateFailure));
+    showAlertToast("Your permission is required for this :(");
   }
 
   @override

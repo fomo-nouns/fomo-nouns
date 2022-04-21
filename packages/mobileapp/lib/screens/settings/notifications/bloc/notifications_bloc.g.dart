@@ -28,4 +28,5 @@ const _$NotificationsStatusEnumMap = {
   NotificationsStatus.initial: 'initial',
   NotificationsStatus.success: 'success',
   NotificationsStatus.updateFailure: 'updateFailure',
+  NotificationsStatus.updating: 'updating',
 };

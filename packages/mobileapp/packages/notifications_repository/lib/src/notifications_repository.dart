@@ -21,4 +21,37 @@ class NotificationsRepository {
   Future<void> unsubscribeFromTopic(NotificationTopics topic) async {
     return await FirebaseMessaging.instance.unsubscribeFromTopic(topic.name);
   }
+
+  Future<bool> hasIOSPermission() async {
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.getNotificationSettings();
+
+    if (settings.authorizationStatus.name == "authorized") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /// Request notification permission via the dialog
+  ///
+  /// Return [true] if permission is granted. False otherwise
+  Future<bool> requestIOSPermission() async {
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus.name == "authorized") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

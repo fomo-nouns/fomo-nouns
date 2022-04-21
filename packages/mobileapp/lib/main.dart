@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -153,7 +154,10 @@ class App extends StatelessWidget {
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
+    // Package require to initialize the BotToast here
+    // Ref: https://github.com/MMMzq/bot_toast#Getting-started
     final botToastBuilder = BotToastInit();
+
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       minTextAdapt: true,
@@ -167,38 +171,30 @@ class App extends StatelessWidget {
             value: _settingsRepository,
           ),
         ],
-        child: MaterialApp(
-          builder: (context, widget) {
-            ScreenUtil.setContext(context);
-            Widget child = MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-              child: widget!,
-            );
-            child = botToastBuilder(context, child);
-            return child;
-            // return MediaQuery(
-            //   data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            //   child: RepositoryProvider<FToast>(
-            //     create: (context) {
-            //       FToast fToast = FToast();
-            //       fToast.init(context);
-            //       return fToast;
-            //     },
-            //     child: widget!,
-            //   ),
-            // );
-          },
-          title: 'Fomo Nouns',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: AppFonts.inter,
-            primaryColor: AppColors.textColor,
-            backgroundColor: AppColors.coolBackground,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark,
+          child: MaterialApp(
+            builder: (context, widget) {
+              ScreenUtil.setContext(context);
+              Widget child = MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                child: widget!,
+              );
+              child = botToastBuilder(context, child);
+              return child;
+            },
+            title: 'Fomo Nouns',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              fontFamily: AppFonts.inter,
+              primaryColor: AppColors.textColor,
+              backgroundColor: AppColors.coolBackground,
+            ),
+            initialRoute: '/',
+            routes: {
+              '/': (context) => const HomeScreen(),
+            },
           ),
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const HomeScreen(),
-          },
         ),
       ),
     );
