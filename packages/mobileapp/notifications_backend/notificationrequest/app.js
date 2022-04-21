@@ -18,7 +18,8 @@ exports.handler = async (event, context, callback) => {
     var auctionSettled;
 
     try {
-        id = parseInt(body.previousAuctionId) + 1;
+        const previousId = parseInt(body.previousAuctionId);
+        id = (previousId % 10 == 9) ? previousId + 2 : previousId + 1;
 
         const auctionData = await axios({
             url: SUBGRAPH_API,
