@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -115,7 +116,15 @@ class _WebViewPlayState extends State<WebViewPlay> {
             this.url = url.toString();
             urlController.text = this.url;
           });
+          if (context.size!.height < 650) {
+            webViewController?.scrollTo(x: 0, y: 75.w.toInt());
+          }
         },
+        // onScrollChanged: (controller, x, y) {
+        //   if (y > 200) {
+        //     webViewController?.scrollTo(x: 0, y: 75.w.toInt());
+        //   }
+        // },
         onLoadError: (controller, url, code, message) {
           pullToRefreshController.endRefreshing();
         },
