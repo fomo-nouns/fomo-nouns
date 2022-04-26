@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/screens/settings/notifications/bloc/notifications_bloc.dart';
 import 'package:mobileapp/screens/settings/notifications/notifications.dart';
+import 'package:mobileapp/screens/settings/vibration/vibration.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:settings_repository/settings_repository.dart';
@@ -25,7 +26,9 @@ class SettingsScreen extends StatelessWidget {
                   context.read<NotificationsRepository>(),
                 ),
                 child: const NotificationsSection(),
-              )
+              ),
+              SizedBox(height: 40.w),
+              const VibrationSection(),
             ],
           ),
         ),

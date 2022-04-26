@@ -10,6 +10,7 @@ import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/screens/play/web_view_play/models/web_data.dart';
 import 'package:mobileapp/screens/play/widgets/noun.dart';
 import 'package:mobileapp/screens/play/widgets/vote_bar.dart';
+import 'package:mobileapp/screens/settings/vibration/cubit/vibration_cubit.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 import 'package:mobileapp/theme/cubit/theme_cubit.dart';
 import 'package:provider/src/provider.dart';
@@ -166,6 +167,9 @@ class _WebViewPlayState extends State<WebViewPlay> {
               //   context.read<ThemeCubit>().updateTheme(
               //       const FomoNounsWebData(background: NounBackground.cool));
               // }
+              if (consoleMessage.message.contains("blocknumber")) {
+                context.read<VibrationCubit>().newNoun();
+              }
               print(consoleMessage);
             },
           ),

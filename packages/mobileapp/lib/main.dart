@@ -11,6 +11,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
+import 'package:mobileapp/screens/settings/vibration/cubit/vibration_cubit.dart';
 import 'package:mobileapp/theme/cubit/theme_cubit.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:path_provider/path_provider.dart';
@@ -176,6 +177,9 @@ class App extends StatelessWidget {
           providers: [
             BlocProvider<ThemeCubit>(
               create: (_) => ThemeCubit()..resetTheme(),
+            ),
+            BlocProvider<VibrationCubit>(
+              create: (_) => VibrationCubit(),
             ),
           ],
           child: AnnotatedRegion<SystemUiOverlayStyle>(
