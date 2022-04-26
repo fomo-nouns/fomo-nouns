@@ -11,6 +11,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
 import 'package:mobileapp/screens/home_screen.dart';
+import 'package:mobileapp/theme/cubit/theme_cubit.dart';
 import 'package:notifications_repository/notifications_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:settings_repository/settings_repository.dart';
@@ -171,29 +172,41 @@ class App extends StatelessWidget {
             value: _settingsRepository,
           ),
         ],
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.dark,
-          child: MaterialApp(
-            builder: (context, widget) {
-              ScreenUtil.setContext(context);
-              Widget child = MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-                child: widget!,
-              );
-              child = botToastBuilder(context, child);
-              return child;
-            },
-            title: 'Fomo Nouns',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: AppFonts.inter,
-              primaryColor: AppColors.textColor,
-              backgroundColor: AppColors.coolBackground,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<ThemeCubit>(
+              create: (_) => ThemeCubit()..resetTheme(),
             ),
-            initialRoute: '/',
-            routes: {
-              '/': (context) => const HomeScreen(),
-            },
+          ],
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.dark,
+            child: BlocBuilder<ThemeCubit, Color>(
+              builder: (context, color) {
+                return MaterialApp(
+                  builder: (context, widget) {
+                    ScreenUtil.setContext(context);
+                    Widget child = MediaQuery(
+                      data:
+                          MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                      child: widget!,
+                    );
+                    child = botToastBuilder(context, child);
+                    return child;
+                  },
+                  title: 'Fomo Nouns',
+                  debugShowCheckedModeBanner: false,
+                  theme: ThemeData(
+                    fontFamily: AppFonts.inter,
+                    primaryColor: AppColors.textColor,
+                    backgroundColor: color,
+                  ),
+                  initialRoute: '/',
+                  routes: {
+                    '/': (context) => const HomeScreen(),
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),

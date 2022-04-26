@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,9 +7,12 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
+import 'package:mobileapp/screens/play/web_view_play/models/web_data.dart';
 import 'package:mobileapp/screens/play/widgets/noun.dart';
 import 'package:mobileapp/screens/play/widgets/vote_bar.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
+import 'package:mobileapp/theme/cubit/theme_cubit.dart';
+import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WebViewPlay extends StatefulWidget {
@@ -44,6 +48,7 @@ class _WebViewPlayState extends State<WebViewPlay> {
 
   @override
   void initState() {
+    // context.read<ThemeCubit>().resetTheme();
     super.initState();
 
     pullToRefreshController = PullToRefreshController(
@@ -154,6 +159,13 @@ class _WebViewPlayState extends State<WebViewPlay> {
               });
             },
             onConsoleMessage: (controller, consoleMessage) {
+              // if (Random().nextBool()) {
+              //   context.read<ThemeCubit>().updateTheme(
+              //       const FomoNounsWebData(background: NounBackground.warm));
+              // } else {
+              //   context.read<ThemeCubit>().updateTheme(
+              //       const FomoNounsWebData(background: NounBackground.cool));
+              // }
               print(consoleMessage);
             },
           ),

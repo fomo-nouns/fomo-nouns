@@ -11,6 +11,10 @@ class ThemeCubit extends Cubit<Color> {
   void updateTheme(FomoNounsWebData? data) {
     emit(data!.toColor);
   }
+
+  void resetTheme() {
+    emit(defaultColor);
+  }
 }
 
 extension on FomoNounsWebData {
