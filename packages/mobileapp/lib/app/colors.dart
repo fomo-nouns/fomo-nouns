@@ -15,7 +15,7 @@ class AppColors {
 
   static const Color transparent = Colors.transparent;
 
-  static const Color fadeStartColor = Color.fromRGBO(55, 58, 67, 0.037);
+  static const Color fadeStartColor = Color.fromRGBO(55, 58, 67, 0.05);
 
   static const Color toastAlert = Color.fromRGBO(255, 0, 0, 0.7);
 
