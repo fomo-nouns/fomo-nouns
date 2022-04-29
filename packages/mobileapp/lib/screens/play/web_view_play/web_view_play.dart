@@ -179,7 +179,7 @@ class _WebViewPlayState extends State<WebViewPlay> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 60.w),
+                          SizedBox(height: 80.w),
                           SizedBox(
                             width: 320.w,
                             child: Image.asset(
@@ -187,15 +187,18 @@ class _WebViewPlayState extends State<WebViewPlay> {
                           ),
                           SidePadding(
                             child: Container(
-                              height: 120.w,
+                              height: 100.w,
                               decoration: BoxDecoration(
-                                color: const Color(0xFFeaebf1),
+                                color: const Color(0xFFFFFFFF).withOpacity(0.5),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20.w)),
-                                border: Border.all(
-                                  color: AppColors.textColor,
-                                  width: 0.75,
-                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.black.withOpacity(0.1),
+                                    offset: Offset(0.0, 4.h),
+                                    blurRadius: 10.w,
+                                  )
+                                ],
                               ),
                               child: Center(
                                 child: PlatformCircularProgressIndicator(),
