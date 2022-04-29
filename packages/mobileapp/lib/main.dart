@@ -127,6 +127,8 @@ void main() async {
 
   _setUpFirebase();
 
+  // await FirebaseMessaging.instance.subscribeToTopic("fcm_debug");
+
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );

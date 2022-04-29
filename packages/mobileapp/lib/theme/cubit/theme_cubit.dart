@@ -3,13 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/screens/play/web_view_play/models/web_data.dart';
 
+extension ThemeColorX on Color {
+  bool get isCoolBackground => this == AppColors.coolBackground;
+  bool get isWarmBackground => this == AppColors.warmBackground;
+}
+
 class ThemeCubit extends Cubit<Color> {
   ThemeCubit() : super(defaultColor);
 
-  static const defaultColor = AppColors.coolBackground;
+  static const defaultColor = AppColors.warmBackground;
 
   void updateTheme(FomoNounsWebData? data) {
-    emit(data!.toColor);
+    if (data!.toColor != state) {
+      emit(data.toColor);
+    }
   }
 
   void resetTheme() {

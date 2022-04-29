@@ -23,6 +23,12 @@ class VibrationCubit extends HydratedCubit<VibrationStatus> {
     }
   }
 
+  void voteButtonClick() async {
+    // if (state.isEnabled && await Vibrate.canVibrate) {
+    //   Vibrate.feedback(FeedbackType.light);
+    // }
+  }
+
   @override
   VibrationStatus fromJson(Map<String, dynamic> json) =>
       $enumDecodeNullable(_$VibrationStatusEnumMap, json['status']) ??

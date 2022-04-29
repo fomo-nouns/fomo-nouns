@@ -34,34 +34,16 @@ exports.handler = (event, context, callback) => {
         case CASES.TEN_MIN_BEFORE_END:
             message = {
                 notification: {
+                    title: 'Auction is about to end in 10 minutes!',
                     body: "Prepare the guns for Fomo! But don't forget it may take more time to end."
-                },
-                android: {
-                    notification: {
-                        title: 'Nouns auction is about to end in 10 minutes!',
-                    }
-                },
-                apns: {
-                    notification: {
-                        title: 'Auction is about to end in 10 minutes!',
-                    }
                 },
             };
             break;
         case CASES.FIVE_MIN_BEFORE_END:
             message = {
                 notification: {
+                    title: 'Auction is about to end in 5 minutes!',
                     body: "Prepare the guns for Fomo! But don't forget it may take more time to end."
-                },
-                android: {
-                    notification: {
-                        title: 'Nouns auction is about to end in 5 minutes!',
-                    }
-                },
-                apns: {
-                    notification: {
-                        title: 'Auction is about to end in 5 minutes!',
-                    }
                 },
             };
             break;
