@@ -11,7 +11,7 @@ extension ThemeColorX on Color {
 class ThemeCubit extends Cubit<Color> {
   ThemeCubit() : super(defaultColor);
 
-  static const defaultColor = AppColors.warmBackground;
+  static const defaultColor = AppColors.coolBackground;
 
   void updateTheme(FomoNounsWebData? data) {
     if (data!.toColor != state) {

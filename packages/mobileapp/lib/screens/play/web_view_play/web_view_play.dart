@@ -81,9 +81,9 @@ class _WebViewPlayState extends State<WebViewPlay> {
               ? 'cool'
               : 'warm';
 
-          // "https://fomonouns.wtf/"
-          String url =
-              "http://localhost:3000/mobile-play/?height=$height&background=$background";
+          String query = "height=$height&background=$background";
+          String url = "https://fomonouns.app/mobile-play/?$query";
+
           return Stack(
             children: [
               InAppWebView(
