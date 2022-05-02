@@ -6,7 +6,6 @@ import 'package:mobileapp/screens/settings/notifications/notifications.dart';
 import 'package:mobileapp/screens/settings/vibration/vibration.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
 import 'package:notifications_repository/notifications_repository.dart';
-import 'package:settings_repository/settings_repository.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -19,18 +18,27 @@ class SettingsScreen extends StatelessWidget {
           padding: EdgeInsets.only(
             top: 30.w,
           ),
-          child: Column(
-            children: [
-              BlocProvider(
-                create: (BuildContext context) => NotificationsBloc(
-                  context.read<NotificationsRepository>(),
+          child: LayoutBuilder(builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
                 ),
-                child: const NotificationsSection(),
+                child: Column(
+                  children: [
+                    BlocProvider(
+                      create: (BuildContext context) => NotificationsBloc(
+                        context.read<NotificationsRepository>(),
+                      ),
+                      child: const NotificationsSection(),
+                    ),
+                    SizedBox(height: 40.w),
+                    const VibrationSection(),
+                  ],
+                ),
               ),
-              SizedBox(height: 40.w),
-              const VibrationSection(),
-            ],
-          ),
+            );
+          }),
         ),
       ),
     );
