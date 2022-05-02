@@ -23,16 +23,11 @@ class HowNotificationsWorkScreen extends StatelessWidget {
                 cupertino: (_, __) => SizedBox(height: 20.w),
                 material: (_, __) => SizedBox(height: 30.w),
               ),
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Text(
-                  "Close",
-                  style: TextStyle(
-                    fontFamily: AppFonts.londrina,
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.greyOne,
-                  ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: FlatTextButton(
+                  text: "Close",
+                  onTap: () => Navigator.of(context).pop(),
                 ),
               ),
               SizedBox(height: 30.w),
@@ -89,7 +84,7 @@ class HowNotificationsWorkScreen extends StatelessWidget {
                   ),
                 ),
               SizedBox(height: 40.w),
-              FlatTextButton(
+              FlatExpandedTextButton(
                 text: "Let's gooooooooo",
                 onTap: () => Navigator.of(context).pop(),
               ),

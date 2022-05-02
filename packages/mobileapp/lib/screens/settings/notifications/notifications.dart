@@ -23,7 +23,7 @@ class NotificationsSection extends StatelessWidget {
           _title,
           const _Selectors(),
           SizedBox(height: 20.h),
-          FlatTextButton(
+          FlatExpandedTextButton(
             text: "How notifications work",
             onTap: () {
               Navigator.push(
