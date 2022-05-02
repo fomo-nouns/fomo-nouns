@@ -185,7 +185,13 @@ class App extends StatelessWidget {
             ),
           ],
           child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle.dark,
+            value: const SystemUiOverlayStyle(
+              systemNavigationBarColor: Color(0xFF000000),
+              systemNavigationBarIconBrightness: Brightness.light,
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+            ),
             child: BlocBuilder<ThemeCubit, Color>(
               builder: (context, color) {
                 return MaterialApp(
