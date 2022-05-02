@@ -3,11 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobileapp/app/colors.dart';
 import 'package:mobileapp/app/const_names.dart';
-import 'package:mobileapp/screens/settings/notifications/bloc/notifications_bloc.dart';
 import 'package:mobileapp/screens/settings/vibration/cubit/vibration_cubit.dart';
 import 'package:mobileapp/screens/settings/widgets/selector.dart';
 import 'package:mobileapp/screens/shared_widgets/helper.dart';
-import 'package:notifications_repository/notifications_repository.dart';
 
 class VibrationSection extends StatelessWidget {
   const VibrationSection({Key? key}) : super(key: key);
@@ -37,18 +35,37 @@ class VibrationSection extends StatelessWidget {
         ),
       );
 
-  Widget get _selector => BlocBuilder<VibrationCubit, VibrationStatus>(
-        builder: (context, state) {
-          return Selector(
-            type: "Vibration",
-            text: "On new noun",
-            value: state.isEnabled,
-            onChange: (newValue) {
-              context.read<VibrationCubit>().state.isEnabled
-                  ? context.read<VibrationCubit>().disable()
-                  : context.read<VibrationCubit>().enable();
+  Widget get _selector => Column(
+        children: [
+          BlocBuilder<VibrationCubit, VibrationState>(
+            builder: (context, state) {
+              return Selector(
+                type: "",
+                text: "On new noun",
+                value: state.onNewNoun,
+                onChange: (newValue) {
+                  context
+                      .read<VibrationCubit>()
+                      .updatePreference(VibrationType.onNewNoun, newValue);
+                },
+              );
             },
-          );
-        },
+          ),
+          SizedBox(height: 10.h),
+          BlocBuilder<VibrationCubit, VibrationState>(
+            builder: (context, state) {
+              return Selector(
+                type: "",
+                text: "On vote cast",
+                value: state.onVote,
+                onChange: (newValue) {
+                  context
+                      .read<VibrationCubit>()
+                      .updatePreference(VibrationType.onVote, newValue);
+                },
+              );
+            },
+          ),
+        ],
       );
 }

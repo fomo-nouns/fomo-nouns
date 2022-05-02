@@ -1,46 +1,41 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-extension VibrationStatusX on VibrationStatus {
-  bool get isEnabled => this == VibrationStatus.enabled;
-  bool get isInitial => this == VibrationStatus.initial;
-  bool get isDisabled => this == VibrationStatus.disabled;
-}
+part 'vibration_state.dart';
+part 'vibration_cubit.g.dart';
 
-enum VibrationStatus { initial, enabled, disabled }
+class VibrationCubit extends HydratedCubit<VibrationState> {
+  VibrationCubit() : super(const VibrationState());
 
-class VibrationCubit extends HydratedCubit<VibrationStatus> {
-  VibrationCubit() : super(VibrationStatus.initial);
-
-  void enable() => emit(VibrationStatus.enabled);
-
-  void disable() => emit(VibrationStatus.disabled);
+  void updatePreference(VibrationType type, bool value) {
+    switch (type) {
+      case VibrationType.onVote:
+        emit(state.copyWith(onVote: value));
+        break;
+      case VibrationType.onNewNoun:
+        emit(state.copyWith(onNewNoun: value));
+        break;
+    }
+  }
 
   void newNoun() async {
-    if (state.isEnabled && await Vibrate.canVibrate) {
+    if (state.onNewNoun && await Vibrate.canVibrate) {
       Vibrate.feedback(FeedbackType.medium);
     }
   }
 
   void voteButtonClick() async {
-    // if (state.isEnabled && await Vibrate.canVibrate) {
-    //   Vibrate.feedback(FeedbackType.light);
-    // }
+    if (state.onVote && await Vibrate.canVibrate) {
+      Vibrate.feedback(FeedbackType.light);
+    }
   }
 
   @override
-  VibrationStatus fromJson(Map<String, dynamic> json) =>
-      $enumDecodeNullable(_$VibrationStatusEnumMap, json['status']) ??
-      VibrationStatus.initial;
+  VibrationState? fromJson(Map<String, dynamic> json) =>
+      VibrationState.fromJson(json);
 
   @override
-  Map<String, dynamic> toJson(VibrationStatus state) =>
-      {'status': _$VibrationStatusEnumMap[state]};
+  Map<String, dynamic>? toJson(VibrationState state) => state.toJson();
 }
-
-const _$VibrationStatusEnumMap = {
-  VibrationStatus.initial: 'initial',
-  VibrationStatus.enabled: 'enabled',
-  VibrationStatus.disabled: 'disabled',
-};
