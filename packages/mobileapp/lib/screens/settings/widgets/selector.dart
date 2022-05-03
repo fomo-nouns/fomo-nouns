@@ -59,8 +59,8 @@ class _SelectorState extends State<Selector> {
           widget.text,
           style: TextStyle(
             fontSize: 24.sp,
-            color: AppColors.textColor,
             fontWeight: FontWeight.w500,
+            letterSpacing: -0.5.sp,
           ),
         ),
         GestureDetector(
