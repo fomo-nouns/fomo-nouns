@@ -166,7 +166,7 @@ class App extends StatelessWidget {
       designSize: const Size(390, 844),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: () => MultiRepositoryProvider(
+      builder: (child) => MultiRepositoryProvider(
         providers: [
           RepositoryProvider<NotificationsRepository>.value(
             value: _notificationsRepository,
@@ -195,18 +195,10 @@ class App extends StatelessWidget {
             child: BlocBuilder<ThemeCubit, Color>(
               builder: (context, color) {
                 return MaterialApp(
-                  builder: (context, widget) {
-                    ScreenUtil.setContext(context);
-                    Widget child = MediaQuery(
-                      data:
-                          MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-                      child: widget!,
-                    );
-                    child = botToastBuilder(context, child);
-                    return child;
-                  },
                   title: 'Fomo Nouns',
                   debugShowCheckedModeBanner: false,
+                  builder: BotToastInit(),
+                  navigatorObservers: [BotToastNavigatorObserver()],
                   theme: ThemeData(
                     fontFamily: AppFonts.inter,
                     primaryColor: AppColors.textColor,
@@ -216,6 +208,7 @@ class App extends StatelessWidget {
                   routes: {
                     '/': (context) => const HomeScreen(),
                   },
+                  home: child,
                 );
               },
             ),
