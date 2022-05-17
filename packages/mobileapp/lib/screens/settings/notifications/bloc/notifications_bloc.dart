@@ -35,25 +35,25 @@ class NotificationsBloc
         bool hasPermission = await _notificationsRepository.hasIOSPermission();
 
         if (hasPermission) {
-          _subscribeToTopic(event, emit);
+          await _subscribeToTopic(event, emit);
         } else {
           bool status = await _notificationsRepository.requestIOSPermission();
 
           if (status) {
-            _subscribeToTopic(event, emit);
+            await _subscribeToTopic(event, emit);
           } else {
             _onPermissionError(emit);
           }
         }
       } else {
-        _subscribeToTopic(event, emit);
+        await _subscribeToTopic(event, emit);
       }
     } else {
-      _unsubscribeFromTopic(event, emit);
+      await _unsubscribeFromTopic(event, emit);
     }
   }
 
-  void _subscribeToTopic(
+  Future<void> _subscribeToTopic(
     NotificationsTopicStateChanged event,
     Emitter<NotificationsState> emit,
   ) async {
@@ -72,7 +72,7 @@ class NotificationsBloc
     });
   }
 
-  void _unsubscribeFromTopic(
+  Future<void> _unsubscribeFromTopic(
     NotificationsTopicStateChanged event,
     Emitter<NotificationsState> emit,
   ) async {
