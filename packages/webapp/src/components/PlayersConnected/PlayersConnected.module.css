@@ -1,2 +1,19 @@
 .Connected {
+    display: flex;
+    flex-direction: row;
+    transition: all 1s ease-in-out;
+}
+
+.Connected:hover {
+    cursor: pointer;
+}
+
+.Stale {
+    margin-left: 0.2rem;
+    color: #5603AD;
+    display: none;
+}
+
+.Connected:hover>.Stale {
+    display: block;
 }

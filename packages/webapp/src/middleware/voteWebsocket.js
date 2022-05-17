@@ -55,6 +55,9 @@ const voteWebsocketMiddleware = () => {
       if('connections' in data) {
         store.dispatch(setNumConnections(data.connections));
       }
+      if ('activeVoters' in data) {
+        store.dispatch(setNumConnections(data.connections));
+      }
     } catch(err) {
       console.error('Erroring parsing FOMO websocket message');
       console.error(err);
