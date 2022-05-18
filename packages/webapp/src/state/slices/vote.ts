@@ -21,7 +21,7 @@ interface VoteState {
 const initialState: VoteState = {
   connected: false,
   numConnections: 1,
-  activeVoters: 1,
+  activeVoters: 0,
   currentVote: undefined,
   voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
   attemptedSettle: false,
@@ -43,7 +43,7 @@ export const voteSlice = createSlice({
     setNumConnections: (state, action: PayloadAction<number | undefined>) => {
       state.numConnections = action.payload === undefined ? 1 : action.payload;
     },
-    setActiveVotes: (state, action: PayloadAction<number | undefined>) => {
+    setActiveVoters: (state, action: PayloadAction<number | undefined>) => {
       state.activeVoters = action.payload === undefined ? 1 : action.payload;
     },
     setCurrentVote: (state, action: PayloadAction<VOTE_OPTIONS | undefined | null>) => {
@@ -75,7 +75,7 @@ export const voteSlice = createSlice({
 export const {
   setConnected,
   setNumConnections,
-  setActiveVotes,
+  setActiveVoters,
   setCurrentVote,
   setScore,
   incrementCount,
