@@ -27,7 +27,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 #For iOS:
 #  A.B.C represents the CFBundleShortVersionString such as 1.0.0.
 #  X (the number after the +) represents the CFBundleVersion such as 1, 2, 3, etc.
-version: 0.1.1+210000101
+version: 0.2.0+210000200
 
 environment:
   sdk: ">=2.15.1 <3.0.0"

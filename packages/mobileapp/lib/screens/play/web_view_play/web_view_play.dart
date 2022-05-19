@@ -83,9 +83,9 @@ class _WebViewPlayState extends State<WebViewPlay> {
               : 'warm';
 
           String query = "height=$height&background=$background";
-          // String mode = kDebugMode ? "dev" : "mobile";
+          String mode = kDebugMode ? "dev" : "mobile";
           // TODO: UPDATE BEFORE MARKET DEPLOY
-          String mode = "dev";
+          // String mode = "dev";
 
           String url = "https://fomonouns.app/$mode-play/?$query";
 

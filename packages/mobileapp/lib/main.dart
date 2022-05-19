@@ -128,7 +128,7 @@ void main() async {
   _setUpFirebase();
 
   // TODO: REMOVE BEFORE MARKET DEPLOY
-  await FirebaseMessaging.instance.subscribeToTopic("fcm_debug");
+  // await FirebaseMessaging.instance.subscribeToTopic("fcm_debug");
 
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
