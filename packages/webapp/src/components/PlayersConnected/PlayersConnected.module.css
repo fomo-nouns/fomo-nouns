@@ -1,7 +1,6 @@
 .Connected {
     display: flex;
     flex-direction: row;
-    transition: all 1s ease-in-out;
 }
 
 .Connected:hover {
@@ -9,11 +8,9 @@
 }
 
 .Stale {
-    margin-left: 0.2rem;
-    color: #5603AD;
-    display: none;
+    margin-left: 0.25rem;
 }
 
-.Connected:hover>.Stale {
-    display: block;
+.StaleHidden {
+    display: none;
 }
