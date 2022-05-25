@@ -6,7 +6,8 @@ import {
   setNumConnections,
   setScore,
   incrementCount,
-  triggerSettlement
+  triggerSettlement,
+  setActiveVoters
 } from '../state/slices/vote';
 
 
@@ -54,6 +55,9 @@ const voteWebsocketMiddleware = () => {
       }
       if('connections' in data) {
         store.dispatch(setNumConnections(data.connections));
+      }
+      if ('activeVoters' in data) {
+        store.dispatch(setActiveVoters(data.activeVoters));
       }
     } catch(err) {
       console.error('Erroring parsing FOMO websocket message');
