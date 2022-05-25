@@ -46,7 +46,7 @@ function App() {
     dispatch(setNextNounId(nextNounId));
     dispatch(setAuctionEnd(auctionEnd));
     dispatch(setBlockAttr({blocknumber, blockhash}))
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(setActiveAccount(account));
