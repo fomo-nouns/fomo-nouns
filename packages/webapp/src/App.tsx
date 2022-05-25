@@ -1,6 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useEthers } from '@usedapp/core';
 import { useAppDispatch, useAppSelector } from './hooks';
+
+import { contract as AuctionContract } from './wrappers/nounsAuction';
+import { setAuctionEnd } from './state/slices/auction';
+import { setNextNounId } from './state/slices/noun';
+import { setBlockAttr } from './state/slices/block';
+import { provider } from './config';
 
 import classes from './App.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,6 +33,20 @@ function App() {
   const dispatch = useAppDispatch();
   const useGreyBg = useAppSelector(state => state.noun.useGreyBg);
   const missedVotes = useAppSelector(state => state.vote.missedVotes);
+
+  useMemo(async ()=> { // Initalized before mount
+    const [{number: blocknumber, hash: blockhash}, auction] = await Promise.all([
+      provider.getBlock('latest'),
+      AuctionContract.auction()
+    ])
+
+    const nextNounId = parseInt(auction?.nounId) + 1;
+    const auctionEnd = auction?.endTime.toNumber();
+
+    dispatch(setNextNounId(nextNounId));
+    dispatch(setAuctionEnd(auctionEnd));
+    dispatch(setBlockAttr({blocknumber, blockhash}))
+  }, [])
 
   useEffect(() => {
     dispatch(setActiveAccount(account));
