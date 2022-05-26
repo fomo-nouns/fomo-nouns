@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import loadingNoun from '../../assets/loading-skull-noun.gif';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveBackground } from '../../state/slices/noun';
@@ -45,7 +45,7 @@ const Noun: React.FC = props => {
 
     return data
 
-  }, [nextNounId, blockhash]);
+  }, [nextNounId, blockhash, ethereumConnected]);
 
   useEffect(()=>{
     // When there's only 1 Noun, change the page background to match
