@@ -71,7 +71,7 @@ function App() {
       <Title/>
       <VoteProgressBar/>
       <SettledAuctionModal/>
-      <Noun alt={"Current Block Noun"}/>
+      <Noun />
       <VoteBar />
       <Banner />
       <Documentation />

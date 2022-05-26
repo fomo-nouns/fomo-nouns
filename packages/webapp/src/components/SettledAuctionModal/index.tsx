@@ -93,8 +93,9 @@ const SettledAuctionModal: React.FC<{}> = props => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attemptedSettleBlockHash, prevSettledBlockHash, nextNounId, dispatch]);
 
-  const copy = successfulSettle ? `Hello, Noun ${localNounId} 👋` : `Someone else minted Noun ${localNounId}`;
-  const title = successfulSettle ? "We minted a Noun!" : "We missed it!";
+  const isTenthNoun = localNounId % 10 === 0;
+  const copy = successfulSettle ? `Hello, Noun ${isTenthNoun ? `${localNounId} & ${localNounId+1}`: localNounId} 👋` : `Someone else minted Noun ${isTenthNoun ? `${localNounId} & ${localNounId+1}`: localNounId}`;
+  const title = successfulSettle ? `We minted ${isTenthNoun ? 'some Nouns': 'a Noun'}!` : `We missed ${isTenthNoun ? 'them' : 'it'}!`;
   const settledAuctionContent = (
     <>
     <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>

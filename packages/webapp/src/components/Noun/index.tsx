@@ -1,61 +1,86 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import loadingNoun from '../../assets/loading-skull-noun.gif';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveBackground } from '../../state/slices/noun';
-import classes from './Noun.module.css';
+import classes from '../Noun/Noun.module.css';
 
 import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nouns/assets';
 import { buildSVG } from '@nouns/sdk';
 const { palette } = ImageData;
 
+function getNounImage(nounId: number, blockhash: string){
+  const seed = getNounSeedFromBlockHash(nounId, blockhash);
+  const { parts, background } = getNounData(seed);
 
-const Noun: React.FC<{ alt: string }> = props => {
-  const { alt } = props;
+  const svgBinary = buildSVG(parts, palette, background);
+  return {src: `data:image/svg+xml;base64,${btoa(svgBinary)}`, seed};
+}
+
+const Noun: React.FC = props => {
 
   const dispatch = useAppDispatch();
-  const [img, setImg] = useState('');
 
   const blockhash = useAppSelector(state => state.block.blockHash);
   const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
   const ethereumConnected = useAppSelector(state => state.block.connected);
 
-  const generateNoun = useCallback(async () => {
-    if (!blockhash) return;
+  const nounImageData = useMemo(() => {
+    const data = []
 
-    const isNounder = nextNounId % 10 === 0;
-    const adjNextNounId = isNounder ? nextNounId + 1 : nextNounId;
+    // Return the Loading Noun
+    if (!blockhash || !nextNounId || !ethereumConnected){
+      data.push({seed: {background: 0}, src: loadingNoun, alt: 'Loading Noun', nounId:''});
+      return data
+    }
 
-    const seed = getNounSeedFromBlockHash(adjNextNounId, blockhash);
-    const { parts, background } = getNounData(seed);
+    // Push the first Noun
+    const {src, seed} = getNounImage(nextNounId, blockhash)
+    data.push({seed, src, alt: `Noun ${nextNounId}`})
 
-    const svgBinary = buildSVG(parts, palette, background);
-    setImg(btoa(svgBinary));
-    dispatch(setActiveBackground(seed.background === 0));
-  }, [dispatch, nextNounId, blockhash]);
+    // Every 10th Noun, push another Noun
+    if (nextNounId % 10 === 0){
+      const {src, seed} = getNounImage(nextNounId+1, blockhash)
+      data.push({seed, src, alt: `Noun ${nextNounId+1}`})
+    }
 
-  useEffect(() => {
-    generateNoun();
-  }, [generateNoun, blockhash]);
-  
+    return data
 
-  let htmlImg, htmlAlt;
-  if (!nextNounId || !ethereumConnected) {
-    htmlImg = loadingNoun;
-    htmlAlt = 'Loading Noun';
-  } else {
-    htmlImg = `data:image/svg+xml;base64,${img}`;
-    htmlAlt = alt;
+  }, [nextNounId, blockhash]);
+
+  useEffect(()=>{
+    // When there's only 1 Noun, change the page background to match
+    if (nounImageData.length > 1) return
+    dispatch(setActiveBackground(nounImageData[0].seed.background === 0));
+  },[dispatch, nounImageData])
+
+
+  const Imgs = nounImageData.map( ({src, alt}, i) => {
+    let imgWrapper = [classes.imgWrapper]
+
+
+    if (nounImageData.length > 1) imgWrapper.push(classes[`noun-${i+1}`])
+
+    return (
+      <div className={`${imgWrapper.join(' ')}`}>
+        <div className={classes.nounId}><span>Noun </span>{nextNounId+i}</div>
+        <img
+          className={classes.img}
+          src={src}
+          alt={alt}
+        />
+      </div>
+      )
+  })
+
+  let wrapperClass = classes.nounWrapper
+  if (nounImageData.length > 1) {
+    wrapperClass = classes.nounsWrapper
   }
 
   return (
-    <div className={classes.imgWrapper}>
-        <img className={classes.img}
-          src={htmlImg}
-          alt={htmlAlt}
-          height="500px"
-          width="500px"
-        />
-      </div>
+    <div className={wrapperClass}>
+      {Imgs}
+    </div>
   );
 };
 

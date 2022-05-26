@@ -10,6 +10,7 @@ const Title: React.FC<{}> = props => {
   const votingActive = useAppSelector(state => state.vote.votingActive);
   const ethereumConnected = useAppSelector(state => state.block.connected);
   const blockHash = useAppSelector(state => state.block.blockHash);
+  const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
 
   let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
 
@@ -27,7 +28,7 @@ const Title: React.FC<{}> = props => {
     titleText = `Attempting to settle...`;
     timer = timerSpacer;
   } else if (votingActive) {
-    titleText = `Should we mint this Noun?`;
+    titleText = `Should we mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}?`;
     timer = <BlockCountdownTimer/>;
   } else if (!activeAuction && !votingActive) {
     titleText = `Time's up! Waiting for next block...`;

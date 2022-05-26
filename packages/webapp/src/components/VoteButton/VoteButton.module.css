@@ -13,7 +13,7 @@ button {
     border: 1px solid black;
     border-radius: 20px;
 
-    height: 110px;
+    height: 90px;
     width: 50%;
     min-width: 85px;
     max-width: 250px;
@@ -27,15 +27,29 @@ button {
     }
 }
 .voteText{
-    font-size: 1.5em;
+    font-size: 1em;
     font-weight: bold;
 }
 
 .voteEmojiText{
-    font-size: 3em;
+    font-size: 2em;
 }
 
 .selected{
     border: 2px solid black;
     background: rgb(127, 197, 156, .4);
+}
+
+@media only screen and (min-width: 768px) {
+    .voteButton{
+        height: 110px;
+    }
+    .voteText{
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .voteEmojiText{
+        font-size: 3em;
+    }
 }
