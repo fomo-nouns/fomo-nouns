@@ -1,5 +1,5 @@
 {
-  "name": "notificationrequest",
+  "name": "NotificationRequest",
   "version": "1.0.0",
   "description": "Accepts data on when to send Firebase Cloud Message and call Step Functions",
   "main": "src/app.js",

@@ -1,0 +1,10 @@
+{
+  "name": "Notifications",
+  "version": "1.0.0",
+  "description": "StepFunction that will organize notifications send on time",
+  "main": "definition.json",
+  "author": "@nikitattt",
+  "license": "MIT",
+  "scripts": {},
+  "devDependencies": {}
+}

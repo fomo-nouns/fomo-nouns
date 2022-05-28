@@ -1,0 +1,261 @@
+{
+    "StartAt": "Parallel",
+    "States": {
+        "Parallel": {
+            "Type": "Parallel",
+            "Branches": [
+                {
+                    "StartAt": "SetOnAuctionEndTopic",
+                    "States": {
+                        "SetOnAuctionEndTopic": {
+                            "Type": "Pass",
+                            "Next": "SetNearEndTimestamp",
+                            "Comment": "Set Firebase Cloud Messaging topic",
+                            "Result": "onAuctionEnd",
+                            "ResultPath": "$.auction.topic"
+                        },
+                        "SetNearEndTimestamp": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "OutputPath": "$.Payload",
+                            "Parameters": {
+                                "Payload.$": "$",
+                                "FunctionName": "arn:aws:lambda:us-east-1:607125124596:function:PrepareISOTime:$LATEST"
+                            },
+                            "Retry": [
+                                {
+                                    "ErrorEquals": [
+                                        "Lambda.ServiceException",
+                                        "Lambda.AWSLambdaException",
+                                        "Lambda.SdkClientException"
+                                    ],
+                                    "IntervalSeconds": 1,
+                                    "MaxAttempts": 3,
+                                    "BackoffRate": 1
+                                }
+                            ],
+                            "Next": "WaitUntilNearEnd",
+                            "Comment": "Set timestamp to the next Wait state"
+                        },
+                        "WaitUntilNearEnd": {
+                            "Type": "Wait",
+                            "Next": "CheckAuctionOnNearEnd",
+                            "Comment": "A wait state to wait for auction to reach end time with the margin of N seconds",
+                            "TimestampPath": "$.auction.endTimeISO"
+                        },
+                        "CheckAuctionOnNearEnd": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "OutputPath": "$.Payload",
+                            "Parameters": {
+                                "Payload.$": "$",
+                                "FunctionName": "arn:aws:lambda:us-east-1:607125124596:function:CheckAuctionEnd:$LATEST"
+                            },
+                            "Retry": [
+                                {
+                                    "ErrorEquals": [
+                                        "Lambda.ServiceException",
+                                        "Lambda.AWSLambdaException",
+                                        "Lambda.SdkClientException"
+                                    ],
+                                    "IntervalSeconds": 1,
+                                    "MaxAttempts": 3,
+                                    "BackoffRate": 1
+                                }
+                            ],
+                            "Next": "IsAuctionEndNear",
+                            "Comment": "Check if auction has been extended via SubGraph API"
+                        },
+                        "IsAuctionEndNear": {
+                            "Comment": "A Choice state adds branching logic to a state machine. Choice rules can implement 16 different comparison operators, and can be combined using And, Or, and Not",
+                            "Type": "Choice",
+                            "Choices": [
+                                {
+                                    "And": [
+                                        {
+                                            "Variable": "$.auction.toEndInTime",
+                                            "BooleanEquals": false
+                                        },
+                                        {
+                                            "Not": {
+                                                "Variable": "$.auction.missedMarginally",
+                                                "BooleanEquals": true
+                                            }
+                                        }
+                                    ],
+                                    "Comment": "If auction time has been extended with the bid",
+                                    "Next": "WaitUntilNearEnd"
+                                },
+                                {
+                                    "Variable": "$.auction.missedMarginally",
+                                    "BooleanEquals": true,
+                                    "Comment": "If auction is missed by the margin of N seconds",
+                                    "Next": "OnMissedEndTime"
+                                }
+                            ],
+                            "Default": "SendNotificationOnEnd"
+                        },
+                        "SendNotificationOnEnd": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "OutputPath": "$.Payload",
+                            "Parameters": {
+                                "Payload.$": "$",
+                                "FunctionName": "arn:aws:lambda:us-east-1:607125124596:function:SendFirebaseNotification:$LATEST"
+                            },
+                            "Retry": [
+                                {
+                                    "ErrorEquals": [
+                                        "Lambda.ServiceException",
+                                        "Lambda.AWSLambdaException",
+                                        "Lambda.SdkClientException"
+                                    ],
+                                    "IntervalSeconds": 1,
+                                    "MaxAttempts": 3,
+                                    "BackoffRate": 1
+                                }
+                            ],
+                            "End": true,
+                            "Comment": "Send notification to Firebase Cloud Messaging"
+                        },
+                        "OnMissedEndTime": {
+                            "Type": "Pass",
+                            "End": true
+                        }
+                    },
+                    "Comment": "State Machine that organises notifications for Fomo Nouns Mobile App"
+                },
+                {
+                    "StartAt": "Set10MinBeforeEndTopic",
+                    "States": {
+                        "Set10MinBeforeEndTopic": {
+                            "Type": "Pass",
+                            "Next": "Set10MinBeforeEndTimestamp",
+                            "Comment": "Set Firebase Cloud Messaging topic",
+                            "Result": "tenMinutesBeforeEnd",
+                            "ResultPath": "$.auction.topic"
+                        },
+                        "Set10MinBeforeEndTimestamp": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "OutputPath": "$.Payload",
+                            "Parameters": {
+                                "Payload.$": "$",
+                                "FunctionName": "arn:aws:lambda:us-east-1:607125124596:function:FomoNounsPrepareISOTime:$LATEST"
+                            },
+                            "Retry": [
+                                {
+                                    "ErrorEquals": [
+                                        "Lambda.ServiceException",
+                                        "Lambda.AWSLambdaException",
+                                        "Lambda.SdkClientException"
+                                    ],
+                                    "IntervalSeconds": 1,
+                                    "MaxAttempts": 3,
+                                    "BackoffRate": 1
+                                }
+                            ],
+                            "Next": "WaitUntil10MinBeforeEnd"
+                        },
+                        "WaitUntil10MinBeforeEnd": {
+                            "Type": "Wait",
+                            "Next": "SendNotification10MinBeforeEnd",
+                            "Comment": "A wait state to wait for auction to reach end time with the margin of N seconds",
+                            "TimestampPath": "$.auction.endTimeISO"
+                        },
+                        "SendNotification10MinBeforeEnd": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "OutputPath": "$.Payload",
+                            "Parameters": {
+                                "Payload.$": "$",
+                                "FunctionName": "arn:aws:lambda:us-east-1:607125124596:function:FomoNounsSendFirebaseNotificationDev:$LATEST"
+                            },
+                            "Retry": [
+                                {
+                                    "ErrorEquals": [
+                                        "Lambda.ServiceException",
+                                        "Lambda.AWSLambdaException",
+                                        "Lambda.SdkClientException"
+                                    ],
+                                    "IntervalSeconds": 1,
+                                    "MaxAttempts": 3,
+                                    "BackoffRate": 1
+                                }
+                            ],
+                            "End": true,
+                            "Comment": "Send notification to Firebase Cloud Messaging"
+                        }
+                    },
+                    "Comment": "State Machine that organises notifications for Fomo Nouns Mobile App"
+                },
+                {
+                    "StartAt": "Set5MinBeforeEndTopic",
+                    "States": {
+                        "Set5MinBeforeEndTopic": {
+                            "Type": "Pass",
+                            "Next": "Set5MinBeforeEndTimestamp",
+                            "Comment": "Set Firebase Cloud Messaging topic",
+                            "Result": "fiveMinutesBeforeEnd",
+                            "ResultPath": "$.auction.topic"
+                        },
+                        "Set5MinBeforeEndTimestamp": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "OutputPath": "$.Payload",
+                            "Parameters": {
+                                "Payload.$": "$",
+                                "FunctionName": "arn:aws:lambda:us-east-1:607125124596:function:FomoNounsPrepareISOTime:$LATEST"
+                            },
+                            "Retry": [
+                                {
+                                    "ErrorEquals": [
+                                        "Lambda.ServiceException",
+                                        "Lambda.AWSLambdaException",
+                                        "Lambda.SdkClientException"
+                                    ],
+                                    "IntervalSeconds": 1,
+                                    "MaxAttempts": 3,
+                                    "BackoffRate": 1
+                                }
+                            ],
+                            "Next": "WaitUntil5MinBeforeEnd"
+                        },
+                        "WaitUntil5MinBeforeEnd": {
+                            "Type": "Wait",
+                            "Next": "SendNotification5MinBeforeEnd",
+                            "Comment": "A wait state to wait for auction to reach end time with the margin of N seconds",
+                            "TimestampPath": "$.auction.endTimeISO"
+                        },
+                        "SendNotification5MinBeforeEnd": {
+                            "Type": "Task",
+                            "Resource": "arn:aws:states:::lambda:invoke",
+                            "OutputPath": "$.Payload",
+                            "Parameters": {
+                                "Payload.$": "$",
+                                "FunctionName": "arn:aws:lambda:us-east-1:607125124596:function:FomoNounsSendFirebaseNotificationDev:$LATEST"
+                            },
+                            "Retry": [
+                                {
+                                    "ErrorEquals": [
+                                        "Lambda.ServiceException",
+                                        "Lambda.AWSLambdaException",
+                                        "Lambda.SdkClientException"
+                                    ],
+                                    "IntervalSeconds": 1,
+                                    "MaxAttempts": 3,
+                                    "BackoffRate": 1
+                                }
+                            ],
+                            "End": true,
+                            "Comment": "Send notification to Firebase Cloud Messaging"
+                        }
+                    },
+                    "Comment": "State Machine that organises notifications for Fomo Nouns Mobile App"
+                }
+            ],
+            "End": true
+        }
+    },
+    "Comment": "State Machine that organises notifications for Fomo Nouns Mobile App"
+}

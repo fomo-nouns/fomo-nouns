@@ -1,5 +1,5 @@
 {
-  "name": "sendnotification",
+  "name": "SendFirebaseNotification",
   "version": "1.0.0",
   "description": "Send notification to Firebase Cloud Messages topic with provided timestamp",
   "main": "src/app.js",
