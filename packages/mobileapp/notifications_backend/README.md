@@ -18,7 +18,7 @@ To enable notifications send you'll need Firebase service account key
 
 2. Click "Generate new private key" and download the json file
 
-3. Rename it to `serviceAccount.json` and put inside `SendNotification\` folder. *Remark: This file is not version controlled*
+3. Rename it to `serviceAccount.json` and put it inside `SendNotification\` folder. *Remark: This file is not version controlled*
 
 ## Lambda Functions
 
@@ -29,7 +29,7 @@ Make sure all 4 lambda functions:
 - `sendnotification/`
 - `checkauctionend/`
 
-are deployed and have need layers.
+are deployed and have required layers.
 
 ## Step-Function
 
@@ -41,7 +41,7 @@ Set up AWS API Gateway endpoint with POST call that will invoke `NotificationReq
 
 ## Setting up Make(Integromat) or Zapier
 
-Now register on Make(Integromat) and using the [Nouns Package](https://verbs.notion.site/Nouns-Automations-using-Integromat-Zapier-7f3af840dc1d4a04b1d728f978c785b0) set up your automation to make `POST` call to created API endpoint with `previousAuctionId` on the body not later that 15 minutes before auction end.
+Now register on Make(Integromat) and using the [Nouns Package](https://verbs.notion.site/Nouns-Automations-using-Integromat-Zapier-7f3af840dc1d4a04b1d728f978c785b0) set up your automation to make `POST` call to created API endpoint with `previousAuctionId` in the body not later than 15 minutes before auction end.
 
 ## Required roles
 
