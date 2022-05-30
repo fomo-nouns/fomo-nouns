@@ -14,6 +14,7 @@ interface VoteState {
   voteCounts: Record<VOTE_OPTIONS, number>;
   attemptedSettle: boolean;
   votingActive: boolean;
+  votingBlockHash?: string;
   score: number;
   missedVotes: number;
 }
@@ -26,6 +27,7 @@ const initialState: VoteState = {
   voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
   attemptedSettle: false,
   votingActive: true,
+  votingBlockHash: undefined,
   score: 0,
   missedVotes: 0
 };
@@ -68,7 +70,10 @@ export const voteSlice = createSlice({
       connected: state.connected,
       // If user lodged a vote, reset missed vote counter, otherwise increment it
       missedVotes: (!state.currentVote ? state.missedVotes+1 : initialState.missedVotes)
-    })
+    }),
+    setVotingBlockHash: (state, action: PayloadAction<string | undefined >) => {
+      state.votingBlockHash = action.payload;
+    },
   },
 });
 
@@ -81,7 +86,8 @@ export const {
   incrementCount,
   triggerSettlement,
   endVoting,
-  resetVotes
+  resetVotes,
+  setVotingBlockHash
 } = voteSlice.actions;
 
 export default voteSlice.reducer;
