@@ -19,7 +19,7 @@ const VoteBar:React.FC<{}> = (props) => {
   useEffect( () => {
     const timerId = setTimeout(dispatch, 500, setVotingBlockHash(blockhash));
     return () => clearTimeout(timerId);
-  }, [blockhash])
+  }, [blockhash, dispatch])
 
   const openSocket = () => {
     if (!voteSocketConnected) {
