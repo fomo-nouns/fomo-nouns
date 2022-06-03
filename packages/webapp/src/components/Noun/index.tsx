@@ -49,20 +49,14 @@ const Noun: React.FC = props => {
 
   useEffect(()=>{
     // When there's only 1 Noun, change the page background to match
-    if (nounImageData.length > 1) return
+    if (nounImageData.length > 1) return;
     dispatch(setActiveBackground(nounImageData[0].seed.background === 0));
   },[dispatch, nounImageData])
 
 
   const Imgs = nounImageData.map( ({src, alt}, i) => {
-    let imgWrapper = [classes.imgWrapper]
-
-
-    if (nounImageData.length > 1) imgWrapper.push(classes[`noun-${i+1}`])
-
     return (
-      <div className={`${imgWrapper.join(' ')}`}>
-        <div className={classes.nounId}><span>Noun </span>{nextNounId+i}</div>
+      <div>
         <img
           className={classes.img}
           src={src}
@@ -72,13 +66,8 @@ const Noun: React.FC = props => {
       )
   })
 
-  let wrapperClass = classes.nounWrapper
-  if (nounImageData.length > 1) {
-    wrapperClass = classes.nounsWrapper
-  }
-
   return (
-    <div className={wrapperClass}>
+    <div className={Imgs.length > 1 ? classes.multinounWrapper : classes.imgWrapper}>
       {Imgs}
     </div>
   );
