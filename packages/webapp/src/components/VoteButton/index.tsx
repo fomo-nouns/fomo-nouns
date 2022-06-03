@@ -20,9 +20,10 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const currentVote = useAppSelector(state => state.vote.currentVote);
   const wsConnected = useAppSelector(state => state.vote.connected);
-  const hash = useAppSelector(state => state.block.blockHash);
+  const blockHash = useAppSelector(state => state.block.blockHash);
   const nextNounId = useAppSelector(state => state.noun.nextNounId);
   const voteCounts = useAppSelector(state => state.vote.voteCounts);
+  const votingBlockHash = useAppSelector(state => state.vote.votingBlockHash);
 
   const votingActive = useAppSelector(state => state.vote.votingActive);
 
@@ -33,12 +34,14 @@ const VoteButton: React.FC<{voteType: VOTE_OPTIONS}> = props => {
     if (currentVote || !wsConnected) return;
     
     dispatch(setCurrentVote(voteType));
-    dispatch(sendVote({"nounId": nextNounId, "blockhash": hash, "vote": voteType}));
+    dispatch(sendVote({"nounId": nextNounId, "blockhash": blockHash, "vote": voteType}));
   }
+
+  const disabled = voteNotSelected || (!votingActive || activeAuction) || blockHash !== votingBlockHash
 
   return (
       <button className={currentVote === voteType ? clsx(classes.voteButton, classes.selected) : classes.voteButton} onClick={changeVote}
-      disabled={voteNotSelected || (!votingActive || activeAuction)}>
+      disabled={disabled}>
         <span className={classes.voteEmojiText}> {voteToEmoji[voteType]} </span>
         <span className={classes.voteText}> {voteCounts[voteType]} </span>
       </button>
