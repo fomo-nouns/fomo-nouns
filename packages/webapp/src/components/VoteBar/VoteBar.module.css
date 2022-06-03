@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-evenly;
     gap: 10px;
-    width: 30%;
+    width: 80%;
     min-height: 80px;
     min-width: 320px;
     padding: .8em;
@@ -25,4 +25,10 @@
     font-size: 1.5em;
     font-weight: bold;
     cursor: pointer;
+}
+
+@media only screen and (min-width: 600px) {
+    .VoteBar {
+        width: 500px;
+    }
 }
