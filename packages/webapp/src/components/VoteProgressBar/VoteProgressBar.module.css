@@ -1,9 +1,9 @@
 .Wrapper {
     width: 100%;
-    display: flex;
     justify-content: center;
     padding-bottom: 5px;
     z-index: 10;
+    display: none;
 }
 
 .BarOutline {
