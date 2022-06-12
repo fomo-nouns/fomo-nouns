@@ -62,12 +62,12 @@ const Noun: React.FC = props => {
 
     return (
       <div className={`${imgWrapper.join(' ')}`}>
-        <div className={classes.nounId}><span>Noun </span>{nextNounId+i}</div>
         <img
           className={classes.img}
           src={src}
           alt={alt}
         />
+        <div className={classes.nounId}>Noun {nextNounId + i}</div>
       </div>
       )
   })
