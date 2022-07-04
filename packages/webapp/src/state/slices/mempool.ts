@@ -27,15 +27,15 @@ export const mempoolSlice = createSlice({
           return initialState;
         }
     },
-    addPendingTx: (state, action: PayloadAction<{from: string, hash: string}>) => {
+    addPendingSettleTx: (state, action: PayloadAction<{from: string, hash: string}>) => {
         state.pendingTxs.push({ from: action.payload.from, hash: action.payload.hash })
     },
-    resetPendingTx: (state) => {
+    resetPendingSettleTx: (state) => {
         state.pendingTxs = []
     }
   },
 });
 
-export const { setMempoolListening, addPendingTx } = mempoolSlice.actions;
+export const { setMempoolListening, addPendingSettleTx, resetPendingSettleTx } = mempoolSlice.actions;
 
 export default mempoolSlice.reducer;
