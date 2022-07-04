@@ -28,6 +28,7 @@ const VoteBar:React.FC<{}> = (props) => {
     if (!ethereumSocketConnected) {
       dispatch(openEthereumSocket());
     }    
+    // TODO: open mempool socket if closed
   }
 
   const voteOpts = (neutralOption: boolean) => (

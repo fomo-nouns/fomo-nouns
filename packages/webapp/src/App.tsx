@@ -24,6 +24,7 @@ import SettledAuctionModal from './components/SettledAuctionModal';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
+import { openEthereumMempoolSocket } from './middleware/alchemyMempoolWebsocket';
 
 
 
@@ -55,6 +56,7 @@ function App() {
   useEffect(() => { // Only initialize after mount
     dispatch(openVoteSocket());
     dispatch(openEthereumSocket());
+    dispatch(openEthereumMempoolSocket());
   }, [dispatch]);
 
   // Deal with inactive users
