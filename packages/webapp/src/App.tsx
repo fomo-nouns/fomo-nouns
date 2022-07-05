@@ -24,7 +24,6 @@ import SettledAuctionModal from './components/SettledAuctionModal';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
-import { openEthereumMempoolSocket } from './middleware/alchemyMempoolWebsocket';
 import NotificationToast from './components/NotificationToast';
 
 
