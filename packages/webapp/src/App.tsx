@@ -24,6 +24,7 @@ import SettledAuctionModal from './components/SettledAuctionModal';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
+import VoteWithKeys from './components/VoteWithKeys';
 
 
 
@@ -76,6 +77,7 @@ function App() {
       <Banner />
       <Documentation />
       <Footer/>
+      <VoteWithKeys />
     </div>
   );
 }
