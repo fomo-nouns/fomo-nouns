@@ -1,8 +1,7 @@
 .ToastWrapper {
     padding: 0.5rem 1rem;
-    align-content: center;
+    align-items: center;
     background-color: #FCFF54;
-    backdrop-filter: opacity(0.6);
     border-radius: 9999px;
     display: flex;
     flex-direction: row;
@@ -13,13 +12,14 @@
 .Text {
     font-weight: bold;
     color: #FF5454;
-    margin-bottom: 1px;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
 }
 
 .Icon {
     height: 24px;
     width: 24px;
-    stroke: #FF5454
+    stroke: #FF5454;
 }
 
 .Link {

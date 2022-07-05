@@ -43,7 +43,7 @@ const alchemyMempoolWebsocketMiddleware = () => {
     "params": [
       "alchemy_pendingTransactions",
       // TODO: update address to auction proxy
-      { toAddress: ['0x6b175474e89094c44da98b954eedeac495271d0f'] },
+      { toAddress: ['0xfF252725f6122A92551A5FA9a6b6bf10eb0Be035'] },
     ]
   });
 
