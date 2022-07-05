@@ -42,8 +42,7 @@ const alchemyMempoolWebsocketMiddleware = () => {
     "method": "eth_subscribe",
     "params": [
       "alchemy_pendingTransactions",
-      // TODO: update address to auction proxy
-      { toAddress: ['0xfF252725f6122A92551A5FA9a6b6bf10eb0Be035'] },
+      { toAddress: [auctionAddress] },
     ]
   });
 
@@ -53,22 +52,17 @@ const alchemyMempoolWebsocketMiddleware = () => {
     socket.send(newTxSubscriptionRequest);
   }
 
-  // TODO: update this
   const handleMessage = store => (msg) => {
     let data = parseMessage(msg);
 
     if (!data) return;
-
-    // TODO: Remove when done with dev
-    console.log(data)
 
     const methodId = data.input.slice(0, 10);
 
     const isSettleTx = settleMethodIds.includes(methodId);
     const fromFomo = data.from === settlerAddress;
 
-    // if (isSettleTx && !fromFomo) {
-    if (true) {
+    if (isSettleTx && !fromFomo) {
       store.dispatch(addPendingSettleTx({ from: data.from, hash: data.hash }))
     }
   }

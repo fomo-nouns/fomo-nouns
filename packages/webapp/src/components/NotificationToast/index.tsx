@@ -58,11 +58,6 @@ const NotificationToast: React.FC<{}> = props => {
     }
   }, [activeAuction, listeningMempool, prevSettledBlockHash, dispatch]);
 
-  // TODO: remove when done with dev
-  useEffect(() => {
-    dispatch(openEthereumMempoolSocket())
-  }, [dispatch]);
-
   return (
     <Toaster
         reverseOrder={false}
