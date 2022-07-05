@@ -5,6 +5,7 @@ import classes from './VoteBar.module.css';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { openVoteSocket } from '../../middleware/voteWebsocket';
 import { openEthereumSocket } from '../../middleware/alchemyWebsocket';
+import { openEthereumMempoolSocket } from "../../middleware/alchemyMempoolWebsocket";
 
 
 const VoteBar:React.FC<{}> = (props) => {
@@ -14,6 +15,7 @@ const VoteBar:React.FC<{}> = (props) => {
   const ethereumSocketConnected = useAppSelector(state => state.block.connected);
   const votingActive = useAppSelector(state => state.vote.votingActive);
   const blockhash = useAppSelector(state => state.block.blockHash);
+  const listeningMempool = useAppSelector(state => state.mempool.listening);
 
   // Approves a specific blockhash for voting after a period of time. This prevents the user from voting on a Noun by mistake as a new block is received.
   useEffect( () => {
@@ -27,8 +29,10 @@ const VoteBar:React.FC<{}> = (props) => {
     }
     if (!ethereumSocketConnected) {
       dispatch(openEthereumSocket());
+    }
+    if (activeAuction === false && !listeningMempool) {
+      dispatch(openEthereumMempoolSocket())
     }    
-    // TODO: open mempool socket if closed
   }
 
   const voteOpts = (neutralOption: boolean) => (

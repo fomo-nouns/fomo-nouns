@@ -25,6 +25,7 @@ import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
 import { openEthereumMempoolSocket } from './middleware/alchemyMempoolWebsocket';
+import NotificationToast from './components/NotificationToast';
 
 
 
@@ -56,7 +57,6 @@ function App() {
   useEffect(() => { // Only initialize after mount
     dispatch(openVoteSocket());
     dispatch(openEthereumSocket());
-    dispatch(openEthereumMempoolSocket());
   }, [dispatch]);
 
   // Deal with inactive users
@@ -78,6 +78,7 @@ function App() {
       <Banner />
       <Documentation />
       <Footer/>
+      <NotificationToast />
     </div>
   );
 }

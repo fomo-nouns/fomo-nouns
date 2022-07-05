@@ -1,0 +1,13 @@
+.ToastWrapper {
+    padding: 0.5rem 1rem;
+    align-content: center;
+    background-color: yellow;
+    backdrop-filter: opacity(0.6);
+    border-radius: 9999px;
+}
+
+p {
+    font-weight: bold;
+    color: red;
+    margin-bottom: 1px;
+}

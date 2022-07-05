@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import dayjs from 'dayjs';
 
 interface SettleTx {
     from: string,
@@ -35,6 +34,8 @@ export const mempoolSlice = createSlice({
     }
   },
 });
+
+export type { SettleTx }
 
 export const { setMempoolListening, addPendingSettleTx, resetPendingSettleTx } = mempoolSlice.actions;
 

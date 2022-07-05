@@ -43,12 +43,10 @@ const alchemyMempoolWebsocketMiddleware = () => {
     "params": [
       "alchemy_pendingTransactions",
       // TODO: update address to auction proxy
-      { toAddress: [auctionAddress] },
+      { toAddress: ['0x6b175474e89094c44da98b954eedeac495271d0f'] },
     ]
   });
 
-
-  // Define the Handler Methods
   const handleOpen = store => () => {
     console.log('Alchemy Mempool Hawk Web Socket OPEN.');
     store.dispatch(setMempoolListening(true));
@@ -61,15 +59,13 @@ const alchemyMempoolWebsocketMiddleware = () => {
 
     if (!data) return;
 
-    // TODO: Remove
+    // TODO: Remove when done with dev
     console.log(data)
 
     const methodId = data.input.slice(0, 10);
 
     const isSettleTx = settleMethodIds.includes(methodId);
     const fromFomo = data.from === settlerAddress;
-
-    // console.log(methodId)
 
     // if (isSettleTx && !fromFomo) {
     if (true) {
