@@ -12,6 +12,7 @@ import block from './state/slices/block';
 import noun from './state/slices/noun';
 import vote from './state/slices/vote';
 import settlement from './state/slices/settlement';
+import mempool from './state/slices/mempool';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
@@ -23,6 +24,7 @@ import { default as globalConfig } from './config';
 import voteWebsocket from './middleware/voteWebsocket';
 import ethersProviderMiddleware from './middleware/ethersProvider';
 import alchemyWebsocketMiddleware from './middleware/alchemyWebsocket';
+import alchemyMempoolWebsocketMiddleware from './middleware/alchemyMempoolWebsocket';
 
 
 dotenv.config();
@@ -38,6 +40,7 @@ const createRootReducer = (history: History) =>
     noun,
     settlement,
     vote,
+    mempool
   });
 
 export default function configureStore(preloadedState: any) {
@@ -48,7 +51,8 @@ export default function configureStore(preloadedState: any) {
       applyMiddleware(
         routerMiddleware(history), // for dispatching history actions
         // ... other middlewares ...
-        alchemyWebsocketMiddleware, 
+        alchemyWebsocketMiddleware,
+        alchemyMempoolWebsocketMiddleware,
         ethersProviderMiddleware,
         voteWebsocket
       ),

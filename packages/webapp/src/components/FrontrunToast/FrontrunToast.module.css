@@ -1,0 +1,28 @@
+.ToastWrapper {
+    padding: 0.5rem 1rem;
+    align-items: center;
+    background-color: #FCFF54;
+    border-radius: 9999px;
+    display: flex;
+    flex-direction: row;
+    gap: 0.375rem;
+    filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+}
+
+.Text {
+    font-weight: bold;
+    color: #FF5454;
+    margin-bottom: 0px;
+    padding-bottom: 1px;
+}
+
+.Icon {
+    height: 24px;
+    width: 24px;
+    stroke: #FF5454;
+}
+
+.Link {
+    text-decoration: none;
+    cursor: pointer;
+}
