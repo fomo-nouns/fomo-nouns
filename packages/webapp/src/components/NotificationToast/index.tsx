@@ -25,7 +25,7 @@ const NotificationToast: React.FC<{}> = props => {
   useEffect(() => {
     const showingThisTx = (tx: SettleTx): boolean => {
         for (const activeToast of activeToasts) {
-            if (activeToast.tx?.hash === tx.hash) {
+            if (activeToast.tx?.from === tx.from) {
                 return true;
             }
         }
