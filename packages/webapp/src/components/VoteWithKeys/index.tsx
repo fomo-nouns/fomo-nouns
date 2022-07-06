@@ -1,44 +1,39 @@
-import React, { useEffect } from "react";
-import VoteButton from '../VoteButton';
-import { VOTE_OPTIONS, setVotingBlockHash } from '../../state/slices/vote';
+import React from "react";
+import { VOTE_OPTIONS, setCurrentVote } from '../../state/slices/vote';
 import classes from './VoteWithKeys.module.css';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { openVoteSocket } from '../../middleware/voteWebsocket';
-import { openEthereumSocket } from '../../middleware/alchemyWebsocket';
+import { sendVote } from '../../middleware/voteWebsocket';
 import { isMobileScreen } from "../../utils/isMobile";
 import useEventListener from "@use-it/event-listener";
 
 
 const VoteWithKeys:React.FC<{}> = (props) => {
   const dispatch = useAppDispatch();
-  const activeAuction = useAppSelector(state => state.auction.activeAuction);
-  const voteSocketConnected = useAppSelector(state => state.vote.connected);
-  const ethereumSocketConnected = useAppSelector(state => state.block.connected);
+  
   const votingActive = useAppSelector(state => state.vote.votingActive);
+  const currentVote = useAppSelector(state => state.vote.currentVote);
+  const wsConnected = useAppSelector(state => state.vote.connected);
+  const votingBlockHash = useAppSelector(state => state.vote.votingBlockHash);
+  const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const blockhash = useAppSelector(state => state.block.blockHash);
+  const nextNounId = useAppSelector(state => state.noun.nextNounId);
 
-  // Approves a specific blockhash for voting after a period of time. This prevents the user from voting on a Noun by mistake as a new block is received.
-//   useEffect( () => {
-//     const timerId = setTimeout(dispatch, 500, setVotingBlockHash(blockhash));
-//     return () => clearTimeout(timerId);
-//   }, [blockhash, dispatch])
+  const restricted = (currentVote !== undefined) || (!votingActive || activeAuction) || blockhash !== votingBlockHash;
 
-//   const openSocket = () => {
-//     if (!voteSocketConnected) {
-//       dispatch(openVoteSocket());
-//     }
-//     if (!ethereumSocketConnected) {
-//       dispatch(openEthereumSocket());
-//     }    
-//   }
+  const changeVote = (voteType: VOTE_OPTIONS) => {
+    if (wsConnected && !restricted) {
+      dispatch(setCurrentVote(voteType));
+      dispatch(sendVote({"nounId": nextNounId, "blockhash": blockhash, "vote": voteType}));
+    }
+  }
 
   useEventListener("keydown", (key) => {
     const event = key as KeyboardEvent
 
     if (event.key === 'ArrowLeft') {
-      console.log('ArrowLeft')
+      changeVote(VOTE_OPTIONS.voteDislike);
     } else if (event.key === 'ArrowRight') {
-      console.log('ArrowRight')
+      changeVote(VOTE_OPTIONS.voteLike);
     }
   });
 
