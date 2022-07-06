@@ -15,6 +15,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.3.1",
+    "@use-it/event-listener": "^0.1.7",
     "@usedapp/core": "^0.5.3",
     "@web3-react/core": "^6.1.9",
     "@web3-react/fortmatic-connector": "^6.1.6",

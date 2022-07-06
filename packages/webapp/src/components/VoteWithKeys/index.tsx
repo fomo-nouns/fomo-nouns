@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { openVoteSocket } from '../../middleware/voteWebsocket';
 import { openEthereumSocket } from '../../middleware/alchemyWebsocket';
 import { isMobileScreen } from "../../utils/isMobile";
+import useEventListener from "@use-it/event-listener";
 
 
 const VoteWithKeys:React.FC<{}> = (props) => {
@@ -31,7 +32,15 @@ const VoteWithKeys:React.FC<{}> = (props) => {
 //     }    
 //   }
 
-  // TODO: show only if keyboard available
+  useEventListener("keydown", (key) => {
+    const event = key as KeyboardEvent
+
+    if (event.key === 'ArrowLeft') {
+      console.log('ArrowLeft')
+    } else if (event.key === 'ArrowRight') {
+      console.log('ArrowRight')
+    }
+  });
 
   const display = isMobileScreen() ? 'none' : 'flex';
   const wrapperStyle = {
