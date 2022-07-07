@@ -1,7 +1,7 @@
 import { default as globalConfig, PROVIDER_KEY } from '../config';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { default as config } from '../config';
-import { addPendingSettleTx, setMempoolListening } from '../state/slices/mempool';
+import { addPendingBidTx, addPendingSettleTx, setMempoolListening } from '../state/slices/mempool';
 
 
 // Define the Actions Intercepted by the Middleware
@@ -9,6 +9,7 @@ const openEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/op
 const closeEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/close', payload});
 
 const settleMethodIds = ['0xf25efffc', '0x1b16802c']
+const bidMethodId = '0x659dd2b4'
 const auctionAddress = config.auctionProxyAddress;
 const settlerAddress = config.fomoSettlerAddress;
 
@@ -61,9 +62,13 @@ const alchemyMempoolWebsocketMiddleware = () => {
 
     const isSettleTx = settleMethodIds.includes(methodId);
     const fromFomo = data.from === settlerAddress;
+    const isBidTx = methodId === bidMethodId
 
     if (isSettleTx && !fromFomo) {
       store.dispatch(addPendingSettleTx({ from: data.from, hash: data.hash }))
+    }
+    if (isBidTx) {
+      store.dispatch(addPendingBidTx({ from: data.from, hash: data.hash, value: data.value }))
     }
   }
 
