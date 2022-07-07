@@ -25,6 +25,7 @@ import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
 import NotificationToast from './components/NotificationToast';
+import VoteWithKeys from './components/VoteWithKeys';
 
 
 
@@ -77,6 +78,7 @@ function App() {
       <Banner />
       <Documentation />
       <Footer/>
+      <VoteWithKeys />
       <NotificationToast />
     </div>
   );

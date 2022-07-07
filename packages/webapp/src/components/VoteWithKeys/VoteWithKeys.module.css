@@ -1,0 +1,35 @@
+.Wrapper {
+    position: fixed;
+    bottom: 0.25rem;
+    left: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.Text {
+    font-family: 'PT Root UI', sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    padding-bottom: 2px;
+}
+
+.Key {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.25rem;
+}
+
+.Warm {
+    border-color: var(--brand-warm-light-text);
+    color: var(--brand-warm-light-text);
+    fill: var(--brand-warm-light-text);
+}
+
+.Cool {
+    border-color: var(--brand-cool-light-text);
+    color: var(--brand-cool-light-text);
+    fill: var(--brand-cool-light-text);
+}
