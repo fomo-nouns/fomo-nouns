@@ -7,12 +7,12 @@ interface SettleTx {
 
 interface MempoolState {
   listening: boolean,
-  pendingTxs: SettleTx[];
+  pendingSettleTxs: SettleTx[];
 }
 
 const initialState: MempoolState = {
   listening: false,
-  pendingTxs: []
+  pendingSettleTxs: []
 };
 
 export const mempoolSlice = createSlice({
@@ -27,10 +27,10 @@ export const mempoolSlice = createSlice({
         }
     },
     addPendingSettleTx: (state, action: PayloadAction<{from: string, hash: string}>) => {
-        state.pendingTxs.push({ from: action.payload.from, hash: action.payload.hash })
+        state.pendingSettleTxs.push({ from: action.payload.from, hash: action.payload.hash })
     },
     resetPendingSettleTx: (state) => {
-        state.pendingTxs = []
+        state.pendingSettleTxs = []
     }
   },
 });

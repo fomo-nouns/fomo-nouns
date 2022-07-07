@@ -18,7 +18,7 @@ const NotificationToast: React.FC<{}> = props => {
   const [activeToasts, setActiveToasts] = useState<ToastData[]>([]);
 
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
-  const pendingSettleTxs = useAppSelector(state => state.mempool.pendingTxs);
+  const pendingSettleTxs = useAppSelector(state => state.mempool.pendingSettleTxs);
   const listeningMempool = useAppSelector(state => state.mempool.listening);
   const prevSettledBlockHash = useAppSelector(state => state.settlement.prevSettledBlockHash);
 
