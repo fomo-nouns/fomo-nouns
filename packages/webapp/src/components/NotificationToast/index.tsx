@@ -4,8 +4,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import toast, { Toaster } from 'react-hot-toast';
 import { resetPendingSettleTx, SettleTx } from '../../state/slices/mempool';
 import { openEthereumMempoolSocket } from '../../middleware/alchemyMempoolWebsocket';
-import FrontrunToast from '../FrontrunToast';
 import dayjs from 'dayjs';
+import MempoolToast from '../MempoolToast';
 
 type ToastData = {
     id: string
@@ -37,7 +37,7 @@ const NotificationToast: React.FC<{}> = props => {
     pendingSettleTxs.forEach(tx => {
         if (!showingThisTx(tx)) {
             const id = toast.custom(
-                <FrontrunToast tx={tx} />, 
+                <MempoolToast tx={tx} />, 
                 {
                     position: "bottom-center",
                     duration: 999999999
