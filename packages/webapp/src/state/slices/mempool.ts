@@ -1,18 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SettleTx {
-    from: string,
-    hash: string
+  from: string
+  hash: string
+}
+
+interface BidTx {
+  from: string
+  hash: string
+  value: string
 }
 
 interface MempoolState {
-  listening: boolean,
-  pendingTxs: SettleTx[];
+  listening: boolean
+  pendingSettleTxs: SettleTx[]
+  pendingBidTxs: BidTx[]
 }
 
 const initialState: MempoolState = {
   listening: false,
-  pendingTxs: []
+  pendingSettleTxs: [],
+  pendingBidTxs: [],
 };
 
 export const mempoolSlice = createSlice({
@@ -27,16 +35,29 @@ export const mempoolSlice = createSlice({
         }
     },
     addPendingSettleTx: (state, action: PayloadAction<{from: string, hash: string}>) => {
-        state.pendingTxs.push({ from: action.payload.from, hash: action.payload.hash })
+        state.pendingSettleTxs.push({ from: action.payload.from, hash: action.payload.hash })
     },
     resetPendingSettleTx: (state) => {
-        state.pendingTxs = []
+        state.pendingSettleTxs = []
+    },
+    addPendingBidTx: (state, action: PayloadAction<{from: string, hash: string, value: string}>) => {
+        state.pendingBidTxs.push({ from: action.payload.from, hash: action.payload.hash, value: action.payload.value })
+    },
+    removePendingBidTx: (state, action: PayloadAction<{hash: string}>) => {
+        const index = state.pendingBidTxs.findIndex(e => e.hash === action.payload.hash);
+        if (index > -1) {
+          state.pendingBidTxs.splice(index, 1);
+        }
+        // TODO: test this one out
+    },
+    resetPendingBidTx: (state) => {
+        state.pendingBidTxs = []
     }
   },
 });
 
-export type { SettleTx }
+export type { SettleTx, BidTx }
 
-export const { setMempoolListening, addPendingSettleTx, resetPendingSettleTx } = mempoolSlice.actions;
+export const { setMempoolListening, addPendingSettleTx, resetPendingSettleTx, addPendingBidTx, removePendingBidTx, resetPendingBidTx } = mempoolSlice.actions;
 
 export default mempoolSlice.reducer;

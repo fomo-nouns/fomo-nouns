@@ -1,7 +1,6 @@
 .ToastWrapper {
     padding: 0.5rem 1rem;
     align-items: center;
-    background-color: #FCFF54;
     border-radius: 9999px;
     display: flex;
     flex-direction: row;
@@ -11,7 +10,6 @@
 
 .Text {
     font-weight: bold;
-    color: #FF5454;
     margin-bottom: 0px;
     padding-bottom: 1px;
 }
@@ -19,10 +17,21 @@
 .Icon {
     height: 24px;
     width: 24px;
-    stroke: #FF5454;
 }
 
 .Link {
     text-decoration: none;
     cursor: pointer;
+}
+
+.Frontrun {
+    background-color: #FCFF54;
+    color: #FF5454;
+    stroke: #FF5454;
+}
+
+.Bid {
+    background-color: var(--brand-black);
+    color: white;
+    stroke: white;
 }
