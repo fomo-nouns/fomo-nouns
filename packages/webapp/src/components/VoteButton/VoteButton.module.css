@@ -3,7 +3,7 @@ button {
 }
 
 
-.voteButton{
+.voteButton {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,35 +21,41 @@ button {
     box-sizing: border-box;
 }
 
+.voteButton:disabled {
+    cursor: not-allowed;
+}
+
 @media (hover: hover) {
-    .voteButton:enabled:hover:not(.selected){
+    .voteButton:enabled:hover:not(.selected) {
         background: rgba(0, 0, 0, 0.1);
     }
 }
-.voteText{
+
+.voteText {
     font-size: 1em;
     font-weight: bold;
 }
 
-.voteEmojiText{
+.voteEmojiText {
     font-size: 2em;
 }
 
-.selected{
+.selected {
     border: 2px solid black;
     background: rgb(127, 197, 156, .4);
 }
 
 @media only screen and (min-width: 768px) {
-    .voteButton{
+    .voteButton {
         height: 110px;
     }
-    .voteText{
+
+    .voteText {
         font-size: 1.5em;
         font-weight: bold;
     }
 
-    .voteEmojiText{
+    .voteEmojiText {
         font-size: 3em;
     }
 }
