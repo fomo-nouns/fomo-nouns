@@ -5,6 +5,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { resetPendingSettleTx, SettleTx } from '../../state/slices/mempool';
 import { openEthereumMempoolSocket } from '../../middleware/alchemyMempoolWebsocket';
 import FrontrunToast from '../FrontrunToast';
+import dayjs from 'dayjs';
 
 type ToastData = {
     id: string
@@ -18,6 +19,7 @@ const NotificationToast: React.FC<{}> = props => {
   const [activeToasts, setActiveToasts] = useState<ToastData[]>([]);
 
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
+  const auctionEnd = useAppSelector(state => state.auction.auctionEnd);
   const pendingSettleTxs = useAppSelector(state => state.mempool.pendingSettleTxs);
   const listeningMempool = useAppSelector(state => state.mempool.listening);
   const prevSettledBlockHash = useAppSelector(state => state.settlement.prevSettledBlockHash);
@@ -47,7 +49,8 @@ const NotificationToast: React.FC<{}> = props => {
   }, [pendingSettleTxs, activeToasts]);
 
   useEffect(() => {
-    if (activeAuction === false && !listeningMempool) {
+    const lessThanMinTillAuctionEnd = dayjs().add(1, 'minute').unix() >= auctionEnd ? true : false
+    if ((activeAuction === false || lessThanMinTillAuctionEnd) && !listeningMempool) {
         dispatch(openEthereumMempoolSocket())
     }
 
@@ -56,7 +59,7 @@ const NotificationToast: React.FC<{}> = props => {
       setActiveToasts([]);
       dispatch(resetPendingSettleTx());
     }
-  }, [activeAuction, listeningMempool, prevSettledBlockHash, dispatch]);
+  }, [activeAuction, auctionEnd, listeningMempool, prevSettledBlockHash, dispatch]);
 
   return (
     <Toaster
