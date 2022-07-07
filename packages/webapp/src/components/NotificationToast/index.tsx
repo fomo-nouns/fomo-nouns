@@ -24,6 +24,7 @@ const NotificationToast: React.FC<{}> = props => {
   const pendingBidTxs = useAppSelector(state => state.mempool.pendingBidTxs);
   const listeningMempool = useAppSelector(state => state.mempool.listening);
   const prevSettledBlockHash = useAppSelector(state => state.settlement.prevSettledBlockHash);
+  const blockhash = useAppSelector(state => state.block.blockHash);
 
   useEffect(() => {
     const showingThisTx = (tx: SettleTx): boolean => {
@@ -66,17 +67,21 @@ const NotificationToast: React.FC<{}> = props => {
   }, [pendingBidTxs, auctionEnd]);
 
   useEffect(() => {
-    const lessThanMinTillAuctionEnd = dayjs().add(1, 'minute').unix() >= auctionEnd ? true : false
+    const lessThanMinTillAuctionEnd = auctionEnd && dayjs().add(1, 'minute').unix() >= auctionEnd ? true : false
     if ((activeAuction === false || lessThanMinTillAuctionEnd) && !listeningMempool) {
-        dispatch(openEthereumMempoolSocket())
+      dispatch(openEthereumMempoolSocket())
     }
+    // [..., blockhash] used to always check time till auction end
+    // and ensure websocket will open as auction comes to an end
+  }, [activeAuction, auctionEnd, listeningMempool, blockhash, dispatch]);
 
+  useEffect(() => {
     if (prevSettledBlockHash) {
       toast.dismiss();
       setActiveToasts([]);
       dispatch(resetPendingSettleTx());
     }
-  }, [activeAuction, auctionEnd, listeningMempool, prevSettledBlockHash, dispatch]);
+  }, [prevSettledBlockHash, dispatch]);
 
   return (
     <Toaster
