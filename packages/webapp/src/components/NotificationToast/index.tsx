@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import toast, { Toaster } from 'react-hot-toast';
-import { resetPendingSettleTx, SettleTx } from '../../state/slices/mempool';
+import { removePendingBidTx, resetPendingSettleTx, SettleTx } from '../../state/slices/mempool';
 import { openEthereumMempoolSocket } from '../../middleware/alchemyMempoolWebsocket';
 import dayjs from 'dayjs';
 import MempoolToast from '../MempoolToast';
@@ -21,6 +21,7 @@ const NotificationToast: React.FC<{}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const auctionEnd = useAppSelector(state => state.auction.auctionEnd);
   const pendingSettleTxs = useAppSelector(state => state.mempool.pendingSettleTxs);
+  const pendingBidTxs = useAppSelector(state => state.mempool.pendingBidTxs);
   const listeningMempool = useAppSelector(state => state.mempool.listening);
   const prevSettledBlockHash = useAppSelector(state => state.settlement.prevSettledBlockHash);
 
@@ -47,6 +48,22 @@ const NotificationToast: React.FC<{}> = props => {
         }
     })
   }, [pendingSettleTxs, activeToasts]);
+
+  useEffect(() => {
+    pendingBidTxs.forEach(tx => {
+      const closeToAuctionEnd = dayjs().add(20, "seconds").unix() >= auctionEnd ? true : false
+      if (closeToAuctionEnd) {
+        toast.custom(
+          <MempoolToast tx={tx} />, 
+          {
+              position: "bottom-center",
+              duration: 6000
+          }
+        )
+      }
+      removePendingBidTx({ hash: tx.hash })
+    })
+  }, [pendingBidTxs, auctionEnd]);
 
   useEffect(() => {
     const lessThanMinTillAuctionEnd = dayjs().add(1, 'minute').unix() >= auctionEnd ? true : false
