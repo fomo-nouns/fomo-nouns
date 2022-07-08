@@ -28,7 +28,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
   const dispatch = useAppDispatch();
 
   // local state variables
-  const [showConnectModal, setShowConnectModal] = useState(false);
+  const [showSettledNounModal, setShowSettledNounModal] = useState(false);
   const [successfulSettle, setSuccessfulSettle] = useState(false);
   const [localNounId, setLocalNounId] = useState(0);
   const [img, setImg] = useState("");
@@ -42,16 +42,16 @@ const SettledAuctionModal: React.FC<{}> = props => {
   const nextNounId = useAppSelector(state => state.noun.nextNounId);
 
   const showModalHandler = () => {
-    setShowConnectModal(true);
+    setShowSettledNounModal(true);
   };
 
   const hideModalHandler = () => {
-    setShowConnectModal(false);
+    setShowSettledNounModal(false);
   };
 
   // get the image of the most recently minted Noun from Twitter
   useEffect(() => {
-    if (showConnectModal && successfulSettle && localNounId > 0) {
+    if (showSettledNounModal && successfulSettle && localNounId > 0) {
       setShareCopy(encodeURI("gm, I just minted this Noun for @nounsdao by playing FOMO Nouns! "));
       // wait for 750ms, then fetch image from twitter
       setTimeout(() => {
@@ -69,7 +69,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
       
       setConfetti(true);
     }
-  }, [showConnectModal, successfulSettle, showConfetti, localNounId, mediaURL]);
+  }, [showSettledNounModal, successfulSettle, showConfetti, localNounId, mediaURL]);
 
   useEffect(() => {
     const getNounImg = () => {
@@ -111,7 +111,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
 
   return (
     <div className={classes.ModalWrapper}>
-      {showConnectModal && <Modal content={settledAuctionContent} onDismiss={hideModalHandler}/>}
+      {showSettledNounModal && <Modal content={settledAuctionContent} onDismiss={hideModalHandler}/>}
     </div>
   )
 };
