@@ -49,6 +49,9 @@ const ethersProviderMiddleware = () => {
 
       console.log("receipt from settle tx from settle block")
       console.log(receipt)
+
+      console.log("receipt status. tx is success")
+      console.log(receipt.status === 1)
     }
   }
 
@@ -65,6 +68,9 @@ const ethersProviderMiddleware = () => {
     console.log("latestActiveNounId")
     console.log(latestActiveNounId)
 
+    console.log("new nounId")
+    console.log(nounId)
+
     if (latestActiveNounId !== nounId && settlementInBloom(logsBloom)) {
       console.log("requesting settlement confirmation")
       confirmSettlement(store, blockNumber);
@@ -80,8 +86,13 @@ const ethersProviderMiddleware = () => {
   // Define the Middleware
   return store => next => action => {
     if (action.type === 'ethereumProvider/checkAuctionAndSettlement') {
-      const logsBloom = action.payload;
-      const blockNumber = action.payload;
+      const { logsBloom, blockNumber } = action.payload;
+
+      console.log("logsBloom")
+      console.log(logsBloom)
+
+      console.log("blockNumber")
+      console.log(blockNumber)
 
       checkAuctionAndSettlement(store, logsBloom, blockNumber)
     } else {

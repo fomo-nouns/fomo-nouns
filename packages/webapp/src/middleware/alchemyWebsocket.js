@@ -74,7 +74,7 @@ const alchemyWebsocketMiddleware = () => {
     }    
 
     // Check if settlement has occurred
-    store.dispatch(checkAuctionAndSettlement(logsBloom, blockNumber));
+    store.dispatch(checkAuctionAndSettlement({"logsBloom": logsBloom, "blockNumber": blockNumber}));
 
     // Update the Redux block information
     store.dispatch(setBlockAttr({'blocknumber': blockNumber, 'blockhash': blockHash}));
