@@ -1,9 +1,6 @@
 import { default as globalConfig, PROVIDER_KEY } from '../config';
 
-import { contract as AuctionContract } from '../wrappers/nounsAuction';
-import { setAuctionEnd } from '../state/slices/auction';
 import { setEthereumConnected, setBlockAttr } from '../state/slices/block';
-import { setNextNounId } from '../state/slices/noun';
 import { resetVotes } from '../state/slices/vote';
 import { resetAuctionEnd } from '../state/slices/auction';
 
@@ -73,7 +70,7 @@ const alchemyWebsocketMiddleware = () => {
       latestObservedBlock = blockNumber;
     }    
 
-    // Check if settlement has occurred
+    // Check latest auction state and if settlement has occurred
     store.dispatch(checkAuctionAndSettlement({"logsBloom": logsBloom, "blockNumber": blockNumber}));
 
     // Update the Redux block information

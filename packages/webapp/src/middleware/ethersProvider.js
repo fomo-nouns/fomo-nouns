@@ -5,20 +5,19 @@ import { isTopicInBloom, isContractAddressInBloom } from 'ethereum-bloom-filters
 import { contract as AuctionContract } from '../wrappers/nounsAuction';
 import { setAuctionEnd } from '../state/slices/auction';
 import { setNextNounId } from '../state/slices/noun';
+import { isSettleMethod } from '../utils/auctionMethods';
 
 // Define the Actions Intercepted by the Middleware
 const checkAuctionAndSettlement = (payload) => ({type: 'ethereumProvider/checkAuctionAndSettlement', payload});
 
 const settlementTopic = '0xc9f72b276a388619c6d185d146697036241880c36654b1a3ffdad07c24038d99';
 const auctionAddress = config.auctionProxyAddress;
-const settledFilter = {address: auctionAddress, topics: [settlementTopic]};
-
 
 // Define the Middleware
 const ethersProviderMiddleware = () => {
   let latestActiveNounId = 0;
 
-  // Define the Handler Methods
+  // Bloom checks could give false positives
   const settlementInBloom = (logsBloom) => {
     try {
       return isTopicInBloom(logsBloom, settlementTopic) &&
@@ -28,53 +27,49 @@ const ethersProviderMiddleware = () => {
     }
   }
 
+  // TODO: delete debug console outputs after testing
+  const checkSettlementTx = async (store, blockNumber) => {
+    if (!blockNumber) return;
+
+    let blockWithTxs = await RPCProvider.getBlockWithTransactions(blockNumber);
+
+    const settleTx = blockWithTxs.transactions.find(tx => tx.to === auctionAddress)
+
+    if (settleTx) {
+      const methodId = settleTx.data.slice(0, 10);
+
+      if (isSettleMethod(methodId)) {
+        const receipt = await settleTx.wait();
+
+        if (receipt.status === 1) {
+          console.log("confirming settlement")
+          confirmSettlement(store, blockNumber);
+        } else {
+          console.log("Is not a bid tx")
+        }
+      }
+    } else {
+      console.log("Couldn't find tx to auctionProxy")
+    }
+  }
+
   const confirmSettlement = async (store, blockNumber) => {
     if (!blockNumber) return;
     const block = await RPCProvider.getBlock(blockNumber - 1);
     store.dispatch(setPrevSettledBlockHash(block.hash));
   }
 
-  const tbh = async (blockNumber) => {
-    if (!blockNumber) return;
-    // let block = await RPCProvider.getBlock(blockNumber - 1);
-
-    let blockWithTxs = await RPCProvider.getBlockWithTransactions(blockNumber);
-
-    const settleTx = blockWithTxs.transactions.find(tx => tx.to === auctionAddress)
-    console.log("settle tx from settle block")
-    console.log(settleTx)
-
-    if (settleTx) {
-      const receipt = await settleTx.wait();
-
-      console.log("receipt from settle tx from settle block")
-      console.log(receipt)
-
-      console.log("receipt status. tx is success")
-      console.log(receipt.status === 1)
-    }
-  }
-
+  // TODO: delete debug console outputs after testing 
   const checkAuctionAndSettlement = async (store, logsBloom, blockNumber) => {
     // Check the latest auction status
     const auction = await AuctionContract.auction();
 
-    console.log("auction data")
-    console.log(auction)
-
     const nounId = parseInt(auction?.nounId);
     const auctionEnd = auction?.endTime.toNumber();
 
-    console.log("latestActiveNounId")
-    console.log(latestActiveNounId)
-
-    console.log("new nounId")
-    console.log(nounId)
-
     if (latestActiveNounId !== nounId && settlementInBloom(logsBloom)) {
       console.log("requesting settlement confirmation")
-      confirmSettlement(store, blockNumber);
-      tbh(blockNumber)
+      checkSettlementTx(store, blockNumber);
     }
 
     latestActiveNounId = nounId
@@ -87,12 +82,6 @@ const ethersProviderMiddleware = () => {
   return store => next => action => {
     if (action.type === 'ethereumProvider/checkAuctionAndSettlement') {
       const { logsBloom, blockNumber } = action.payload;
-
-      console.log("logsBloom")
-      console.log(logsBloom)
-
-      console.log("blockNumber")
-      console.log(blockNumber)
 
       checkAuctionAndSettlement(store, logsBloom, blockNumber)
     } else {

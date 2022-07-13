@@ -2,14 +2,13 @@ import { default as globalConfig, PROVIDER_KEY } from '../config';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { default as config } from '../config';
 import { addPendingBidTx, addPendingSettleTx, setMempoolListening } from '../state/slices/mempool';
+import { isBidMethod, isSettleMethod } from '../utils/auctionMethods';
 
 
 // Define the Actions Intercepted by the Middleware
 const openEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/open', payload});
 const closeEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/close', payload});
 
-const settleMethodIds = ['0xf25efffc', '0x1b16802c']
-const bidMethodId = '0x659dd2b4'
 const auctionAddress = config.auctionProxyAddress;
 const settlerAddress = config.fomoSettlerAddress;
 
@@ -63,9 +62,9 @@ const alchemyMempoolWebsocketMiddleware = () => {
 
     const methodId = data.input.slice(0, 10);
 
-    const isSettleTx = settleMethodIds.includes(methodId);
+    const isSettleTx = isSettleMethod(methodId);
     const fromFomo = data.from === settlerAddress;
-    const isBidTx = methodId === bidMethodId
+    const isBidTx = isBidMethod(methodId);
 
     console.log(`The settle tx: ${isSettleTx}`)
     console.log(`The bid tx: ${isBidTx}`)
