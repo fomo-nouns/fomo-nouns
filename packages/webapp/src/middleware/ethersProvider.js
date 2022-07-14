@@ -12,6 +12,9 @@ const checkAuctionAndSettlement = (payload) => ({type: 'ethereumProvider/checkAu
 
 const settlementTopic = '0xc9f72b276a388619c6d185d146697036241880c36654b1a3ffdad07c24038d99';
 const auctionAddress = config.auctionProxyAddress;
+const fomoAddress = config.fomoSettlerAddress;
+
+const possibleSettleAddresses = [auctionAddress, fomoAddress];
 
 // Define the Middleware
 const ethersProviderMiddleware = () => {
@@ -33,7 +36,9 @@ const ethersProviderMiddleware = () => {
 
     let blockWithTxs = await RPCProvider.getBlockWithTransactions(blockNumber);
 
-    const settleTx = blockWithTxs.transactions.find(tx => tx.to === auctionAddress)
+    const settleTx = blockWithTxs.transactions.find(tx => possibleSettleAddresses.includes(tx.to));
+
+    // TODO: add method checks
 
     if (settleTx) {
       const methodId = settleTx.data.slice(0, 10);
