@@ -10,7 +10,8 @@ const openEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/op
 const closeEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/close', payload});
 
 const auctionAddress = config.auctionProxyAddress;
-const settlerAddress = config.fomoSettlerAddress;
+// TODO: move executor address to /config.ts
+const fomoExecutorAddress = '0x85906cF629ae1DA297548769ecE3e3E6a4f3288f';
 
 // Define the Middleware
 const alchemyMempoolWebsocketMiddleware = () => {
@@ -60,11 +61,9 @@ const alchemyMempoolWebsocketMiddleware = () => {
 
     console.log(data)
 
-    const methodId = data.input.slice(0, 10);
-
-    const isSettleTx = isSettleMethod(methodId);
-    const fromFomo = data.from === settlerAddress;
-    const isBidTx = isBidMethod(methodId);
+    const isSettleTx = isSettleMethod(data.input);
+    const fromFomo = data.from === fomoExecutorAddress;
+    const isBidTx = isBidMethod(data.input);
 
     console.log(`The settle tx: ${isSettleTx}`)
     console.log(`The bid tx: ${isBidTx}`)

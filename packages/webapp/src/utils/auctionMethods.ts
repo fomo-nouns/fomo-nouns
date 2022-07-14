@@ -1,10 +1,22 @@
-const settleMethodIds = ['0xf25efffc', '0x1b16802c']
-const bidMethodId = '0x659dd2b4'
+import { contract as AuctionContract } from '../wrappers/nounsAuction';
 
-export const isSettleMethod = (methodId: string) => {
-    return settleMethodIds.includes(methodId);
+const settleMethods = ['settleCurrentAndCreateNewAuction', 'settleAuction']
+const bidMethod = 'createBid'
+
+export const isSettleMethod = (input: string) => {
+    try {
+        const decodedInput = AuctionContract.interface.parseTransaction({ data: input })
+        return settleMethods.includes(decodedInput.name);
+    } catch {
+        return false;
+    }
 };
 
-export const isBidMethod = (methodId: string) => {
-    return methodId === bidMethodId;
+export const isBidMethod = (input: string) => {
+    try {
+        const decodedInput = AuctionContract.interface.parseTransaction({ data: input })
+        return decodedInput.name === bidMethod;
+    } catch {
+        return false;
+    }
 };
