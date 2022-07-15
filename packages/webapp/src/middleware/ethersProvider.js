@@ -19,7 +19,7 @@ const possibleSettleContracts = [auctionAddress, fomoAddress];
 
 // Define the Middleware
 const ethersProviderMiddleware = () => {
-  let latestActiveNounId = 0;
+  let latestActiveNounId = undefined;
 
   // Bloom checks could give false positives
   const settlementInBloom = (logsBloom) => {
@@ -47,7 +47,7 @@ const ethersProviderMiddleware = () => {
       const receipt = await settleTx.wait();
 
       if (receipt.status === 1) {
-        console.log("confirming settlement")
+        console.log("debug - confirming settlement after checks")
         confirmSettlement(store, blockNumber);
       } else {
         console.log("Reverted tx")
@@ -72,8 +72,20 @@ const ethersProviderMiddleware = () => {
     const auctionEnd = auction?.endTime.toNumber();
 
     if (latestActiveNounId !== nounId && settlementInBloom(logsBloom)) {
-      console.log("requesting settlement confirmation")
+      console.log("debug - requesting settlement confirmation")
       checkSettlementTx(store, blockNumber);
+      if (latestActiveNounId === undefined) {
+        // Go more safe route by checking for settle tx
+        // in a block and not base assumptions only on bloom
+        // filters as they may give false positives 
+        checkSettlementTx(store, blockNumber);
+      } else {
+        // Else if noun id has increased it means tx
+        // that modified auction state run successefuly
+        // and additional checks can be skipped
+        confirmSettlement(store, blockNumber);
+        console.log("debug - stright confirm")
+      }
     }
 
     latestActiveNounId = nounId
