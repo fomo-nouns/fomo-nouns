@@ -1,22 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import toast, { Toaster } from 'react-hot-toast';
-import { removePendingBidTx, resetPendingSettleTx, SettleTx } from '../../state/slices/mempool';
+import { removePendingBidTx, removePendingSettleTx, resetPendingSettleTx } from '../../state/slices/mempool';
 import { openEthereumMempoolSocket } from '../../middleware/alchemyMempoolWebsocket';
 import dayjs from 'dayjs';
 import MempoolToast from '../MempoolToast';
 
-type ToastData = {
-    id: string
-    tx?: SettleTx
-}
-
 const NotificationToast: React.FC<{}> = props => {
   const dispatch = useAppDispatch();
-
-  // local state variables
-  const [activeToasts, setActiveToasts] = useState<ToastData[]>([]);
 
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const auctionEnd = useAppSelector(state => state.auction.auctionEnd);
@@ -27,34 +19,23 @@ const NotificationToast: React.FC<{}> = props => {
   const blockhash = useAppSelector(state => state.block.blockHash);
 
   useEffect(() => {
-    const showingThisTx = (tx: SettleTx): boolean => {
-        for (const activeToast of activeToasts) {
-            if (activeToast.tx?.hash === tx.hash) {
-                return true;
-            }
-        }
-        return false;
-      }
-
     pendingSettleTxs.forEach(tx => {
-        if (!showingThisTx(tx)) {
-            const id = toast.custom(
-                <MempoolToast tx={tx} />, 
-                {
-                    position: "bottom-center",
-                    duration: 999999999
-                }
-            )
-            setActiveToasts([...activeToasts, { id: id, tx: tx }])
-        }
+        toast.custom(
+          <MempoolToast tx={tx} />, 
+            {
+                position: "bottom-center",
+                duration: 20000
+            }
+        )
+        removePendingSettleTx({ hash: tx.hash });
     })
-  }, [pendingSettleTxs, activeToasts]);
+  }, [pendingSettleTxs]);
 
   useEffect(() => {
     pendingBidTxs.forEach(tx => {
       // TODO: set time to 20 seconds after testing
       const closeToAuctionEnd = dayjs().add(980, "seconds").unix() >= auctionEnd ? true : false
-      if (closeToAuctionEnd) {
+      // if (closeToAuctionEnd) {
         toast.custom(
           <MempoolToast tx={tx} />, 
           {
@@ -62,7 +43,7 @@ const NotificationToast: React.FC<{}> = props => {
               duration: 6000
           }
         )
-      }
+      // }
       removePendingBidTx({ hash: tx.hash })
     })
   }, [pendingBidTxs, auctionEnd]);
@@ -80,7 +61,6 @@ const NotificationToast: React.FC<{}> = props => {
   useEffect(() => {
     if (prevSettledBlockHash) {
       toast.dismiss();
-      setActiveToasts([]);
       dispatch(resetPendingSettleTx());
     }
   }, [prevSettledBlockHash, dispatch]);

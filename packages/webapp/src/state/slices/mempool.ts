@@ -37,6 +37,13 @@ export const mempoolSlice = createSlice({
     addPendingSettleTx: (state, action: PayloadAction<{from: string, hash: string}>) => {
         state.pendingSettleTxs.push({ from: action.payload.from, hash: action.payload.hash })
     },
+    removePendingSettleTx: (state, action: PayloadAction<{hash: string}>) => {
+      const index = state.pendingSettleTxs.findIndex(e => e.hash === action.payload.hash);
+      if (index > -1) {
+        state.pendingSettleTxs.splice(index, 1);
+      }
+      // TODO: test this one out
+  },
     resetPendingSettleTx: (state) => {
         state.pendingSettleTxs = []
     },
@@ -44,11 +51,11 @@ export const mempoolSlice = createSlice({
         state.pendingBidTxs.push({ from: action.payload.from, hash: action.payload.hash, value: action.payload.value })
     },
     removePendingBidTx: (state, action: PayloadAction<{hash: string}>) => {
-        const index = state.pendingBidTxs.findIndex(e => e.hash === action.payload.hash);
-        if (index > -1) {
-          state.pendingBidTxs.splice(index, 1);
-        }
-        // TODO: test this one out
+      const index = state.pendingBidTxs.findIndex(e => e.hash === action.payload.hash);
+      if (index > -1) {
+        state.pendingBidTxs.splice(index, 1);
+      }
+      // TODO: test this one out
     },
     resetPendingBidTx: (state) => {
         state.pendingBidTxs = []
@@ -58,6 +65,6 @@ export const mempoolSlice = createSlice({
 
 export type { SettleTx, BidTx }
 
-export const { setMempoolListening, addPendingSettleTx, resetPendingSettleTx, addPendingBidTx, removePendingBidTx, resetPendingBidTx } = mempoolSlice.actions;
+export const { setMempoolListening, addPendingSettleTx, removePendingSettleTx, resetPendingSettleTx, addPendingBidTx, removePendingBidTx, resetPendingBidTx } = mempoolSlice.actions;
 
 export default mempoolSlice.reducer;
