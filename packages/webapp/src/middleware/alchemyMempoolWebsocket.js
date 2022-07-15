@@ -2,16 +2,16 @@ import { default as globalConfig, PROVIDER_KEY } from '../config';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { default as config } from '../config';
 import { addPendingBidTx, addPendingSettleTx, setMempoolListening } from '../state/slices/mempool';
+import { isBidMethod, isSettleMethod } from '../utils/auctionMethods';
 
 
 // Define the Actions Intercepted by the Middleware
 const openEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/open', payload});
 const closeEthereumMempoolSocket = (payload) => ({type: 'ethereumMempoolSocket/close', payload});
 
-const settleMethodIds = ['0xf25efffc', '0x1b16802c']
-const bidMethodId = '0x659dd2b4'
 const auctionAddress = config.auctionProxyAddress;
-const settlerAddress = config.fomoSettlerAddress;
+// TODO: move executor address to /config.ts
+const fomoExecutorAddress = '0x85906cF629ae1DA297548769ecE3e3E6a4f3288f';
 
 // Define the Middleware
 const alchemyMempoolWebsocketMiddleware = () => {
@@ -61,11 +61,9 @@ const alchemyMempoolWebsocketMiddleware = () => {
 
     console.log(data)
 
-    const methodId = data.input.slice(0, 10);
-
-    const isSettleTx = settleMethodIds.includes(methodId);
-    const fromFomo = data.from === settlerAddress;
-    const isBidTx = methodId === bidMethodId
+    const isSettleTx = isSettleMethod(data.input);
+    const fromFomo = data.from === fomoExecutorAddress;
+    const isBidTx = isBidMethod(data.input);
 
     console.log(`The settle tx: ${isSettleTx}`)
     console.log(`The bid tx: ${isBidTx}`)

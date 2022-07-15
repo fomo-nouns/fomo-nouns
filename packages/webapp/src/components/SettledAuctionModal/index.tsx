@@ -29,7 +29,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
 
   // local state variables
   const [showSettledNounModal, setShowSettledNounModal] = useState(false);
-  const [successfulSettle, setSuccessfulSettle] = useState(false);
+  const [successfulFomoSettle, setSuccessfulFomoSettle] = useState(false);
   const [localNounId, setLocalNounId] = useState(0);
   const [img, setImg] = useState("");
   const [showConfetti, setConfetti] = useState(false);
@@ -51,7 +51,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
 
   // get the image of the most recently minted Noun from Twitter
   useEffect(() => {
-    if (showSettledNounModal && successfulSettle && localNounId > 0) {
+    if (showSettledNounModal && successfulFomoSettle && localNounId > 0) {
       setShareCopy(encodeURI("gm, I just minted this Noun for @nounsdao by playing FOMO Nouns! "));
       // wait for 750ms, then fetch image from twitter
       setTimeout(() => {
@@ -69,7 +69,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
       
       setConfetti(true);
     }
-  }, [showSettledNounModal, successfulSettle, showConfetti, localNounId, mediaURL]);
+  }, [showSettledNounModal, successfulFomoSettle, showConfetti, localNounId, mediaURL]);
 
   useEffect(() => {
     const getNounImg = () => {
@@ -86,7 +86,7 @@ const SettledAuctionModal: React.FC<{}> = props => {
 
     if (prevSettledBlockHash) {
       getNounImg();
-      attemptedSettleBlockHash === prevSettledBlockHash ? setSuccessfulSettle(true) : setSuccessfulSettle(false);
+      attemptedSettleBlockHash === prevSettledBlockHash ? setSuccessfulFomoSettle(true) : setSuccessfulFomoSettle(false);
       showModalHandler();
       dispatch(resetPrevSettledBlockHash());
     }
@@ -94,8 +94,8 @@ const SettledAuctionModal: React.FC<{}> = props => {
   }, [attemptedSettleBlockHash, prevSettledBlockHash, nextNounId, dispatch]);
 
   const isTenthNoun = localNounId % 10 === 0;
-  const copy = successfulSettle ? `Hello, Noun ${isTenthNoun ? `${localNounId} & ${localNounId+1}`: localNounId} 👋` : `Someone else minted Noun ${isTenthNoun ? `${localNounId} & ${localNounId+1}`: localNounId}`;
-  const title = successfulSettle ? `We minted ${isTenthNoun ? 'some Nouns': 'a Noun'}!` : `We missed ${isTenthNoun ? 'them' : 'it'}!`;
+  const copy = successfulFomoSettle ? `Hello, Noun ${isTenthNoun ? `${localNounId} & ${localNounId+1}`: localNounId} 👋` : `Someone else minted Noun ${isTenthNoun ? `${localNounId} & ${localNounId+1}`: localNounId}`;
+  const title = successfulFomoSettle ? `We minted ${isTenthNoun ? 'some Nouns': 'a Noun'}!` : `We missed ${isTenthNoun ? 'them' : 'it'}!`;
   const settledAuctionContent = (
     <>
     <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
