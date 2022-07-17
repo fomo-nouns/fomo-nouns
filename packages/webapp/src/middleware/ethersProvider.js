@@ -73,7 +73,6 @@ const ethersProviderMiddleware = () => {
 
     if (latestActiveNounId !== nounId && settlementInBloom(logsBloom)) {
       console.log("debug - requesting settlement confirmation")
-      checkSettlementTx(store, blockNumber);
       if (latestActiveNounId === undefined) {
         // Go more safe route by checking for settle tx
         // in a block and not base assumptions only on bloom
