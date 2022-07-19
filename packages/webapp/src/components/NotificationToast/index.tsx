@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 
 import toast, { Toaster } from 'react-hot-toast';
 import { removePendingBidTx, removePendingSettleTx, resetPendingSettleTx } from '../../state/slices/mempool';
-import { openEthereumMempoolSocket } from '../../middleware/alchemyMempoolWebsocket';
+import { closeEthereumMempoolSocket, openEthereumMempoolSocket } from '../../middleware/alchemyMempoolWebsocket';
 import dayjs from 'dayjs';
 import MempoolToast from '../MempoolToast';
 
@@ -51,10 +51,20 @@ const NotificationToast: React.FC<{}> = props => {
     const lessThanMinTillAuctionEnd = auctionEnd && dayjs().add(6, 'minutes').unix() >= auctionEnd ? true : false
     if ((activeAuction === false || lessThanMinTillAuctionEnd) && !listeningMempool) {
       dispatch(openEthereumMempoolSocket())
+    } else if (activeAuction === true && !lessThanMinTillAuctionEnd && listeningMempool) {
+      dispatch(closeEthereumMempoolSocket())
     }
     // [..., blockhash] used to always check time till auction end
     // and ensure websocket will open as auction comes to an end
   }, [activeAuction, auctionEnd, listeningMempool, blockhash, dispatch]);
+
+  useEffect(() => {
+
+      dispatch(openEthereumMempoolSocket())
+    
+    // [..., blockhash] used to always check time till auction end
+    // and ensure websocket will open as auction comes to an end
+  }, [dispatch]);
 
   useEffect(() => {
     if (prevSettledBlockHash) {
