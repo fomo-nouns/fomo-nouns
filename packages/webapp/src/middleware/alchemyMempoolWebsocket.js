@@ -53,20 +53,14 @@ const alchemyMempoolWebsocketMiddleware = () => {
     socket.send(newTxSubscriptionRequest);
   }
 
-  // TODO: delete console outputs after testing 
   const handleMessage = store => (msg) => {
     let data = parseMessage(msg);
 
     if (!data) return;
 
-    console.log(data)
-
     const isSettleTx = isSettleMethod(data.input);
     const fromFomo = data.from === fomoExecutorAddress;
     const isBidTx = isBidMethod(data.input);
-
-    console.log(`The settle tx: ${isSettleTx}`)
-    console.log(`The bid tx: ${isBidTx}`)
 
     if (isSettleTx && !fromFomo) {
       store.dispatch(addPendingSettleTx({ from: data.from, hash: data.hash }))

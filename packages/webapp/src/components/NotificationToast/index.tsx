@@ -33,9 +33,8 @@ const NotificationToast: React.FC<{}> = props => {
 
   useEffect(() => {
     pendingBidTxs.forEach(tx => {
-      // TODO: set time to 20 seconds after testing
-      const closeToAuctionEnd = dayjs().add(980, "seconds").unix() >= auctionEnd ? true : false
-      // if (closeToAuctionEnd) {
+      const closeToAuctionEnd = dayjs().add(5, "minutes").unix() >= auctionEnd ? true : false
+      if (closeToAuctionEnd) {
         toast.custom(
           <MempoolToast tx={tx} />, 
           {
@@ -43,14 +42,13 @@ const NotificationToast: React.FC<{}> = props => {
               duration: 6000
           }
         )
-      // }
+      }
       removePendingBidTx({ hash: tx.hash })
     })
   }, [pendingBidTxs, auctionEnd]);
 
   useEffect(() => {
-    // TODO: set time to 1 minute after testing
-    const lessThanMinTillAuctionEnd = auctionEnd && dayjs().add(9, 'minute').unix() >= auctionEnd ? true : false
+    const lessThanMinTillAuctionEnd = auctionEnd && dayjs().add(6, 'minutes').unix() >= auctionEnd ? true : false
     if ((activeAuction === false || lessThanMinTillAuctionEnd) && !listeningMempool) {
       dispatch(openEthereumMempoolSocket())
     }

@@ -42,7 +42,6 @@ export const mempoolSlice = createSlice({
       if (index > -1) {
         state.pendingSettleTxs.splice(index, 1);
       }
-      // TODO: test this one out
   },
     resetPendingSettleTx: (state) => {
         state.pendingSettleTxs = []
@@ -55,7 +54,6 @@ export const mempoolSlice = createSlice({
       if (index > -1) {
         state.pendingBidTxs.splice(index, 1);
       }
-      // TODO: test this one out
     },
     resetPendingBidTx: (state) => {
         state.pendingBidTxs = []
