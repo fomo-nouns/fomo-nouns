@@ -5,16 +5,25 @@ import config from '../../config';
 import { utils } from 'ethers';
 import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils/etherscan';
 
-import WalletConnectModal from "../WalletConnectModal";
 import fomologo from './fomologo.png';
 import PlayersConnected from '../PlayersConnected';
+import { NavBarButtonStyle } from '../NavBarButton';
+import { useAppSelector } from '../../hooks';
+import NavWallet from '../NavWallet';
 
 const NavBar = () => {
+  const activeAccount = useAppSelector(state => state.account.activeAccount);
   const treasuryBalance = useEtherBalance(config.fomoSettlerAddress);
   const settlementHoldingsLink = buildEtherscanHoldingsLink(config.fomoSettlerAddress);
   const settlementWriteLink = buildEtherscanWriteLink(config.fomoSettlerAddress);
+  const useGreyBg = useAppSelector(state => state.noun.isCoolBackground);
 
   const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
+
+  // TODO: check this
+  const nonWalletButtonStyle = useGreyBg
+    ? NavBarButtonStyle.COOL_INFO
+    : NavBarButtonStyle.WARM_INFO;
 
   const scrollTo = (ref: string) => () => {
     const anchor = document.querySelector(ref); console.log(anchor);
@@ -73,9 +82,7 @@ const NavBar = () => {
           >
             NOUNS
           </Nav.Link>
-          <Nav.Item>
-            <WalletConnectModal />
-          </Nav.Item>
+          <NavWallet address={activeAccount || '0'} buttonStyle={nonWalletButtonStyle} />
         </Navbar.Collapse>
       </Navbar>
     </div>
