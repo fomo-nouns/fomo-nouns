@@ -59,14 +59,6 @@ const NotificationToast: React.FC<{}> = props => {
   }, [activeAuction, auctionEnd, listeningMempool, blockhash, dispatch]);
 
   useEffect(() => {
-
-      dispatch(openEthereumMempoolSocket())
-    
-    // [..., blockhash] used to always check time till auction end
-    // and ensure websocket will open as auction comes to an end
-  }, [dispatch]);
-
-  useEffect(() => {
     if (prevSettledBlockHash) {
       toast.dismiss();
       dispatch(resetPendingSettleTx());
