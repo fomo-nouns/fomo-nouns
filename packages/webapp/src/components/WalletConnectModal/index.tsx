@@ -10,11 +10,20 @@ import { TrezorConnector } from '@web3-react/trezor-connector';
 import { FortmaticConnector } from '@web3-react/fortmatic-connector';
 import config, { CHAIN_ID } from '../../config';
 import classes from './WalletConnectModal.module.css';
+import { AbstractConnector } from '@web3-react/abstract-connector';
+import { useAppDispatch } from '../../hooks';
+import { setActiveAccount } from '../../state/slices/account';
 
 const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
   const { onDismiss } = props;
-  const { activate } = useEthers();
+  const { activate, account } = useEthers();
+  const dispatch = useAppDispatch();
   const supportedChainIds = [CHAIN_ID];
+
+  const activateAccount = async (connector: AbstractConnector) => {
+    await activate(connector);
+    dispatch(setActiveAccount(account));
+  }
 
   const wallets = (
     <div className={classes.walletConnectModal}>
@@ -23,7 +32,7 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
           const injected = new InjectedConnector({
             supportedChainIds,
           });
-          activate(injected);
+          activateAccount(injected);
         }}
         walletType={WALLET_TYPE.metamask}
       />
@@ -33,7 +42,7 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
             apiKey: 'pk_live_60FAF077265B4CBA',
             chainId: CHAIN_ID,
           });
-          activate(fortmatic);
+          activateAccount(fortmatic);
         }}
         walletType={WALLET_TYPE.fortmatic}
       />
@@ -46,7 +55,7 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
               [CHAIN_ID]: config.jsonRpcUri,
             },
           });
-          activate(walletlink);
+          activateAccount(walletlink);
         }}
         walletType={WALLET_TYPE.walletconnect}
       />
@@ -58,7 +67,7 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
             url: config.jsonRpcUri,
             supportedChainIds,
           });
-          activate(walletlink);
+          activateAccount(walletlink);
         }}
         walletType={WALLET_TYPE.coinbaseWallet}
       />
@@ -67,7 +76,7 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
           const injected = new InjectedConnector({
             supportedChainIds,
           });
-          activate(injected);
+          activateAccount(injected);
         }}
         walletType={WALLET_TYPE.brave}
       />
@@ -90,7 +99,7 @@ const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
             manifestAppUrl: 'https://nouns.wtf',
             manifestEmail: 'nounops+trezorconnect@protonmail.com',
           });
-          activate(trezor);
+          activateAccount(trezor);
         }}
         walletType={WALLET_TYPE.trezor}
       />
