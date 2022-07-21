@@ -68,31 +68,26 @@ const NavWallet: React.FC<NavWalletProps> = props => {
   };
 
   const statePrimaryButtonClass = usePickByState(
-    navDropdownClasses.whiteInfo,
     navDropdownClasses.coolInfo,
     navDropdownClasses.warmInfo,
   );
 
   const stateSelectedDropdownClass = usePickByState(
-    navDropdownClasses.whiteInfoSelected,
     navDropdownClasses.dropdownActive,
     navDropdownClasses.dropdownActive,
   );
 
   const mobileTextColor = usePickByState(
-    'rgba(140, 141, 146, 1)',
     'rgba(121, 128, 156, 1)',
     'rgba(142, 129, 127, 1)',
   );
 
   const mobileBorderColor = usePickByState(
-    'rgba(140, 141, 146, .5)',
     'rgba(121, 128, 156, .5)',
     'rgba(142, 129, 127, .5)',
   );
 
   const connectWalletButtonStyle = usePickByState(
-    NavBarButtonStyle.WHITE_WALLET,
     NavBarButtonStyle.COOL_WALLET,
     NavBarButtonStyle.WARM_WALLET,
   );
@@ -151,7 +146,6 @@ const NavWallet: React.FC<NavWalletProps> = props => {
               navDropdownClasses.button,
               navDropdownClasses.dropdownPrimaryText,
               usePickByState(
-                navDropdownClasses.whiteInfoSelectedTop,
                 navDropdownClasses.coolInfoSelected,
                 navDropdownClasses.warmInfoSelected,
               ),
@@ -166,7 +160,6 @@ const NavWallet: React.FC<NavWalletProps> = props => {
               classes.dropDownBottom,
               navDropdownClasses.button,
               usePickByState(
-                navDropdownClasses.whiteInfoSelectedBottom,
                 navDropdownClasses.coolInfoSelected,
                 navDropdownClasses.warmInfoSelected,
               ),

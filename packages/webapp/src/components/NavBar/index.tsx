@@ -7,7 +7,7 @@ import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils
 
 import fomologo from './fomologo.png';
 import PlayersConnected from '../PlayersConnected';
-import { NavBarButtonStyle } from '../NavBarButton';
+import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
 import { useAppSelector } from '../../hooks';
 import NavWallet from '../NavWallet';
 
@@ -20,27 +20,20 @@ const NavBar = () => {
 
   const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
 
-  // TODO: check this
   const nonWalletButtonStyle = useGreyBg
     ? NavBarButtonStyle.COOL_INFO
     : NavBarButtonStyle.WARM_INFO;
 
-  const scrollTo = (ref: string) => () => {
-    const anchor = document.querySelector(ref); console.log(anchor);
-    if (!anchor) return;
-    anchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
   return (
     <div className={classes.HeaderBar}>
-      <Navbar collapseOnSelect expand="lg">
+      <Navbar collapseOnSelect expand="md">
         <Navbar.Brand href="/" className={classes.navBarBrand}>
           <img src={fomologo} alt='FOMO Nouns'
             width="115"
             className={classes.LogoImage}
           />
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="nav-items" />
+        <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
         <Navbar.Collapse id="nav-items" className="justify-content-end">
           <Nav.Item className={classes.nounsNavLink}>
             <PlayersConnected />
@@ -53,7 +46,10 @@ const NavBar = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                CONTRACT Ξ {Number(utils.formatEther(treasuryBalance)).toFixed(2)}
+                <NavBarButton
+                  buttonText={<>Contract Ξ {Number(utils.formatEther(treasuryBalance)).toFixed(2)}</>}
+                  buttonStyle={nonWalletButtonStyle}
+                />
               </Nav.Link>
             )}
           </Nav.Item>
@@ -65,22 +61,22 @@ const NavBar = () => {
               target="_blank"
               rel="noreferrer"
             >
-              DONATE
+              <NavBarButton
+                buttonText={<>Donate</>}
+                buttonStyle={nonWalletButtonStyle}
+              />
             </Nav.Link>
           </Nav.Item>
-          <Nav.Link onClick={scrollTo('#wtf')} className={classes.nounsNavLink}>
-            WTF
-          </Nav.Link>
-          <Nav.Link onClick={scrollTo('#faq')} className={classes.nounsNavLink}>
-            FAQ
-          </Nav.Link>
           <Nav.Link
             href="https://nouns.wtf/"
             className={classes.nounsNavLink}
             target="_blank"
             rel="noreferrer"
           >
-            NOUNS
+            <NavBarButton
+              buttonText={<>Nouns</>}
+              buttonStyle={nonWalletButtonStyle}
+            />
           </Nav.Link>
           <NavWallet address={activeAccount || '0'} buttonStyle={nonWalletButtonStyle} />
         </Navbar.Collapse>

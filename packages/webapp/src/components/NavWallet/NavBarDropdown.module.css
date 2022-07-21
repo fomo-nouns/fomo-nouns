@@ -22,8 +22,9 @@
 }
 
 .coolInfo {
-  color: #79809c;
-  background-color: #e9ebf3;
+  color: var(--brand-cool-dark-text);
+  border: 1px solid var(--brand-cool-border);
+  border-radius: 10px;
 }
 
 .coolInfo:hover {
@@ -32,8 +33,9 @@
 }
 
 .warmInfo {
-  color: #b6a9a7;
-  background-color: #fdf9f9;
+  color: var(--brand-warm-dark-text);
+  border: 1px solid var(--brand-warm-border);
+  border-radius: 10px;
 }
 
 .warmInfo:hover {
@@ -67,6 +69,7 @@
   background-color: white;
   color: black;
 }
+
 .coolInfoSelected {
   color: #79809c;
   background-color: #e9ebf3;
@@ -133,6 +136,7 @@
 }
 
 @media (max-width: 992px) {
+
   .wrapper,
   .button {
     height: 48px;
