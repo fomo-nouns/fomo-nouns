@@ -12,8 +12,8 @@ import clsx from 'clsx';
 import { usePickByState } from '../../utils/colorResponsiveUIUtils';
 import WalletConnectButton from './WalletConnectButton';
 import {
-  veryShortAddress,
-  veryShortENS,
+  shortAddress,
+  shortENS,
 } from '../../utils/addressAndENSDisplayUtils';
 // TODO: check this
 import responsiveUiUtilsClasses from '../../utils/ResponsiveUIUtils.module.css';
@@ -47,7 +47,7 @@ const NavWallet: React.FC<NavWalletProps> = props => {
   const { deactivate } = useEthers();
   const ens = useReverseENSLookUp(address);
   
-  const shortAddress = veryShortAddress(address);
+  const shortUserAddress = shortAddress(address);
 
   const setModalStateHandler = (state: boolean) => {
     setShowConnectModal(state);
@@ -121,7 +121,7 @@ const NavWallet: React.FC<NavWalletProps> = props => {
             {' '}
             <Davatar size={21} address={address} provider={provider} />
           </div>
-          <div className={navDropdownClasses.dropdownBtnContent}>{ens ? ens : shortAddress}</div>
+          <div className={navDropdownClasses.dropdownBtnContent}>{ens ? ens : shortUserAddress}</div>
           <div className={buttonUp ? navDropdownClasses.arrowUp : navDropdownClasses.arrowDown}>
             {buttonUp ? faSortUp : faSortDown}
           </div>
@@ -175,12 +175,12 @@ const NavWallet: React.FC<NavWalletProps> = props => {
 
   const renderENS = (ens: string) => {
     // Return different length based on locale?
-    return veryShortENS(ens);
+    return shortENS(ens);
   };
 
   const renderAddress = (address: string) => {
     // Return different length based on locale?
-    return veryShortAddress(address);
+    return shortAddress(address);
   };
 
   const walletConnectedContentMobile = (
