@@ -1,7 +1,8 @@
 .HeaderBar {
   width: 100%;
   box-sizing: border-box;
-  padding: 0 5px;
+  padding: 10px 5px;
+  max-width: 1140px;
 }
 
 .fundsLow {
