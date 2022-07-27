@@ -10,10 +10,7 @@ export enum NavBarButtonStyle {
   WHITE_ACTIVE,
   WHITE_ACTIVE_VOTE_SUBMIT,
   WHITE_WALLET,
-  DELEGATE_BACK,
-  DELEGATE_PRIMARY,
-  DELEGATE_SECONDARY,
-  DELEGATE_DISABLED,
+  RED_INFO
 }
 
 interface NavBarButtonProps {
@@ -50,17 +47,8 @@ export const getNavBarButtonVariant = (buttonStyle?: NavBarButtonStyle) => {
     case NavBarButtonStyle.WHITE_WALLET: {
       return classes.whiteWallet;
     }
-    case NavBarButtonStyle.DELEGATE_BACK: {
-      return classes.delegateBack;
-    }
-    case NavBarButtonStyle.DELEGATE_PRIMARY: {
-      return classes.delegatePrimary;
-    }
-    case NavBarButtonStyle.DELEGATE_SECONDARY: {
-      return classes.delegateSecondary;
-    }
-    case NavBarButtonStyle.DELEGATE_DISABLED: {
-      return classes.delegateDisabled;
+    case NavBarButtonStyle.RED_INFO: {
+      return classes.redInfo;
     }
     default: {
       return classes.info;

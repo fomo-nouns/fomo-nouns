@@ -21,7 +21,7 @@ const NavFunds: React.FC<{}> = props => {
 
     return (
       <>
-        <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
+        <Nav.Item className={classes.fundsLow}>
             {treasuryBalance && (
               <Nav.Link
                 href={settlementHoldingsLink}
@@ -31,7 +31,7 @@ const NavFunds: React.FC<{}> = props => {
               >
                 <NavBarButton
                   buttonText={<>Low Funds Ξ {Number(utils.formatEther(treasuryBalance)).toFixed(2)}</>}
-                  buttonStyle={nonWalletButtonStyle}
+                  buttonStyle={NavBarButtonStyle.RED_INFO}
                 />
               </Nav.Link>
             )}
