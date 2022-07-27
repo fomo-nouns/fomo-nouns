@@ -1,24 +1,16 @@
 import classes from './NavBar.module.css';
-import { useEtherBalance } from '@usedapp/core';
 import { Nav, Navbar } from 'react-bootstrap';
-import config from '../../config';
-import { utils } from 'ethers';
-import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils/etherscan';
 
 import fomologo from './fomologo.png';
 import PlayersConnected from '../PlayersConnected';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
 import { useAppSelector } from '../../hooks';
 import NavWallet from '../NavWallet';
+import NavFunds from '../NavFunds';
 
 const NavBar = () => {
   const activeAccount = useAppSelector(state => state.account.activeAccount);
-  const treasuryBalance = useEtherBalance(config.fomoSettlerAddress);
-  const settlementHoldingsLink = buildEtherscanHoldingsLink(config.fomoSettlerAddress);
-  const settlementWriteLink = buildEtherscanWriteLink(config.fomoSettlerAddress);
   const useGreyBg = useAppSelector(state => state.noun.isCoolBackground);
-
-  const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
 
   const nonWalletButtonStyle = useGreyBg
     ? NavBarButtonStyle.COOL_INFO
@@ -38,35 +30,7 @@ const NavBar = () => {
           <Nav.Item className={classes.nounsNavLink}>
             <PlayersConnected />
           </Nav.Item>
-          <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
-            {treasuryBalance && (
-              <Nav.Link
-                href={settlementHoldingsLink}
-                className={classes.nounsNavLink}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <NavBarButton
-                  buttonText={<>Contract Ξ {Number(utils.formatEther(treasuryBalance)).toFixed(2)}</>}
-                  buttonStyle={nonWalletButtonStyle}
-                />
-              </Nav.Link>
-            )}
-          </Nav.Item>
-          
-          <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
-            <Nav.Link
-              href={settlementWriteLink}
-              className={classes.nounsNavLink}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <NavBarButton
-                buttonText={<>Donate</>}
-                buttonStyle={nonWalletButtonStyle}
-              />
-            </Nav.Link>
-          </Nav.Item>
+          <NavFunds />
           <Nav.Link
             href="https://nouns.wtf/"
             className={classes.nounsNavLink}
