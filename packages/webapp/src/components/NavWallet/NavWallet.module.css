@@ -1,6 +1,16 @@
-.icon {
-  min-width: 24px;
+.iconConnected {
+  min-width: 14px;
+  min-height: 14px;
   margin-right: 0.5rem;
+  background-color: var(--brand-color-green);
+  border-radius: 4px;
+}
+
+.connectButtonIcon {
+  min-width: 14px;
+  min-height: 14px;
+  background-color: var(--brand-color-red);
+  border-radius: 4px;
 }
 
 /* connect button displays differently to default NavBarItems, thus the !importants */

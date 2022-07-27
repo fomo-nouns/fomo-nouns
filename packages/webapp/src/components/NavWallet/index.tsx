@@ -1,4 +1,3 @@
-import Davatar from '@davatar/react';
 import { useEthers } from '@usedapp/core';
 import React, { useState } from 'react';
 import { useReverseENSLookUp } from '../../utils/ensLookup';
@@ -42,7 +41,6 @@ const NavWallet: React.FC<NavWalletProps> = props => {
 
   const [buttonUp, setButtonUp] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
-  const { library: provider } = useEthers();
   const activeAccount = useAppSelector(state => state.account.activeAccount);
   const { deactivate } = useEthers();
   const ens = useReverseENSLookUp(address);
@@ -104,6 +102,10 @@ const NavWallet: React.FC<NavWalletProps> = props => {
    </svg>
   </>
 
+  const icon = (
+    activeAccount ? <div className={classes.iconConnected} /> : <div className={classes.iconDisconnected} />
+  )
+
   const customDropdownToggle = React.forwardRef<RefType, Props>(({ onClick, value }, ref) => (
     <>
       <div
@@ -117,10 +119,7 @@ const NavWallet: React.FC<NavWalletProps> = props => {
         }}
       >
         <div className={navDropdownClasses.button}>
-          <div className={classes.icon}>
-            {' '}
-            <Davatar size={21} address={address} provider={provider} />
-          </div>
+          {icon}
           <div className={navDropdownClasses.dropdownBtnContent}>{ens ? ens : shortUserAddress}</div>
           <div className={buttonUp ? navDropdownClasses.arrowUp : navDropdownClasses.arrowDown}>
             {buttonUp ? faSortUp : faSortDown}
@@ -194,10 +193,7 @@ const NavWallet: React.FC<NavWalletProps> = props => {
         <div className={navDropdownClasses.connectContentMobileWrapper}>
           <div className={clsx(navDropdownClasses.wrapper, getNavBarButtonVariant(buttonStyle))}>
             <div className={navDropdownClasses.button}>
-              <div className={classes.icon}>
-                {' '}
-                <Davatar size={21} address={address} provider={provider} />
-              </div>
+              {icon}
               <div className={navDropdownClasses.dropdownBtnContent}>
                 {ens ? renderENS(ens) : renderAddress(address)}
               </div>
@@ -234,6 +230,8 @@ const NavWallet: React.FC<NavWalletProps> = props => {
     </Dropdown>
   );
 
+  const connectButtonIcon = (<div className={classes.connectButtonIcon} />)
+
   return (
     <>
       {showConnectModal && activeAccount === undefined && (
@@ -249,6 +247,7 @@ const NavWallet: React.FC<NavWalletProps> = props => {
           className={clsx(navDropdownClasses.nounsNavLink, navDropdownClasses.connectBtn)}
           onClickHandler={() => setModalStateHandler(true)}
           buttonStyle={connectWalletButtonStyle}
+          buttonIcon={connectButtonIcon}
         />
       )}
     </>
