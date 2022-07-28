@@ -5,21 +5,26 @@ import { utils } from 'ethers';
 import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils/etherscan';
 import classes from './NavFunds.module.css';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
-import { useAppSelector } from '../../hooks';
 
 const NavFunds: React.FC<{}> = props => {
     const treasuryBalance = useEtherBalance(config.fomoSettlerAddress);
     const settlementHoldingsLink = buildEtherscanHoldingsLink(config.fomoSettlerAddress);
     const settlementWriteLink = buildEtherscanWriteLink(config.fomoSettlerAddress);
-    const useGreyBg = useAppSelector(state => state.noun.isCoolBackground);
-
-    const nonWalletButtonStyle = useGreyBg
-        ? NavBarButtonStyle.COOL_INFO
-        : NavBarButtonStyle.WARM_INFO;
 
     const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
+    const treasuryBalanceFormatted = treasuryBalance && Number(utils.formatEther(treasuryBalance)).toFixed(2);
 
-    return (
+    const buttonText = (
+        <>
+            <div className={classes.wrapper}>
+                <span className={classes.lowFundsText}>Low Funds</span>
+                <div className={classes.divider} />
+                Ξ {treasuryBalanceFormatted}
+            </div>
+        </>
+    )
+
+    return contractFundsLow ? (
       <>
         <Nav.Item className={classes.fundsLow}>
             {treasuryBalance && (
@@ -30,7 +35,7 @@ const NavFunds: React.FC<{}> = props => {
                 rel="noreferrer"
               >
                 <NavBarButton
-                  buttonText={<>Low Funds Ξ {Number(utils.formatEther(treasuryBalance)).toFixed(2)}</>}
+                  buttonText={buttonText}
                   buttonStyle={NavBarButtonStyle.RED_INFO}
                 />
               </Nav.Link>
@@ -46,12 +51,12 @@ const NavFunds: React.FC<{}> = props => {
             >
               <NavBarButton
                 buttonText={<>Donate</>}
-                buttonStyle={nonWalletButtonStyle}
+                buttonStyle={NavBarButtonStyle.RED_INFO}
               />
             </Nav.Link>
           </Nav.Item>
        </>
-    )
+    ) : <></>
 };
 
 export default NavFunds;
