@@ -99,14 +99,10 @@
   color: black !important;
 }
 
-.arrowDown {
-  margin-bottom: 0.25rem;
-  margin-left: 0.5rem;
-}
-
-.arrowUp {
-  margin-left: 0.5rem;
-  margin-top: 0.5rem;
+.arrow {
+  height: 20px;
+  width: 20px;
+  margin-left: 0.25rem;
 }
 
 .button:hover {

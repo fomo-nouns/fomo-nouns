@@ -121,7 +121,7 @@ const NavWallet: React.FC<NavWalletProps> = props => {
         <div className={navDropdownClasses.button}>
           {icon}
           <div className={navDropdownClasses.dropdownBtnContent}>{ens ? ens : shortUserAddress}</div>
-          <div className={buttonUp ? navDropdownClasses.arrowUp : navDropdownClasses.arrowDown}>
+          <div className={navDropdownClasses.arrow}>
             {buttonUp ? faSortUp : faSortDown}
           </div>
         </div>
