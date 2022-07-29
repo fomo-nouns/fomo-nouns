@@ -5,7 +5,7 @@ import { usePickByState } from "../../utils/colorResponsiveUIUtils";
 import NavBarButton, { NavBarButtonStyle } from "../NavBarButton";
 import classes from './PlayersConnected.module.css';
 
-const PlayersConnected: React.FC<{}> = props => {
+const NavPlayers: React.FC<{}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const numConnections = useAppSelector(state => state.vote.numConnections);
   const activeVoters = useAppSelector(state => state.vote.activeVoters);
@@ -59,4 +59,5 @@ const PlayersConnected: React.FC<{}> = props => {
   //   return <></>
   // }
 };
-export default PlayersConnected;
+
+export default NavPlayers;

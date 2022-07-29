@@ -2,7 +2,7 @@ import classes from './NavBar.module.css';
 import { Nav, Navbar } from 'react-bootstrap';
 
 import fomologo from './fomologo.png';
-import PlayersConnected from '../PlayersConnected';
+import NavPlayers from '../NavPlayers';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
 import { useAppSelector } from '../../hooks';
 import NavWallet from '../NavWallet';
@@ -28,7 +28,7 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
         <Navbar.Collapse id="nav-items" className="justify-content-end">
           <Nav.Item className={classes.nounsNavLink}>
-            <PlayersConnected />
+            <NavPlayers />
           </Nav.Item>
           <NavFunds />
           <Nav.Link
