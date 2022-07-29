@@ -25,11 +25,11 @@ const NavBar = () => {
             className={classes.LogoImage}
           />
         </Navbar.Brand>
+        <Nav.Item className={classes.nounsNavLink}>
+          <NavPlayers />
+        </Nav.Item>
         <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
         <Navbar.Collapse id="nav-items" className="justify-content-end">
-          <Nav.Item className={classes.nounsNavLink}>
-            <NavPlayers />
-          </Nav.Item>
           <NavFunds />
           <Nav.Link
             href="https://nouns.wtf/"
