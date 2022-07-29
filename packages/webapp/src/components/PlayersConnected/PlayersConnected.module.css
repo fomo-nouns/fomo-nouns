@@ -1,16 +1,48 @@
-.Connected {
+.stale {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    margin-left: 0.75rem;
 }
 
-.Connected:hover {
-    cursor: pointer;
-}
-
-.Stale {
-    margin-left: 0.25rem;
-}
-
-.StaleHidden {
+.staleHidden {
     display: none;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nounsNavLink,
+.nounsNavLink:active,
+.nounsNavLink:visited {
+    font-family: 'PT Root UI';
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.3rem !important;
+    color: black !important;
+}
+
+.playersTextCool {
+    color: var(--brand-cool-light-text);
+}
+
+.dividerCool {
+    height: 14px;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    border-left: 1px solid var(--brand-cool-border);
+}
+
+.playersTextWarm {
+    color: var(--brand-warm-light-text);
+}
+
+.dividerWarm {
+    height: 14px;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    border-left: 1px solid var(--brand-warm-border);
 }

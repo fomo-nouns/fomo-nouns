@@ -1,5 +1,8 @@
+import clsx from "clsx";
 import { useState } from "react";
 import { useAppSelector } from "../../hooks";
+import { usePickByState } from "../../utils/colorResponsiveUIUtils";
+import NavBarButton, { NavBarButtonStyle } from "../NavBarButton";
 import classes from './PlayersConnected.module.css';
 
 const PlayersConnected: React.FC<{}> = props => {
@@ -10,21 +13,50 @@ const PlayersConnected: React.FC<{}> = props => {
 
   const [showStalePlayers, setShowStalePlayers] = useState(false);
 
-  if (!activeAuction && voteConnected) {
+  const playersTextStyle = usePickByState(
+    classes.playersTextCool,
+    classes.playersTextWarm,
+  );
+
+  const dividerStyle = usePickByState(
+    classes.dividerCool,
+    classes.dividerWarm,
+  );
+
+  const buttonText = (
+    <>
+        <div className={classes.wrapper}>
+            <div className={classes.wrapper}>
+              <span className={playersTextStyle}>Active Players</span>
+              <div className={dividerStyle} />
+              {activeVoters}
+            </div>
+            <div className={clsx(showStalePlayers ? classes.stale : classes.staleHidden)}>
+              <span className={playersTextStyle}>Stale</span>
+              <div className={dividerStyle} />
+              {numConnections - activeVoters}
+            </div>
+        </div>
+    </>
+  )
+
+  const buttonStyle = usePickByState(
+    NavBarButtonStyle.COOL_INFO,
+    NavBarButtonStyle.WARM_INFO,
+  );
+
+  // if (!activeAuction && voteConnected) {
     return (
-      <div 
-        onClick={() => setShowStalePlayers(!showStalePlayers)}
-        className={classes.Connected}>
-        <span>
-          Active Players: {activeVoters}
-        </span>
-        <span className={showStalePlayers ? classes.Stale : classes.StaleHidden}>
-          · Stale: {numConnections - activeVoters}
-        </span>
+      <div onClick={() => setShowStalePlayers(!showStalePlayers)}>
+        <NavBarButton
+          buttonText={buttonText}
+          buttonStyle={buttonStyle}
+          disabled={false}
+        />
       </div>
     );
-  } else {
-    return <></>
-  }
+  // } else {
+  //   return <></>
+  // }
 };
 export default PlayersConnected;
