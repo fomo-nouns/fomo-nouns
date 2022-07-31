@@ -43,6 +43,8 @@ const NotificationToast: React.FC<{}> = props => {
           }
         )
       }
+      //TODO: remove debug console outputs after testing
+      console.log('call removePendingBidTx()')
       removePendingBidTx({ hash: tx.hash })
     })
   }, [pendingBidTxs, auctionEnd]);
@@ -57,14 +59,6 @@ const NotificationToast: React.FC<{}> = props => {
     // [..., blockhash] used to always check time till auction end
     // and ensure websocket will open as auction comes to an end
   }, [activeAuction, auctionEnd, listeningMempool, blockhash, dispatch]);
-
-  useEffect(() => {
-
-      dispatch(openEthereumMempoolSocket())
-    
-    // [..., blockhash] used to always check time till auction end
-    // and ensure websocket will open as auction comes to an end
-  }, [dispatch]);
 
   useEffect(() => {
     if (prevSettledBlockHash) {

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 
 const CornerHelpText: React.FC<{}> = (props) => {
-  const useGreyBg = useAppSelector(state => state.noun.useGreyBg);
+  const useGreyBg = useAppSelector(state => state.noun.isCoolBackground);
 
   const display = isMobileScreen() ? 'none' : 'flex';
   const wrapperStyle = {

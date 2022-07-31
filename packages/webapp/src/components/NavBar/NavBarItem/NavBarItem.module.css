@@ -8,6 +8,7 @@
 .navBarItem a {
   color: var(--brand-black);
 }
+
 .navBarItem a:hover {
   color: var(--brand-dark-red);
 }
@@ -17,6 +18,7 @@
     background-color: transparent !important;
     color: var(--brand-black) !important;
   }
+
   .navBarItem:hover {
     background-color: transparent !important;
   }

@@ -50,12 +50,18 @@ export const mempoolSlice = createSlice({
         state.pendingBidTxs.push({ from: action.payload.from, hash: action.payload.hash, value: action.payload.value })
     },
     removePendingBidTx: (state, action: PayloadAction<{hash: string}>) => {
+      //TODO: remove debug console outputs after testing
+      console.log(`hash to remove: ${action.payload.hash}`)
       const index = state.pendingBidTxs.findIndex(e => e.hash === action.payload.hash);
+      console.log(`index to remove: ${index}`)
       if (index > -1) {
         state.pendingBidTxs.splice(index, 1);
       }
+      console.log("bending bids in state:")
+      console.log(state.pendingBidTxs)
     },
     resetPendingBidTx: (state) => {
+        console.log("reset pending bids")
         state.pendingBidTxs = []
     }
   },
