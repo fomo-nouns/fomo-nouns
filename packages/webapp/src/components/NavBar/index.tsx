@@ -18,7 +18,7 @@ const NavBar = () => {
 
   return (
     <div className={classes.HeaderBar}>
-      <Navbar collapseOnSelect expand="xl">
+      <Navbar collapseOnSelect expand="lg">
         <div className={classes.brandAndPlayersWrapper}>
           <Navbar.Brand href="/" className={classes.navBarBrand}>
             <img src={fomologo} alt='FOMO Nouns'

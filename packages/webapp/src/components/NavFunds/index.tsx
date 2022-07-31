@@ -2,13 +2,12 @@ import { Nav } from 'react-bootstrap';
 import { useEtherBalance } from '@usedapp/core';
 import config from '../../config';
 import { utils } from 'ethers';
-import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils/etherscan';
+import { buildEtherscanWriteLink } from '../../utils/etherscan';
 import classes from './NavFunds.module.css';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
 
 const NavFunds: React.FC<{}> = props => {
     const treasuryBalance = useEtherBalance(config.fomoSettlerAddress);
-    const settlementHoldingsLink = buildEtherscanHoldingsLink(config.fomoSettlerAddress);
     const settlementWriteLink = buildEtherscanWriteLink(config.fomoSettlerAddress);
 
     const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
@@ -29,7 +28,7 @@ const NavFunds: React.FC<{}> = props => {
         <Nav.Item className={classes.fundsLow}>
             {treasuryBalance && (
               <Nav.Link
-                href={settlementHoldingsLink}
+                href={settlementWriteLink}
                 className={classes.nounsNavLink}
                 target="_blank"
                 rel="noreferrer"
@@ -40,20 +39,6 @@ const NavFunds: React.FC<{}> = props => {
                 />
               </Nav.Link>
             )}
-          </Nav.Item>
-          
-          <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
-            <Nav.Link
-              href={settlementWriteLink}
-              className={classes.nounsNavLink}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <NavBarButton
-                buttonText={<>Donate</>}
-                buttonStyle={NavBarButtonStyle.RED_INFO}
-              />
-            </Nav.Link>
           </Nav.Item>
        </>
     ) : <></>
