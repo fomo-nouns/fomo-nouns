@@ -43,6 +43,8 @@ const NotificationToast: React.FC<{}> = props => {
           }
         )
       }
+      //TODO: remove debug console outputs after testing
+      console.log('call removePendingBidTx()')
       removePendingBidTx({ hash: tx.hash })
     })
   }, [pendingBidTxs, auctionEnd]);
