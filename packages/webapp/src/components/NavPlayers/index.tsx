@@ -1,8 +1,6 @@
-import clsx from "clsx";
 import { useState } from "react";
 import { useAppSelector } from "../../hooks";
 import { usePickByState } from "../../utils/colorResponsiveUIUtils";
-import NavBarButton, { NavBarButtonStyle } from "../NavBarButton";
 import classes from './PlayersConnected.module.css';
 
 const NavPlayers: React.FC<{}> = props => {
@@ -13,46 +11,35 @@ const NavPlayers: React.FC<{}> = props => {
 
   const [showStalePlayers, setShowStalePlayers] = useState(false);
 
-  const playersTextStyle = usePickByState(
-    classes.playersTextCool,
-    classes.playersTextWarm,
-  );
-
-  const dividerStyle = usePickByState(
-    classes.dividerCool,
-    classes.dividerWarm,
-  );
-
-  const buttonText = (
-    <>
-        <div className={classes.wrapper}>
-            <div className={classes.wrapper}>
-              <span className={playersTextStyle}>Active Players</span>
-              <div className={dividerStyle} />
-              {activeVoters}
-            </div>
-            <div className={clsx(showStalePlayers ? classes.stale : classes.staleHidden)}>
-              <span className={playersTextStyle}>Stale</span>
-              <div className={dividerStyle} />
-              {numConnections - activeVoters}
-            </div>
-        </div>
-    </>
-  )
-
   const buttonStyle = usePickByState(
-    NavBarButtonStyle.COOL_INFO,
-    NavBarButtonStyle.WARM_INFO,
+    classes.coolInfo,
+    classes.warmInfo,
   );
 
   // if (!activeAuction && voteConnected) {
     return (
-      <div onClick={() => setShowStalePlayers(!showStalePlayers)}>
-        <NavBarButton
-          buttonText={buttonText}
-          buttonStyle={buttonStyle}
-          disabled={false}
-        />
+      <div
+        className={`${classes.wrapper} ${buttonStyle}`}
+        onClick={() => setShowStalePlayers(!showStalePlayers)}>
+        <div className={classes.button}>
+          <div
+            className="d-flex flex-row justify-content-around"
+            style={{
+              paddingTop: '1px',
+            }}
+          >
+            <div className={classes.button}>
+              <span className={classes.players}>Active Players</span>
+              <div className={classes.divider} />
+              {activeVoters}
+            </div>
+            <div className={showStalePlayers ? classes.stale : classes.staleHidden}>
+              <span className={classes.players}>Stale</span>
+              <div className={classes.divider} />
+              {numConnections - activeVoters}
+            </div>
+          </div>
+        </div>
       </div>
     );
   // } else {

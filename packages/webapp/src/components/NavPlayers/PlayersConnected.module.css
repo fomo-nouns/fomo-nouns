@@ -10,39 +10,83 @@
 }
 
 .wrapper {
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'PT Root UI';
+    font-weight: bold;
+    padding: 0px 10px 0px 10px;
+    transition: all 0.125s ease-in-out;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.button {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
 }
 
-.nounsNavLink,
-.nounsNavLink:active,
-.nounsNavLink:visited {
-    font-family: 'PT Root UI';
-    font-weight: bold;
-    font-size: 0.9rem;
-    padding: 0.3rem 0.3rem !important;
-    color: black !important;
+@media (max-width: 400px) {
+    .wrapper {
+        margin-left: -0.5rem;
+        padding: 0px 7px 0px 6px;
+    }
 }
 
-.playersTextCool {
-    color: var(--brand-cool-light-text);
+.button:hover {
+    cursor: pointer;
 }
 
-.dividerCool {
-    height: 14px;
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
-    border-left: 1px solid var(--brand-cool-border);
+.coolInfo {
+    border: 1px solid var(--brand-cool-border);
+    border-radius: 10px;
+    color: var(--brand-cool-dark-text);
 }
 
-.playersTextWarm {
+.coolInfo:hover {
+    background-color: var(--brand-cool-accent);
+    color: black;
+}
+
+.warmInfo {
+    border: 1px solid var(--brand-warm-border);
+    border-radius: 10px;
+    color: var(--brand-warm-dark-text);
+}
+
+.warmInfo:hover {
+    background-color: var(--brand-warm-accent);
+    color: black;
+}
+
+.players {
+    color: black;
+    opacity: 0.5;
+}
+
+.warmInfo .players {
     color: var(--brand-warm-light-text);
 }
 
-.dividerWarm {
+.coolInfo .players {
+    color: var(--brand-cool-light-text);
+}
+
+.divider {
     height: 14px;
     margin-right: 0.5rem;
     margin-left: 0.5rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.coolInfo .divider {
+    border-left: 1px solid var(--brand-cool-border);
+}
+
+.coolInfo .divider {
     border-left: 1px solid var(--brand-warm-border);
 }
