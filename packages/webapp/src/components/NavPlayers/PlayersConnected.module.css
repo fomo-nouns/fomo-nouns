@@ -30,13 +30,6 @@
     width: 100%;
 }
 
-@media (max-width: 400px) {
-    .wrapper {
-        margin-left: -0.5rem;
-        padding: 0px 7px 0px 6px;
-    }
-}
-
 .button:hover {
     cursor: pointer;
 }
@@ -89,4 +82,28 @@
 
 .coolInfo .divider {
     border-left: 1px solid var(--brand-warm-border);
+}
+
+@media (max-width: 400px) {
+    .wrapper {
+        margin-left: -0.5rem;
+        padding: 0px 12px 0px 12px;
+    }
+
+    .players {
+        display: none;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .stale .divider {
+        display: flex;
+        margin-left: 0rem;
+    }
+
+    .stale {
+        margin-left: 0.5rem;
+    }
 }
