@@ -19,15 +19,17 @@ const NavBar = () => {
   return (
     <div className={classes.HeaderBar}>
       <Navbar collapseOnSelect expand="xl">
-        <Navbar.Brand href="/" className={classes.navBarBrand}>
-          <img src={fomologo} alt='FOMO Nouns'
-            width="115"
-            className={classes.LogoImage}
-          />
-        </Navbar.Brand>
-        <Nav.Item className={classes.nounsNavLink}>
-          <NavPlayers />
-        </Nav.Item>
+        <div className={classes.brandAndPlayersWrapper}>
+          <Navbar.Brand href="/" className={classes.navBarBrand}>
+            <img src={fomologo} alt='FOMO Nouns'
+              width="115"
+              className={classes.LogoImage}
+            />
+          </Navbar.Brand>
+          <Nav.Item className={classes.nounsNavLink}>
+            <NavPlayers />
+          </Nav.Item>
+        </div>
         <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
         <Navbar.Collapse id="nav-items" className="justify-content-end">
           <NavFunds />

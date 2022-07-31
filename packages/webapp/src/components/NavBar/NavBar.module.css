@@ -79,6 +79,13 @@
   align-items: center;
 }
 
+.brandAndPlayersWrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
 .navBarToggle {
   border-radius: 10px;
   height: 44px;
