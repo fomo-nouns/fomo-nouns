@@ -84,7 +84,7 @@
     border-left: 1px solid var(--brand-warm-border);
 }
 
-@media (max-width: 400px) {
+@media (max-width: 450px) {
     .wrapper {
         margin-left: -0.5rem;
         padding: 0px 12px 0px 12px;
