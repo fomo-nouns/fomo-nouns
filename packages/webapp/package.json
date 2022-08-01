@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@davatar/react": "^1.8.1",
-    "@nouns/assets": "0.3.0",
+    "@nouns/assets": "0.4.0",
     "@nouns/sdk": "0.2.0",
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.11.4",
