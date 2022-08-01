@@ -57,6 +57,14 @@ export const mempoolSlice = createSlice({
 
 export type { SettleTx, BidTx }
 
-export const { setMempoolListening, addPendingSettleTx, removePendingSettleTx, resetPendingSettleTx, addPendingBidTx, removePendingBidTx, resetPendingBidTx } = mempoolSlice.actions;
+export const { 
+  setMempoolListening, 
+  addPendingSettleTx, 
+  removePendingSettleTx, 
+  resetPendingSettleTx, 
+  addPendingBidTx, 
+  removePendingBidTx, 
+  resetPendingBidTx 
+} = mempoolSlice.actions;
 
 export default mempoolSlice.reducer;
