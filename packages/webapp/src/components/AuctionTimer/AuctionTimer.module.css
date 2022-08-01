@@ -1,5 +1,7 @@
-.Wrapper{
+.Wrapper {
     font-size: 1em;
-    justify-self: center;
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
     font-family: 'Londrina Solid';
 }

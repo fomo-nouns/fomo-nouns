@@ -3,6 +3,7 @@ import { useAppSelector } from "../../hooks";
 import classes from "./Title.module.css";
 import AuctionTimer from '../AuctionTimer';
 import BlockCountdownTimer from '../BlockCountdownTimer';
+import Gradient, { GradientStyle } from "../Gradient";
 
 const Title: React.FC<{}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
@@ -22,7 +23,7 @@ const Title: React.FC<{}> = props => {
     titleText = `Waiting for next block...`;
     timer = timerSpacer;
   } else if (activeAuction) {
-    titleText = `Come back at Noun O'Clock in:`;
+    titleText = `Play with us in:`;
     timer = <AuctionTimer/>;
   } else if (attemptedSettle) {
     titleText = `Attempting to settle...`;
@@ -41,7 +42,9 @@ const Title: React.FC<{}> = props => {
   return (
     <div className={classes.Wrapper}>
       <h1 className={classes.Title}>
-        {titleText}
+        <Gradient style={GradientStyle.FUCHSIA_PURPLE}>
+          {titleText}
+        </Gradient>
         {timer}
       </h1>
     </div>

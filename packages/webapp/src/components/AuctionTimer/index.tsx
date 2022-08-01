@@ -3,6 +3,7 @@ import classes from './AuctionTimer.module.css';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useAppSelector } from "../../hooks";
+import Gradient, { GradientStyle } from "../Gradient";
 
 dayjs.extend(duration);
 
@@ -34,7 +35,9 @@ const AuctionTimer: React.FC<{}> = props => {
     const activeAuctionTimer = () => {
         return(
             <>
-            {hours}h {minutes}m {seconds}s
+                <Gradient style={GradientStyle.FUCHSIA_PURPLE}>
+                    {hours}h {minutes}m {seconds}s
+                </Gradient>
             </>
         );
     }
