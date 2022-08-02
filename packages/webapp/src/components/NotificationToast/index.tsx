@@ -27,9 +27,9 @@ const NotificationToast: React.FC<{}> = props => {
                 duration: 20000
             }
         )
-        removePendingSettleTx({ hash: tx.hash });
+        dispatch(removePendingSettleTx({ hash: tx.hash }));
     })
-  }, [pendingSettleTxs]);
+  }, [pendingSettleTxs, dispatch]);
 
   useEffect(() => {
     pendingBidTxs.forEach(tx => {
@@ -44,9 +44,9 @@ const NotificationToast: React.FC<{}> = props => {
       }
       //TODO: remove debug console outputs after testing
       console.log('call removePendingBidTx()')
-      removePendingBidTx({ hash: tx.hash })
+      dispatch(removePendingBidTx({ hash: tx.hash }));
     })
-  }, [pendingBidTxs, closeToAuctionEnd]);
+  }, [pendingBidTxs, closeToAuctionEnd, dispatch]);
 
   useEffect(() => {
     if ((activeAuction === false || closeToAuctionEnd) && !listeningMempool) {
