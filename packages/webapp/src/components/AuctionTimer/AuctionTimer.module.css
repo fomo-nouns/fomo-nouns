@@ -6,17 +6,3 @@
     font-family: 'Londrina Solid';
     text-align: left;
 }
-
-.hoursWidth {
-    width: 11.5rem;
-}
-
-.minutesWidth {
-    width: 7.5rem;
-}
-
-.secondsWidth {
-    width: 3.5rem;
-}
-
-/* TODO: center text on mobile */

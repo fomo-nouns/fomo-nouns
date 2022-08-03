@@ -1,27 +1,26 @@
-.Title {
+.title {
     text-align: center;
     font-family: 'Londrina Solid';
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
 }
 
-.Wrapper {
+.wrapper {
     justify-self: center;
     white-space: pre-wrap;
     padding-bottom: 0.5rem;
 }
 
-.TimerSpacer {
+.timerSpacer {
     font-size: 1em;
     justify-self: center;
     font-family: 'Londrina Solid';
 }
 
-.oneLine {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
+.cool {
+    color: var(--brand-cool-dark-text);
 }
 
-/* TODO: break to two lines on mobile */
+.warm {
+    color: var(--brand-cool-warm-text);
+}
