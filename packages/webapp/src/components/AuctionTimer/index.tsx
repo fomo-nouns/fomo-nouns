@@ -3,7 +3,6 @@ import classes from './AuctionTimer.module.css';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useAppSelector } from "../../hooks";
-import Gradient, { GradientStyle } from "../Gradient";
 
 dayjs.extend(duration);
 
@@ -16,10 +15,10 @@ const AuctionTimer: React.FC<{}> = props => {
     useEffect(() => {
         const timeLeft = auctionEnd - dayjs().unix();
         setAuctionTimer(timeLeft);
-        if(timeLeft <= 0) {
+        if (timeLeft <= 0) {
             setAuctionTimer(0);
         } else {
-            const timer = setTimeout(()=> {
+            const timer = setTimeout(() => {
                 setAuctionTimer(auctionTimerRef.current - 1);
             }, 1000);
             return () => {
@@ -31,17 +30,24 @@ const AuctionTimer: React.FC<{}> = props => {
     const hours = Math.floor(timerDuration.hours());
     const minutes = Math.floor(timerDuration.minutes());
     const seconds = Math.floor(timerDuration.seconds());
-    
+
+    let widthStyle = '';
+    if (hours) {
+        widthStyle = classes.hoursWidth;
+    } else if (minutes) {
+        widthStyle = classes.minutesWidth;
+    } else {
+        widthStyle = classes.secondsWidth;
+    }
+
     const activeAuctionTimer = () => {
-        return(
-            <>
-                <Gradient style={GradientStyle.FUCHSIA_PURPLE}>
-                    {hours}h {minutes}m {seconds}s
-                </Gradient>
-            </>
+        return (
+            <div className={widthStyle}>
+                {hours}h {minutes}m {seconds}s
+            </div>
         );
     }
-    return(
+    return (
         <div className={classes.Wrapper}>
             {activeAuction && activeAuctionTimer()}
         </div>

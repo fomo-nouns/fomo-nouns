@@ -1,11 +1,11 @@
-.Title{
+.Title {
     text-align: center;
     font-family: 'Londrina Solid';
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
 }
 
-.Wrapper{
+.Wrapper {
     justify-self: center;
     white-space: pre-wrap;
     padding-bottom: 0.5rem;
@@ -16,3 +16,12 @@
     justify-self: center;
     font-family: 'Londrina Solid';
 }
+
+.oneLine {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* TODO: break to two lines on mobile */
