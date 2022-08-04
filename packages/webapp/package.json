@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@davatar/react": "^1.8.1",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@nouns/assets": "^0.2.0",
     "@nouns/sdk": "^0.1.4",
     "@reduxjs/toolkit": "^1.6.2",
