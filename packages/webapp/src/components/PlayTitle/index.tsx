@@ -5,12 +5,23 @@ import BlockCountdownTimer from '../BlockCountdownTimer';
 import Gradient, { GradientStyle } from "../Gradient";
 import { usePickByState } from "../../utils/colorResponsiveUIUtils";
 import clsx from "clsx";
+import { VOTE_OPTIONS } from "../../state/slices/vote";
+import { yesVotesNeeded } from "../../utils/voteMath";
 
 const PlayTitle: React.FC<{}> = props => {
     const activeAuction = useAppSelector(state => state.auction.activeAuction);
+    const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
     const attemptedSettle = useAppSelector(state => state.vote.attemptedSettle);
     const votingActive = useAppSelector(state => state.vote.votingActive);
-    const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
+    const activeVoters = useAppSelector(state => state.vote.activeVoters);
+    const votes = useAppSelector(state => state.vote.voteCounts);
+
+    const likes = votes[VOTE_OPTIONS.voteLike];
+    const dislikes = votes[VOTE_OPTIONS.voteDislike];
+
+    console.log(`total votes: ${likes + dislikes}`)
+    console.log(`likes: ${likes}`)
+    console.log(`dislikes: ${dislikes}`)
 
     let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
 
@@ -25,9 +36,24 @@ const PlayTitle: React.FC<{}> = props => {
         );
         // TODO: set to `(votingActive)` after dev work
     } else if (votingActive) {
+        const requiredLikes = yesVotesNeeded(dislikes, activeVoters);
+        console.log(`required likes: ${requiredLikes}`)
+
+        let titleText = ''
+        if ((requiredLikes + dislikes) > activeVoters) {
+            titleText = 'No way we can get this noun now';
+        } else {
+            if (likes === 0) {
+                titleText = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
+            } else {
+                const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
+                titleText = `${moreLikesNeeded} votes more and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
+            }
+        }
+
         title = (
             <div>
-                <div>Should we mint {nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}?</div>
+                <Gradient style={GradientStyle.FUCHSIA_PURPLE}>{titleText}</Gradient>
                 <BlockCountdownTimer />
             </div>
         );

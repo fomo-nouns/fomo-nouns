@@ -19,16 +19,29 @@ interface VoteState {
   missedVotes: number;
 }
 
+// const initialState: VoteState = {
+//   connected: false,
+//   numConnections: 1,
+//   activeVoters: 0,
+//   currentVote: undefined,
+//   voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
+//   attemptedSettle: false,
+//   votingActive: true,
+//   votingBlockHash: undefined,
+//   score: 0,
+//   missedVotes: 0
+// };
+//TODO: uncomment and return back initialState after PlayTitle dev work done
 const initialState: VoteState = {
   connected: false,
-  numConnections: 1,
-  activeVoters: 0,
+  numConnections: 10,
+  activeVoters: 10,
   currentVote: undefined,
-  voteCounts: {voteLike: 0, voteShrug: 0, voteDislike: 0}, // TODO: Make this programmatic
+  voteCounts: {voteLike: 5, voteShrug: 0, voteDislike: 2},
   attemptedSettle: false,
   votingActive: true,
   votingBlockHash: undefined,
-  score: 0,
+  score: 0.78,
   missedVotes: 0
 };
 
