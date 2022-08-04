@@ -1,0 +1,26 @@
+.title {
+    text-align: center;
+    font-family: 'Londrina Solid';
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.wrapper {
+    justify-self: center;
+    white-space: pre-wrap;
+    padding-bottom: 0.5rem;
+}
+
+.timerSpacer {
+    font-size: 1em;
+    justify-self: center;
+    font-family: 'Londrina Solid';
+}
+
+.cool {
+    color: var(--brand-cool-dark-text);
+}
+
+.warm {
+    color: var(--brand-cool-warm-text);
+}
