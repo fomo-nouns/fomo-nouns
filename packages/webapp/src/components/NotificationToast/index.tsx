@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import toast, { Toaster } from 'react-hot-toast';
 import { removePendingBidTx, removePendingSettleTx, resetPendingSettleTx } from '../../state/slices/mempool';
 import { closeEthereumMempoolSocket, openEthereumMempoolSocket } from '../../middleware/alchemyMempoolWebsocket';
-import dayjs from 'dayjs';
 import MempoolToast from '../MempoolToast';
 
 const NotificationToast: React.FC<{}> = props => {
@@ -20,14 +19,14 @@ const NotificationToast: React.FC<{}> = props => {
 
   useEffect(() => {
     pendingSettleTxs.forEach(tx => {
-        toast.custom(
-          <MempoolToast tx={tx} />, 
-            {
-                position: "bottom-center",
-                duration: 20000
-            }
-        )
-        dispatch(removePendingSettleTx({ hash: tx.hash }));
+      toast.custom(
+        <MempoolToast tx={tx} />,
+        {
+          position: "bottom-center",
+          duration: 20000
+        }
+      )
+      dispatch(removePendingSettleTx({ hash: tx.hash }));
     })
   }, [pendingSettleTxs, dispatch]);
 
@@ -35,10 +34,10 @@ const NotificationToast: React.FC<{}> = props => {
     pendingBidTxs.forEach(tx => {
       if (closeToAuctionEnd) {
         toast.custom(
-          <MempoolToast tx={tx} />, 
+          <MempoolToast tx={tx} />,
           {
-              position: "bottom-center",
-              duration: 6000
+            position: "bottom-center",
+            duration: 6000
           }
         )
       }
@@ -67,7 +66,7 @@ const NotificationToast: React.FC<{}> = props => {
 
   return (
     <Toaster
-        reverseOrder={false}
+      reverseOrder={false}
     />
   )
 };

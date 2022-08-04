@@ -3,11 +3,13 @@ import classes from './AuctionTimer.module.css';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useAppSelector } from "../../hooks";
+import star from '../../assets/star.png';
 
 dayjs.extend(duration);
 
 const AuctionTimer: React.FC<{}> = props => {
     const activeAuction = useAppSelector(state => state.auction.activeAuction);
+    const closeToAuctionEnd = useAppSelector(state => state.auction.closeToEnd);
     const auctionEnd = useAppSelector(state => state.auction.auctionEnd);
     const [auctionTimer, setAuctionTimer] = useState<number>(0);
     const auctionTimerRef = useRef(auctionEnd);
@@ -31,24 +33,34 @@ const AuctionTimer: React.FC<{}> = props => {
     const minutes = Math.floor(timerDuration.minutes());
     const seconds = Math.floor(timerDuration.seconds());
 
-    let widthStyle = '';
-    if (hours) {
-        widthStyle = classes.hoursWidth;
-    } else if (minutes) {
-        widthStyle = classes.minutesWidth;
-    } else {
-        widthStyle = classes.secondsWidth;
+    const levelImages: Array<React.ReactNode> = [];
+
+    if (closeToAuctionEnd) {
+        for (let i = 5; i > minutes; i--) {
+            levelImages.push(<img key={i} className={classes.levelImage} src={star} alt="Readiness Level Marker" />)
+        }
     }
 
     const activeAuctionTimer = () => {
         return (
-            <div className={widthStyle}>
-                {hours}h {minutes}m {seconds}s
-            </div>
-        );
+            <>
+                <div className={classes.level}>
+                    {levelImages}
+                </div>
+                <div>
+                    {hours > 0 && <>{hours}h </>}
+                    {minutes > 0 && <>{minutes}m </>}
+                    {seconds > 0 && <>{seconds}s </>}
+                </div>
+                <div className={classes.level}>
+                    {levelImages}
+                </div>
+            </>
+        )
     }
+
     return (
-        <div className={classes.Wrapper}>
+        <div className={classes.wrapper}>
             {activeAuction && activeAuctionTimer()}
         </div>
     )
