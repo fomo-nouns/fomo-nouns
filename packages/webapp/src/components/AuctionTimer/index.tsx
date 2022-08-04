@@ -45,8 +45,6 @@ const AuctionTimer: React.FC<{}> = props => {
         }
     }
 
-    console.log(auctionTimerRef.current)
-
     const activeAuctionTimer = () => {
         return (
             <>
