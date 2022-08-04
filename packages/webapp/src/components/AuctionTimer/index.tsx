@@ -54,7 +54,7 @@ const AuctionTimer: React.FC<{}> = props => {
                 <div>
                     {showHours && <>{hours}h </>}
                     {showMinutes && <>{minutes}m </>}
-                    {showSeconds && <>{seconds}s </>}
+                    {showSeconds && <>{seconds}s</>}
                 </div>
                 <div className={classes.level}>
                     {levelImages}
