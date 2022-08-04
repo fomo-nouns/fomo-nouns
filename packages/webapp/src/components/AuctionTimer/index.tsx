@@ -33,6 +33,10 @@ const AuctionTimer: React.FC<{}> = props => {
     const minutes = Math.floor(timerDuration.minutes());
     const seconds = Math.floor(timerDuration.seconds());
 
+    const showHours = auctionTimerRef.current >= 3600
+    const showMinutes = auctionTimerRef.current >= 60
+    const showSeconds = auctionTimerRef.current >= 0
+
     const levelImages: Array<React.ReactNode> = [];
 
     if (closeToAuctionEnd) {
@@ -41,6 +45,8 @@ const AuctionTimer: React.FC<{}> = props => {
         }
     }
 
+    console.log(auctionTimerRef.current)
+
     const activeAuctionTimer = () => {
         return (
             <>
@@ -48,9 +54,9 @@ const AuctionTimer: React.FC<{}> = props => {
                     {levelImages}
                 </div>
                 <div>
-                    {hours > 0 && <>{hours}h </>}
-                    {minutes > 0 && <>{minutes}m </>}
-                    {seconds > 0 && <>{seconds}s </>}
+                    {showHours && <>{hours}h </>}
+                    {showMinutes && <>{minutes}m </>}
+                    {showSeconds && <>{seconds}s </>}
                 </div>
                 <div className={classes.level}>
                     {levelImages}
