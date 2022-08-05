@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface Noun {
   nextNounId?: number | null;
   useGreyBg: boolean;
+  displaySingleNoun: boolean;
 }
 
 const initialState: Noun = {
   nextNounId: null,
-  useGreyBg: true
+  useGreyBg: true,
+  displaySingleNoun: true
 };
 
 export const nounSlice = createSlice({
@@ -19,10 +21,13 @@ export const nounSlice = createSlice({
     },
     setActiveBackground: (state, action: PayloadAction<boolean | null>) => {
       state.useGreyBg = action.payload === null ? true : action.payload;
+    },
+    setDisplaySingleNoun: (state, action: PayloadAction<boolean | null>) => {
+      state.displaySingleNoun = action.payload === null ? true : action.payload;
     }
   },
 });
 
-export const { setNextNounId, setActiveBackground } = nounSlice.actions;
+export const { setNextNounId, setActiveBackground, setDisplaySingleNoun } = nounSlice.actions;
 
 export default nounSlice.reducer;

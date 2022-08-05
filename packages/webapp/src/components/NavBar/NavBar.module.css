@@ -18,14 +18,17 @@
 .connectBtn {
   cursor: pointer;
 }
+
 .connectBtn:hover,
 .connectBtn:active,
 .connectBtn:focus {
   cursor: pointer !important;
 }
+
 .disconnectBtn {
   cursor: pointer;
 }
+
 .disconnectBtn:hover,
 .disconnectBtn:active,
 .disconnectBtn:focus {
@@ -48,6 +51,7 @@
   padding: 0.5rem 0.8rem !important;
   color: var(--brand-black) !important;
 }
+
 .nounsNavLink:hover {
   color: var(--brand-dark-red) !important;
 }
@@ -62,4 +66,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.nogglesAscii {
+  display: inline-block;
+  position: relative;
+  bottom: 1px;
+  right: 3px;
 }

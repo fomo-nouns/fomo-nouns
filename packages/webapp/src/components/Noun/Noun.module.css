@@ -1,19 +1,19 @@
 /* double Noun display */
 .nounsWrapper {
     border: 1px solid #000000;
-    margin:  0.5em 0 0.75em 0;
+    margin: 0.5em 0 0.75em 0;
     box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
 
 }
 
-.imgWrapper{
+.imgWrapper {
     z-index: 0;
     position: relative;
 }
 
 .noun-1 {
-    border-bottom:  1px solid #000;
+    border-bottom: 1px solid #000;
 }
 
 
@@ -43,8 +43,13 @@
     background-color: #fff;
     color: #222;
     text-align: center;
-    font-size:  1.25em;
+    font-size: 1.25em;
     font-family: 'Londrina Solid';
+}
+
+.nounId .icon {
+    display: none;
+    font-size: 0.75em;
 }
 
 .noun-2 .nounId {
@@ -57,13 +62,13 @@
         margin: 1.5em 0;
     }
 
-    .imgWrapper{
+    .imgWrapper {
         position: relative;
     }
 
     .noun-1 {
-        border-bottom:  0;
-        border-right:  1px solid #000;
+        border-bottom: 0;
+        border-right: 1px solid #000;
     }
 
     .img {
@@ -87,6 +92,7 @@
     .nounsWrapper .img {
         height: auto;
     }
+
     .nounsWrapper .noun-1 .img {
         border-radius: 20px 0 0 20px;
         border-radius: 20px 0 0 0;
@@ -113,7 +119,7 @@
 
 @media only screen and (min-width: 1025px) {
     .img {
-        width:  500px;
+        width: 500px;
         max-width: 500px;
     }
 
