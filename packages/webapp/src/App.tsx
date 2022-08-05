@@ -12,7 +12,7 @@ import classes from './App.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavBar from './components/NavBar';
-import Noun  from './components/Noun';
+import Noun from './components/Noun';
 import Title from './components/Title';
 import VoteBar from './components/VoteBar';
 import VoteProgressBar from './components/VoteProgressBar';
@@ -26,6 +26,7 @@ import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
 import NotificationToast from './components/NotificationToast';
 import CornerHelpText from './components/CornerHelpText';
+import dayjs from 'dayjs';
 
 
 function App() {
@@ -35,18 +36,23 @@ function App() {
   const useGreyBg = useAppSelector(state => state.noun.isCoolBackground);
   const missedVotes = useAppSelector(state => state.vote.missedVotes);
 
-  useMemo(async ()=> { // Initalized before mount
-    const [{number: blocknumber, hash: blockhash}, auction] = await Promise.all([
+  useMemo(async () => { // Initalized before mount
+    const [{ number: blockNumber, hash: blockHash }, auction] = await Promise.all([
       provider.getBlock('latest'),
       AuctionContract.auction()
     ])
+
+    // Setting block time to 1 min past now prevent players from
+    // refreshing the page and passing multiple votes for the
+    // current block
+    const blockTime = dayjs().subtract(1, 'minute').valueOf();
 
     const nextNounId = parseInt(auction?.nounId) + 1;
     const auctionEnd = auction?.endTime.toNumber();
 
     dispatch(setNextNounId(nextNounId));
     dispatch(setAuctionEnd(auctionEnd));
-    dispatch(setBlockAttr({blocknumber, blockhash}))
+    dispatch(setBlockAttr({ 'blockNumber': blockNumber, 'blockHash': blockHash, 'blockTime': blockTime }));
   }, [dispatch])
 
   useEffect(() => {
@@ -69,14 +75,14 @@ function App() {
   return (
     <div className={`${classes.App} ${useGreyBg ? classes.bgGrey : classes.bgBeige}`}>
       <NavBar />
-      <Title/>
-      <VoteProgressBar/>
-      <SettledAuctionModal/>
+      <Title />
+      <VoteProgressBar />
+      <SettledAuctionModal />
       <Noun />
       <VoteBar />
       <Banner />
       <Documentation />
-      <Footer/>
+      <Footer />
       <CornerHelpText />
       <NotificationToast />
     </div>

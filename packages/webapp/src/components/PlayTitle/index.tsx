@@ -22,6 +22,7 @@ const PlayTitle: React.FC<{}> = props => {
     console.log(`total votes: ${likes + dislikes}`)
     console.log(`likes: ${likes}`)
     console.log(`dislikes: ${dislikes}`)
+    console.log(`voting active: ${votingActive}`)
 
     let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
 
@@ -42,13 +43,11 @@ const PlayTitle: React.FC<{}> = props => {
         let titleText = ''
         if ((requiredLikes + dislikes) > activeVoters) {
             titleText = 'No way we can get this noun now';
+        } else if (likes === 0) {
+            titleText = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
         } else {
-            if (likes === 0) {
-                titleText = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
-            } else {
-                const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
-                titleText = `${moreLikesNeeded} votes more and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
-            }
+            const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
+            titleText = `${moreLikesNeeded} more votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
         }
 
         title = (

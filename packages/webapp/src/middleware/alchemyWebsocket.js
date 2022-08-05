@@ -6,6 +6,7 @@ import { resetAuctionEnd } from '../state/slices/auction';
 
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { checkAuctionAndSettlement } from './ethersProvider';
+import dayjs from 'dayjs';
 
 
 // Define the Actions Intercepted by the Middleware
@@ -61,6 +62,7 @@ const alchemyWebsocketMiddleware = () => {
     const blockNumber = Number(data.number); // Convert from hex
     const blockHash = data.hash;
     const logsBloom = data.logsBloom;
+    const blockTime = dayjs().valueOf();
 
     if (latestObservedBlock >= blockNumber) {
       console.log(`Minor block re-org, skipping repeat blocknumber ${blockNumber}`);
@@ -74,7 +76,7 @@ const alchemyWebsocketMiddleware = () => {
     store.dispatch(checkAuctionAndSettlement({"logsBloom": logsBloom, "blockNumber": blockNumber}));
 
     // Update the Redux block information
-    store.dispatch(setBlockAttr({'blocknumber': blockNumber, 'blockhash': blockHash}));
+    store.dispatch(setBlockAttr({'blockNumber': blockNumber, 'blockHash': blockHash, 'blockTime': blockTime}));
     store.dispatch(resetVotes());
   }
 
