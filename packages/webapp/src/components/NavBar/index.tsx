@@ -51,7 +51,7 @@ const NavBar = () => {
           {
             nextNounId != null && nextNounId % 10 === 0 &&
             <Nav.Link onClick={toggleSingleNounDisplay} className={classes.nounsNavLink}>
-              {!displaySingleNoun ? <FontAwesomeIcon icon={faEyeSlash} className="icon" /> : `⌐◨-◨`} {displaySingleNoun ? 'Show' : 'Hide'} Noun {nextNounId}
+              {!displaySingleNoun ? <FontAwesomeIcon icon={faEyeSlash} className="icon" /> : <div className={classes.nogglesAscii}>⌐◨-◨</div>} {displaySingleNoun ? 'SHOW' : 'HIDE'} NOUN {nextNounId}
             </Nav.Link>
           }
           <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
