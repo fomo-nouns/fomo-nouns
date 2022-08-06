@@ -4,6 +4,10 @@ import { Nav, Navbar } from 'react-bootstrap';
 import config from '../../config';
 import { utils } from 'ethers';
 import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils/etherscan';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setDisplaySingleNoun } from '../../state/slices/noun';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 import WalletConnectModal from "../WalletConnectModal";
 import fomologo from './fomologo.png';
@@ -22,6 +26,14 @@ const NavBar = () => {
     anchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
+  const displaySingleNoun = useAppSelector(state => state.noun.displaySingleNoun)!;
+  const dispatch = useAppDispatch();
+
+  function toggleSingleNounDisplay() {
+    dispatch(setDisplaySingleNoun(!displaySingleNoun));
+  }
+
   return (
     <div className={classes.HeaderBar}>
       <Navbar collapseOnSelect expand="lg">
@@ -36,6 +48,12 @@ const NavBar = () => {
           <Nav.Item className={classes.nounsNavLink}>
             <PlayersConnected />
           </Nav.Item>
+          {
+            nextNounId != null && nextNounId % 10 === 0 &&
+            <Nav.Link onClick={toggleSingleNounDisplay} className={classes.nounsNavLink}>
+              {!displaySingleNoun ? <FontAwesomeIcon icon={faEyeSlash} className="icon" /> : <div className={classes.nogglesAscii}>⌐◨-◨</div>} {displaySingleNoun ? 'SHOW' : 'HIDE'} NOUN {nextNounId}
+            </Nav.Link>
+          }
           <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
             {treasuryBalance && (
               <Nav.Link
@@ -48,7 +66,7 @@ const NavBar = () => {
               </Nav.Link>
             )}
           </Nav.Item>
-          
+
           <Nav.Item className={contractFundsLow ? classes.fundsLow : ''}>
             <Nav.Link
               href={settlementWriteLink}
@@ -60,9 +78,6 @@ const NavBar = () => {
             </Nav.Link>
           </Nav.Item>
           <Nav.Link onClick={scrollTo('#wtf')} className={classes.nounsNavLink}>
-            WTF
-          </Nav.Link>
-          <Nav.Link onClick={scrollTo('#faq')} className={classes.nounsNavLink}>
             FAQ
           </Nav.Link>
           <Nav.Link
