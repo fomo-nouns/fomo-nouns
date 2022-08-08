@@ -25,11 +25,12 @@ export const blockSlice = createSlice({
         return initialState;
       }
     },
-    setBlockAttr: (state, action: PayloadAction<{blocknumber: number, blockhash: string}>) => {
-      state.blockTime = Date.now(); // Approximate but better ensures proper CX
-      const { blocknumber, blockhash } = action.payload;
-      state.blockNumber = blocknumber;
-      state.blockHash = blockhash;
+    setBlockAttr: (state, action: PayloadAction<{blockNumber: number, blockHash: string, blockTime: number}>) => {
+      const { blockNumber, blockHash, blockTime } = action.payload;
+
+      state.blockTime = blockTime;
+      state.blockNumber = blockNumber;
+      state.blockHash = blockHash;
     }
   },
 });

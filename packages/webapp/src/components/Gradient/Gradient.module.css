@@ -1,0 +1,11 @@
+.purpleFuchsia {
+    background: linear-gradient(90deg, var(--fomo-color-purple) 0%, var(--fomo-color-fuchsia) 100%);
+    background-clip: text;
+    color: transparent;
+}
+
+.fuchsiaPurple {
+    background: linear-gradient(90deg, var(--fomo-color-fuchsia) 0%, var(--fomo-color-purple) 100%);
+    background-clip: text;
+    color: transparent;
+}

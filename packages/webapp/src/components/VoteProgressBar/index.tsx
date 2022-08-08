@@ -22,12 +22,17 @@ const VoteProgressBar: React.FC<{}> = props => {
         display
     };
 
-    return(
-        <div className={classes.Wrapper} style={wrapperStyle}>
-            <div className={classes.BarOutline}>
-                <div className={classes.ProgressBar} style={barStyle}/>
-            </div>
-        </div>
+    // TODO: remove this component completely when done with titles refresh
+
+    // return (
+    //     <div className={classes.Wrapper} style={wrapperStyle}>
+    //         <div className={classes.BarOutline}>
+    //             <div className={classes.ProgressBar} style={barStyle} />
+    //         </div>
+    //     </div>
+    // )
+    return (
+        <></>
     )
 };
 

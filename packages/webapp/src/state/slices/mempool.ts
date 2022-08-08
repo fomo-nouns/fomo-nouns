@@ -38,10 +38,7 @@ export const mempoolSlice = createSlice({
         state.pendingSettleTxs.push({ from: action.payload.from, hash: action.payload.hash })
     },
     removePendingSettleTx: (state, action: PayloadAction<{hash: string}>) => {
-      const index = state.pendingSettleTxs.findIndex(e => e.hash === action.payload.hash);
-      if (index > -1) {
-        state.pendingSettleTxs.splice(index, 1);
-      }
+        state.pendingSettleTxs = state.pendingSettleTxs.filter(e => e.hash !== action.payload.hash);
   },
     resetPendingSettleTx: (state) => {
         state.pendingSettleTxs = []
@@ -50,18 +47,9 @@ export const mempoolSlice = createSlice({
         state.pendingBidTxs.push({ from: action.payload.from, hash: action.payload.hash, value: action.payload.value })
     },
     removePendingBidTx: (state, action: PayloadAction<{hash: string}>) => {
-      //TODO: remove debug console outputs after testing
-      console.log(`hash to remove: ${action.payload.hash}`)
-      const index = state.pendingBidTxs.findIndex(e => e.hash === action.payload.hash);
-      console.log(`index to remove: ${index}`)
-      if (index > -1) {
-        state.pendingBidTxs.splice(index, 1);
-      }
-      console.log("bending bids in state:")
-      console.log(state.pendingBidTxs)
+        state.pendingBidTxs = state.pendingBidTxs.filter(e => e.hash !== action.payload.hash);
     },
     resetPendingBidTx: (state) => {
-        console.log("reset pending bids")
         state.pendingBidTxs = []
     }
   },
@@ -69,6 +57,14 @@ export const mempoolSlice = createSlice({
 
 export type { SettleTx, BidTx }
 
-export const { setMempoolListening, addPendingSettleTx, removePendingSettleTx, resetPendingSettleTx, addPendingBidTx, removePendingBidTx, resetPendingBidTx } = mempoolSlice.actions;
+export const { 
+  setMempoolListening, 
+  addPendingSettleTx, 
+  removePendingSettleTx, 
+  resetPendingSettleTx, 
+  addPendingBidTx, 
+  removePendingBidTx, 
+  resetPendingBidTx 
+} = mempoolSlice.actions;
 
 export default mempoolSlice.reducer;

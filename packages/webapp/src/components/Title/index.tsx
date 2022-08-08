@@ -2,50 +2,44 @@ import React from "react";
 import { useAppSelector } from "../../hooks";
 import classes from "./Title.module.css";
 import AuctionTimer from '../AuctionTimer';
-import BlockCountdownTimer from '../BlockCountdownTimer';
+import Gradient, { GradientStyle } from "../Gradient";
+import { usePickByState } from "../../utils/colorResponsiveUIUtils";
+import clsx from "clsx";
+import PlayTitle from "../PlayTitle";
 
 const Title: React.FC<{}> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
-  const attemptedSettle = useAppSelector(state => state.vote.attemptedSettle);
-  const votingActive = useAppSelector(state => state.vote.votingActive);
+  const closeToAuctionEnd = useAppSelector(state => state.auction.closeToEnd);
   const ethereumConnected = useAppSelector(state => state.block.connected);
   const blockHash = useAppSelector(state => state.block.blockHash);
-  const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
 
   let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
 
-  let titleText = '', timer = <></>;
+  let title = <></>;
   if (!ethereumConnected) {
-    titleText = `Awaiting connection...`;
-    timer = timerSpacer;
+    title = (<>Awaiting connection...{timerSpacer}</>);
   } else if (!blockHash || activeAuction === undefined) {
-    titleText = `Waiting for next block...`;
-    timer = timerSpacer;
-  } else if (activeAuction) {
-    titleText = `Come back at Noun O'Clock in:`;
-    timer = <AuctionTimer/>;
-  } else if (attemptedSettle) {
-    titleText = `Attempting to settle...`;
-    timer = timerSpacer;
-  } else if (votingActive) {
-    titleText = `Should we mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}?`;
-    timer = <BlockCountdownTimer/>;
-  } else if (!activeAuction && !votingActive) {
-    titleText = `Time's up! Waiting for next block...`;
-    timer = <BlockCountdownTimer/>;
+    title = (<>Waiting for next block...{timerSpacer}</>);
+  } else if (activeAuction && !closeToAuctionEnd) {
+    title = (<div><div>Choose next noun with us in:</div><AuctionTimer /></div>);
+  } else if (activeAuction && closeToAuctionEnd) {
+    title = (<div><Gradient style={GradientStyle.FUCHSIA_PURPLE}><div>We are starting in just:</div><AuctionTimer /></Gradient></div>);
   } else {
-    titleText = 'Loading FOMO Nouns...';
-    timer = <></>;
+    title = (<>Loading FOMO Nouns...</>);
   }
 
-  return (
-    <div className={classes.Wrapper}>
-      <h1 className={classes.Title}>
-        {titleText}
-        {timer}
+  const style = usePickByState(
+    classes.cool,
+    classes.warm,
+  );
+
+  return activeAuction ? (
+    <div className={classes.wrapper}>
+      <h1 className={clsx(classes.title, style)}>
+        {title}
       </h1>
     </div>
-  )
+  ) : (<PlayTitle />);
 };
 
 export default Title;
