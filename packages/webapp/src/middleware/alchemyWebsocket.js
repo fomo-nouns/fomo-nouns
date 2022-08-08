@@ -8,6 +8,12 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { checkAuctionAndSettlement } from './ethersProvider';
 import dayjs from 'dayjs';
 
+//TODO: remove this after PlayTitle dev work done
+import {
+  incrementCount,
+  triggerSettlement,
+} from '../state/slices/vote';
+
 
 // Define the Actions Intercepted by the Middleware
 const openEthereumSocket = (payload) => ({type: 'ethereumSocket/open', payload});
@@ -78,6 +84,22 @@ const alchemyWebsocketMiddleware = () => {
     // Update the Redux block information
     store.dispatch(setBlockAttr({'blockNumber': blockNumber, 'blockHash': blockHash, 'blockTime': blockTime}));
     store.dispatch(resetVotes());
+
+    //TODO: remove this after PlayTitle dev work done
+    setTimeout(function() {
+      const rand = Math.random()
+      if (rand < 0.3) {
+        store.dispatch(incrementCount('voteDislike'));
+        store.dispatch(incrementCount('voteDislike'));
+        store.dispatch(incrementCount('voteDislike'));
+        console.log('- - - pretend we get lot of NO votes')
+      } else if (rand > 0.3 && rand < 0.6) {
+        store.dispatch(triggerSettlement());
+        console.log('- - - pretend we try to mint')
+      } else {
+        console.log('- - - pretend we do nothing')
+      }
+    }, 3000);
   }
 
   const handleClose = store => () => {
