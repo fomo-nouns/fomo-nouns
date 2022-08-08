@@ -15,7 +15,6 @@ import NavBar from './components/NavBar';
 import Noun from './components/Noun';
 import Title from './components/Title';
 import VoteBar from './components/VoteBar';
-import VoteProgressBar from './components/VoteProgressBar';
 import Documentation from './components/Documentation';
 import Banner from './components/Banner';
 import Footer from './components/Footer';
@@ -76,7 +75,6 @@ function App() {
     <div className={`${classes.App} ${useGreyBg ? classes.bgGrey : classes.bgBeige}`}>
       <NavBar />
       <Title />
-      <VoteProgressBar />
       <SettledAuctionModal />
       <Noun />
       <VoteBar />
