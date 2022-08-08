@@ -1,10 +1,16 @@
 import classes from './NavBar.module.css';
 import { Nav, Navbar } from 'react-bootstrap';
+import config from '../../config';
+import { utils } from 'ethers';
+import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils/etherscan';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setDisplaySingleNoun } from '../../state/slices/noun';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 import fomologo from './fomologo.png';
 import NavPlayers from '../NavPlayers';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
-import { useAppSelector } from '../../hooks';
 import NavWallet from '../NavWallet';
 import NavFunds from '../NavFunds';
 
@@ -15,6 +21,14 @@ const NavBar = () => {
   const nonWalletButtonStyle = useGreyBg
     ? NavBarButtonStyle.COOL_INFO
     : NavBarButtonStyle.WARM_INFO;
+
+  const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
+  const displaySingleNoun = useAppSelector(state => state.noun.displaySingleNoun)!;
+  const dispatch = useAppDispatch();
+
+  function toggleSingleNounDisplay() {
+    dispatch(setDisplaySingleNoun(!displaySingleNoun));
+  }
 
   return (
     <div className={classes.HeaderBar}>
@@ -33,6 +47,13 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
         <Navbar.Collapse id="nav-items" className="justify-content-end">
           <NavFunds />
+          {
+            // TODO: style this in v2 style version
+            nextNounId != null && nextNounId % 10 === 0 &&
+            <Nav.Link onClick={toggleSingleNounDisplay} className={classes.nounsNavLink}>
+              {!displaySingleNoun ? <FontAwesomeIcon icon={faEyeSlash} className="icon" /> : <div className={classes.nogglesAscii}>⌐◨-◨</div>} {displaySingleNoun ? 'SHOW' : 'HIDE'} NOUN {nextNounId}
+            </Nav.Link>
+          }
           <Nav.Link
             href="https://nouns.wtf/"
             className={classes.nounsNavLink}

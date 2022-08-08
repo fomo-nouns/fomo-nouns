@@ -47,6 +47,11 @@
     font-family: 'Londrina Solid';
 }
 
+.nounId .icon {
+    display: none;
+    font-size: 0.75em;
+}
+
 .noun-2 .nounId {
     border-radius: 0 0 20px 20px;
 }

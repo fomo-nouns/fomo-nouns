@@ -65,6 +65,12 @@
   font-size: 0.9rem;
   padding: 0.3rem 0.3rem !important;
   color: black !important;
+  /* padding: 0.5rem 0.8rem !important;
+  color: var(--brand-black) !important; */
+}
+
+.nounsNavLink:hover {
+  color: var(--brand-dark-red) !important;
 }
 
 .testnetImg {
@@ -91,4 +97,11 @@
   height: 44px;
   padding: 0.25rem 0.5rem;
   margin-right: 12px;
+}
+
+.nogglesAscii {
+  display: inline-block;
+  position: relative;
+  bottom: 1px;
+  right: 3px;
 }
