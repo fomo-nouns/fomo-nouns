@@ -54,7 +54,6 @@ const PlayTitle: React.FC<{}> = props => {
     let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
 
     let title = <></>;
-    // TODO: set to `(attemptedSettle)` after dev work
     if (attemptedSettle) {
         title = (
             <>
@@ -62,7 +61,6 @@ const PlayTitle: React.FC<{}> = props => {
                 <div>{timerSpacer}</div>
             </>
         );
-        // TODO: set to `(votingActive)` after dev work
     } else if (votingActive) {
         const requiredLikes = yesVotesNeeded(dislikes, activeVoters);
 
@@ -102,8 +100,7 @@ const PlayTitle: React.FC<{}> = props => {
                 </div>
             );
         }
-        // TODO: set to `(!activeAuction && !votingActive)` after dev work
-    } else if (activeAuction && !votingActive) {
+    } else if (!activeAuction && !votingActive) {
         if (noWayWeGetItTitle === undefined) {
             title = (
                 <div>
