@@ -74,5 +74,8 @@
   "devDependencies": {
     "@types/websocket": "^1.0.4",
     "dotenv": "^10.0.0"
+  },
+  "resolutions": {
+    "@types/react": "^17.0.0"
   }
 }
