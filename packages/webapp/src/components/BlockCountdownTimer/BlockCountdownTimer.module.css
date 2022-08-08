@@ -1,7 +1,6 @@
 .Wrapper {
     width: 100%;
     justify-content: center;
-    padding-bottom: 5px;
     z-index: 10;
     margin-top: 1rem;
 }
@@ -11,7 +10,6 @@
     font-family: 'PT Root UI';
     font-weight: bold;
     font-size: medium;
-    margin-top: 0.2rem;
     margin-bottom: 0.2rem;
     color: #000000;
 }

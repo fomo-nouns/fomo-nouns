@@ -12,9 +12,12 @@
 }
 
 .timerSpacer {
-    font-size: 1em;
-    justify-self: center;
-    font-family: 'Londrina Solid';
+    font-family: 'PT Root UI';
+    font-weight: bold;
+    font-size: medium;
+    margin-top: 1rem;
+    padding-bottom: 0.2rem;
+    margin-bottom: 19px;
 }
 
 .cool {
@@ -22,5 +25,5 @@
 }
 
 .warm {
-    color: var(--brand-cool-warm-text);
+    color: var(--brand-warm-dark-text);
 }
