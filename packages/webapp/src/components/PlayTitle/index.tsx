@@ -76,38 +76,49 @@ const PlayTitle: React.FC<{}> = props => {
             } else {
                 titleText = noWayWeGetItTitle;
             }
-        } else if (likes === 0) {
-            titleText = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
+
+            title = (
+                <div>
+                    <div>{titleText}</div>
+                    <div>{timerSpacer}</div>
+                </div>
+            );
         } else {
             if (noWayWeGetItTitle !== undefined) {
                 setNoWayWeGetItTitle(undefined);
             }
 
-            const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
-            titleText = `${moreLikesNeeded} more votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
-        }
+            if (likes === 0) {
+                titleText = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
+            } else {
+                const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
+                titleText = `${moreLikesNeeded} more votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
+            }
 
-        title = (
-            <div>
-                <div>{titleText}</div>
-                <BlockCountdownTimer />
-            </div>
-        );
+            title = (
+                <div>
+                    <div>{titleText}</div>
+                    <BlockCountdownTimer />
+                </div>
+            );
+        }
         // TODO: set to `(!activeAuction && !votingActive)` after dev work
     } else if (activeAuction && !votingActive) {
-        let titleText = ''
         if (noWayWeGetItTitle === undefined) {
-            titleText = randomTimeIsUpTitle();
+            title = (
+                <div>
+                    <div>{randomTimeIsUpTitle()}</div>
+                    <BlockCountdownTimer />
+                </div>
+            );
         } else {
-            titleText = noWayWeGetItTitle;
+            title = (
+                <div>
+                    <div>{noWayWeGetItTitle}</div>
+                    <div>{timerSpacer}</div>
+                </div>
+            );
         }
-
-        title = (
-            <div>
-                <div>{titleText}</div>
-                <BlockCountdownTimer />
-            </div>
-        );
     } else {
         title = <></>
     }
