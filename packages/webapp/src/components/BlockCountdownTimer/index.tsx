@@ -53,7 +53,7 @@ const BlockCountdownTimer: React.FC<{}> = props => {
 
   return (
     <div className={classes.Wrapper}>
-      <div className={clsx(classes.Title, titleStyle)}>Time Left</div>
+      <div className={clsx(classes.Title, titleStyle)}>Time To Vote</div>
       <div className={classes.BarOutline}>
         <div className={clsx(classes.ProgressBar, timerThreshold ? classes.Threshold : '')} style={barStyle} />
       </div>
