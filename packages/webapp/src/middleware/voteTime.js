@@ -15,10 +15,23 @@ const voteTime = () => {
 
         if (voteTimeLeft < 0) {
             store.dispatch(endVoting());
-            store.dispatch(setVoteTimeLeft(voteTimeSetting));
+            store.dispatch(setVoteTimeLeft(0));
             clearInterval(timer);
         } else {
             timer = setTimeout(() => { updateTimer(store) }, 60);
+        }
+    }
+
+    const closeTimer = (store, time, x) => {
+        const newTime = time - (60 * x);
+        store.dispatch(setVoteTimeLeft(newTime));
+
+        if (time < 0) {
+            store.dispatch(endVoting());
+            store.dispatch(setVoteTimeLeft(0));
+            clearInterval(timer);
+        } else {
+            timer = setTimeout(() => { closeTimer(store, newTime, x + 1) }, 60);
         }
     }
 
@@ -26,6 +39,11 @@ const voteTime = () => {
         if (action.type === 'block/setBlockAttr') {
             currentBlockTime = action.payload.blockTime;
             updateTimer(store);
+        } else if (action.type === 'vote/triggerSettlement') {
+            // store.dispatch(setVoteTimeLeft(0))
+            // clearInterval(timer);
+            // clearInterval(timer);
+            // closeTimer(store, dayjs().valueOf() - currentBlockTime, 1);
         }
 
         return next(action);
