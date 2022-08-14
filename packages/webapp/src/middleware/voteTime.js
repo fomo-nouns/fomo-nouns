@@ -8,15 +8,19 @@ const voteTime = () => {
     let currentBlockTime = null;
     let timer = null
 
+    const closeVoting = (store) => {
+        store.dispatch(endVoting());
+        store.dispatch(setVoteTimeLeft(0));
+        clearInterval(timer);
+    }
+
     const updateTimer = (store) => {
         const timeSinceLastBlock = dayjs().valueOf() - currentBlockTime;
         const voteTimeLeft = voteTimeSetting - timeSinceLastBlock
         store.dispatch(setVoteTimeLeft(voteTimeLeft));
 
         if (voteTimeLeft < 0) {
-            store.dispatch(endVoting());
-            store.dispatch(setVoteTimeLeft(0));
-            clearInterval(timer);
+            closeVoting(store);
         } else {
             timer = setTimeout(() => { updateTimer(store) }, 60);
         }
@@ -27,9 +31,7 @@ const voteTime = () => {
         store.dispatch(setVoteTimeLeft(newTime));
 
         if (time < 0) {
-            store.dispatch(endVoting());
-            store.dispatch(setVoteTimeLeft(0));
-            clearInterval(timer);
+            closeVoting(store);
         } else {
             timer = setTimeout(() => { closeTimer(store, newTime, x + 1) }, 60);
         }
@@ -40,10 +42,10 @@ const voteTime = () => {
             currentBlockTime = action.payload.blockTime;
             updateTimer(store);
         } else if (action.type === 'vote/triggerSettlement') {
-            // store.dispatch(setVoteTimeLeft(0))
-            // clearInterval(timer);
-            // clearInterval(timer);
-            // closeTimer(store, dayjs().valueOf() - currentBlockTime, 1);
+            // closeVoting(store);
+
+            clearInterval(timer);
+            closeTimer(store, dayjs().valueOf() - currentBlockTime, 1);
         }
 
         return next(action);
