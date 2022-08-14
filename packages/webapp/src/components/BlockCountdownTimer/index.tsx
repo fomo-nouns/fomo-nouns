@@ -23,7 +23,7 @@ const BlockCountdownTimer: React.FC<{}> = props => {
 
   const barStyle = {
     width: `${timeLeft}%`,
-    transition: 'width .15s ease-out'
+    transition: 'width 60ms ease-out'
   };
 
   const timerThreshold = timeLeft <= 20;

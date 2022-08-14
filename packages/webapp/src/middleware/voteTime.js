@@ -18,7 +18,7 @@ const voteTime = () => {
             store.dispatch(setVoteTimeLeft(voteTimeSetting));
             clearInterval(timer);
         } else {
-            timer = setTimeout(() => { updateTimer(store) }, 20);
+            timer = setTimeout(() => { updateTimer(store) }, 60);
         }
     }
 
