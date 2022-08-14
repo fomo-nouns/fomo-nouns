@@ -26,6 +26,7 @@ import voteWebsocket from './middleware/voteWebsocket';
 import ethersProviderMiddleware from './middleware/ethersProvider';
 import alchemyWebsocketMiddleware from './middleware/alchemyWebsocket';
 import alchemyMempoolWebsocketMiddleware from './middleware/alchemyMempoolWebsocket';
+import voteTime from './middleware/voteTime';
 
 
 dotenv.config();
@@ -55,7 +56,8 @@ export default function configureStore(preloadedState: any) {
         alchemyWebsocketMiddleware,
         alchemyMempoolWebsocketMiddleware,
         ethersProviderMiddleware,
-        voteWebsocket
+        voteWebsocket,
+        voteTime
       ),
     ),
   );
@@ -80,7 +82,7 @@ ReactDOM.render(
       <Web3ReactProvider getLibrary={
         provider => new Web3Provider(provider)
       }>
-        <DAppProvider config={config}> 
+        <DAppProvider config={config}>
           <App />
         </DAppProvider>
       </Web3ReactProvider>

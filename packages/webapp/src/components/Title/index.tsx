@@ -33,7 +33,8 @@ const Title: React.FC<{}> = props => {
     classes.warm,
   );
 
-  return activeAuction ? (
+  //TODO: !titles - set back to `activeAuction` after dev work
+  return !activeAuction ? (
     <div className={classes.wrapper}>
       <h1 className={clsx(classes.title, style)}>
         {title}

@@ -8,9 +8,15 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { checkAuctionAndSettlement } from './ethersProvider';
 import dayjs from 'dayjs';
 
+//TODO: !titles - remove this after dev work
+import {
+  incrementCount,
+  triggerSettlement
+} from '../state/slices/vote';
+
 // Define the Actions Intercepted by the Middleware
-const openEthereumSocket = (payload) => ({type: 'ethereumSocket/open', payload});
-const closeEthereumSocket = (payload) => ({type: 'ethereumSocket/close', payload});
+const openEthereumSocket = (payload) => ({ type: 'ethereumSocket/open', payload });
+const closeEthereumSocket = (payload) => ({ type: 'ethereumSocket/close', payload });
 
 
 // Define the Middleware
@@ -32,14 +38,14 @@ const alchemyWebsocketMiddleware = () => {
       } else if (data.id === blockId) {
         blockSubscription = data.result;
       }
-    } catch(e) {
+    } catch (e) {
       console.log('Error parsing Alchemy websocket message');
       console.log(e);
     }
   }
 
   const newBlockSubscriptionRequest = JSON.stringify({
-    "jsonrpc":"2.0",
+    "jsonrpc": "2.0",
     "id": blockId,
     "method": "eth_subscribe",
     "params": ["newHeads"]
@@ -69,14 +75,31 @@ const alchemyWebsocketMiddleware = () => {
     } else {
       console.log(`Updating blocknumber ${blockNumber}`);
       latestObservedBlock = blockNumber;
-    }    
+    }
 
     // Check latest auction state and if settlement has occurred
-    store.dispatch(checkAuctionAndSettlement({"logsBloom": logsBloom, "blockNumber": blockNumber}));
+    store.dispatch(checkAuctionAndSettlement({ "logsBloom": logsBloom, "blockNumber": blockNumber }));
 
     // Update the Redux block information
-    store.dispatch(setBlockAttr({'blockNumber': blockNumber, 'blockHash': blockHash, 'blockTime': blockTime}));
+    store.dispatch(setBlockAttr({ 'blockNumber': blockNumber, 'blockHash': blockHash, 'blockTime': blockTime }));
     store.dispatch(resetVotes());
+
+    //TODO: !titles - remove timers after dev work
+    setTimeout(() => {
+      store.dispatch(incrementCount('voteLike'))
+      console.log('- add one like vote')
+    }, 1000);
+
+    setTimeout(() => {
+      store.dispatch(incrementCount('voteLike'))
+      console.log('- - add one like vote')
+    }, 2000);
+
+    setTimeout(() => {
+      store.dispatch(triggerSettlement())
+      console.log('- - - set as try to settle')
+    }, 3000);
+
   }
 
   const handleClose = store => () => {

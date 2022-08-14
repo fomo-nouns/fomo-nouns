@@ -58,7 +58,7 @@ const PlayTitle: React.FC<{}> = props => {
         title = (
             <>
                 <Gradient style={GradientStyle.FUCHSIA_PURPLE}>{randomSettleTitle()}</Gradient>
-                <div>{timerSpacer}</div>
+                <BlockCountdownTimer />
             </>
         );
     } else if (votingActive) {
@@ -100,7 +100,8 @@ const PlayTitle: React.FC<{}> = props => {
                 </div>
             );
         }
-    } else if (!activeAuction && !votingActive) {
+        //TODO: !titles - set this back to `(!activeAuction && !votingActive)` after dev work
+    } else if (activeAuction && !votingActive) {
         if (noWayWeGetItTitle === undefined) {
             title = (
                 <div>

@@ -1,4 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { default as config } from '../../config';
+
+const voteTime = config.voteTime;
 
 export enum VOTE_OPTIONS {
   voteDislike = 'voteDislike',
@@ -17,6 +20,7 @@ interface VoteState {
   votingBlockHash?: string;
   score: number;
   missedVotes: number;
+  voteTimeLeft: number;
 }
 
 const initialState: VoteState = {
@@ -29,7 +33,8 @@ const initialState: VoteState = {
   votingActive: true,
   votingBlockHash: undefined,
   score: 0,
-  missedVotes: 0
+  missedVotes: 0,
+  voteTimeLeft: voteTime
 };
 
 export const voteSlice = createSlice({
@@ -69,11 +74,14 @@ export const voteSlice = createSlice({
       activeVotes: state.activeVoters,
       connected: state.connected,
       // If user lodged a vote, reset missed vote counter, otherwise increment it
-      missedVotes: (!state.currentVote ? state.missedVotes+1 : initialState.missedVotes)
+      missedVotes: (!state.currentVote ? state.missedVotes + 1 : initialState.missedVotes)
     }),
     setVotingBlockHash: (state, action: PayloadAction<string | undefined >) => {
       state.votingBlockHash = action.payload;
     },
+    setVoteTimeLeft: (state, action: PayloadAction<number | undefined >) => {
+      state.voteTimeLeft = action.payload === undefined ? voteTime : action.payload;
+    }
   },
 });
 
@@ -87,7 +95,8 @@ export const {
   triggerSettlement,
   endVoting,
   resetVotes,
-  setVotingBlockHash
+  setVotingBlockHash,
+  setVoteTimeLeft
 } = voteSlice.actions;
 
 export default voteSlice.reducer;

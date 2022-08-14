@@ -1,50 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import classes from './BlockCountdownTimer.module.css';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { endVoting } from '../../state/slices/vote';
+import { useAppSelector } from "../../hooks";
 import clsx from "clsx";
 import { usePickByState } from "../../utils/colorResponsiveUIUtils";
+import { default as config } from '../../config';
 
 dayjs.extend(duration);
 
-const voteTime = 6000;
+const voteTime = config.voteTime;
 
 const BlockCountdownTimer: React.FC<{}> = props => {
-  const dispatch = useAppDispatch();
-  const blockTime = useAppSelector(state => state.block.blockTime);
+  const voteTimeLeft = useAppSelector(state => state.vote.voteTimeLeft);
 
-  const [timeLeft, setTimeLeft] = useState<number>(0);
-
-  useEffect(() => {
-    const timeSince = dayjs().valueOf() - blockTime;
-    const timeLeft = voteTime - timeSince;
-
-    if (timeLeft <= 0) {
-      setTimeLeft(0);
-      dispatch(endVoting());
-    } else {
-      let timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 20);
-      }, 20);
-      return () => clearInterval(timer);
-    }
-  }, [dispatch, blockTime, timeLeft]);
-
-  let score = timeLeft / voteTime * 100;
+  let timeLeft = voteTimeLeft / voteTime * 100;
 
   const min = 1;
-  score = score < min ? min : score;
+  timeLeft = timeLeft < min ? min : timeLeft;
   const max = 100;
-  score = score > max ? max : score;
+  timeLeft = timeLeft > max ? max : timeLeft;
 
   const barStyle = {
-    width: `${score}%`,
+    width: `${timeLeft}%`,
     transition: 'width .15s ease-out'
   };
 
-  const timerThreshold = score <= 20;
+  const timerThreshold = timeLeft <= 20;
 
   const titleStyle = usePickByState(
     classes.Cool,

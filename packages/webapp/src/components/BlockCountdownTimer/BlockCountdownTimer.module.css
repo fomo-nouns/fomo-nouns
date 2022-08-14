@@ -41,7 +41,7 @@
 .ProgressBar {
     height: 100%;
     min-width: 16px;
-    background: linear-gradient(270deg, #F9B9F2 -24.95%, #5603AD 100%);
+    background: linear-gradient(270deg, var(--fomo-color-purple) -24.95%, var(--fomo-color-fuchsia) 100%);
     border-radius: inherit;
 }
 
