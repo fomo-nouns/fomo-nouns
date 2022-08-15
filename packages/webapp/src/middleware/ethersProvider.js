@@ -1,4 +1,4 @@
-import { default as config, provider as RPCProvider} from '../config';
+import { default as config, provider as RPCProvider } from '../config';
 
 import { setPrevSettledBlockHash } from '../state/slices/settlement';
 import { isTopicInBloom, isContractAddressInBloom } from 'ethereum-bloom-filters';
@@ -9,7 +9,7 @@ import { isSettleMethod as isAuctionSettleMethod } from '../utils/auctionMethods
 import { isSettleMethod as isFomoSettleMethod } from '../utils/fomoMethods';
 
 // Define the Actions Intercepted by the Middleware
-const checkAuctionAndSettlement = (payload) => ({type: 'ethereumProvider/checkAuctionAndSettlement', payload});
+const checkAuctionAndSettlement = (payload) => ({ type: 'ethereumProvider/checkAuctionAndSettlement', payload });
 
 const settlementTopic = '0xc9f72b276a388619c6d185d146697036241880c36654b1a3ffdad07c24038d99';
 const auctionAddress = config.auctionProxyAddress;
@@ -25,7 +25,7 @@ const ethersProviderMiddleware = () => {
   const settlementInBloom = (logsBloom) => {
     try {
       return isTopicInBloom(logsBloom, settlementTopic) &&
-            isContractAddressInBloom(logsBloom, auctionAddress);
+        isContractAddressInBloom(logsBloom, auctionAddress);
     } catch {
       return false;
     }
@@ -35,7 +35,6 @@ const ethersProviderMiddleware = () => {
     return isFomoSettleMethod(input) || isAuctionSettleMethod(input);
   }
 
-  // TODO: delete debug console outputs after testing
   const checkSettlementTx = async (store, blockNumber) => {
     if (!blockNumber) return;
 
@@ -47,7 +46,6 @@ const ethersProviderMiddleware = () => {
       const receipt = await settleTx.wait();
 
       if (receipt.status === 1) {
-        console.log("debug - confirming settlement after checks")
         confirmSettlement(store, blockNumber);
       } else {
         console.log("Reverted tx")
@@ -63,7 +61,6 @@ const ethersProviderMiddleware = () => {
     store.dispatch(setPrevSettledBlockHash(block.hash));
   }
 
-  // TODO: delete debug console outputs after testing 
   const checkAuctionAndSettlement = async (store, logsBloom, blockNumber) => {
     // Check the latest auction status
     const auction = await AuctionContract.auction();
@@ -72,7 +69,6 @@ const ethersProviderMiddleware = () => {
     const auctionEnd = auction?.endTime.toNumber();
 
     if (latestActiveNounId !== nounId && settlementInBloom(logsBloom)) {
-      console.log("debug - requesting settlement confirmation")
       if (latestActiveNounId === undefined) {
         // Go more safe route by checking for settle tx
         // in a block and not base assumptions only on bloom
@@ -83,7 +79,6 @@ const ethersProviderMiddleware = () => {
         // that modified auction state run successefuly
         // and additional checks can be skipped
         confirmSettlement(store, blockNumber);
-        console.log("debug - stright confirm")
       }
     }
 

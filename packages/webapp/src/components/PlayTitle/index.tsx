@@ -75,9 +75,7 @@ const PlayTitle: React.FC<{}> = props => {
             const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
             title = `${moreLikesNeeded} more votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
         }
-
-        //TODO: !titles - set this back to `(!activeAuction && !votingActive)` after dev work
-    } else if (activeAuction && !votingActive) {
+    } else if (!activeAuction && !votingActive) {
         if (noWayWeGetItTitle === undefined) {
             title = randomTimeIsUpTitle();
         } else {
