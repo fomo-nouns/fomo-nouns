@@ -1,15 +1,13 @@
 import classes from './NavBar.module.css';
 import { Nav, Navbar } from 'react-bootstrap';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setDisplaySingleNoun } from '../../state/slices/noun';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { useAppSelector } from '../../hooks';
 
-import fomologo from './fomologo.png';
+import fomoLogo from './fomologo.png';
 import NavPlayers from '../NavPlayers';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
 import NavWallet from '../NavWallet';
 import NavFunds from '../NavFunds';
+import NavNounderNounSwitch from '../NavNounderNounSwitch';
 
 const NavBar = () => {
   const activeAccount = useAppSelector(state => state.account.activeAccount);
@@ -19,20 +17,12 @@ const NavBar = () => {
     ? NavBarButtonStyle.COOL_INFO
     : NavBarButtonStyle.WARM_INFO;
 
-  const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
-  const displaySingleNoun = useAppSelector(state => state.noun.displaySingleNoun)!;
-  const dispatch = useAppDispatch();
-
-  function toggleSingleNounDisplay() {
-    dispatch(setDisplaySingleNoun(!displaySingleNoun));
-  }
-
   return (
     <div className={classes.HeaderBar}>
       <Navbar collapseOnSelect expand="lg">
         <div className={classes.brandAndPlayersWrapper}>
           <Navbar.Brand href="/" className={classes.navBarBrand}>
-            <img src={fomologo} alt='FOMO Nouns'
+            <img src={fomoLogo} alt='FOMO Nouns'
               width="115"
               className={classes.LogoImage}
             />
@@ -44,13 +34,7 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
         <Navbar.Collapse id="nav-items" className="justify-content-end">
           <NavFunds />
-          {
-            // TODO: style this in v2 style version
-            nextNounId != null && nextNounId % 10 === 0 &&
-            <Nav.Link onClick={toggleSingleNounDisplay} className={classes.nounsNavLink}>
-              {!displaySingleNoun ? <FontAwesomeIcon icon={faEyeSlash} className="icon" /> : <div className={classes.nogglesAscii}>⌐◨-◨</div>} {displaySingleNoun ? 'SHOW' : 'HIDE'} NOUN {nextNounId}
-            </Nav.Link>
-          }
+          <NavNounderNounSwitch />
           <Nav.Link
             href="https://nouns.wtf/"
             className={classes.nounsNavLink}

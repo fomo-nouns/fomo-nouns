@@ -32,7 +32,6 @@
     box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.05);
     height: 16px;
     width: 100%;
-    /* width: 500px; */
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
@@ -41,7 +40,7 @@
 .ProgressBar {
     height: 100%;
     min-width: 16px;
-    background: linear-gradient(270deg, #F9B9F2 -24.95%, #5603AD 100%);
+    background: linear-gradient(270deg, var(--fomo-color-purple) -24.95%, var(--fomo-color-fuchsia) 100%);
     border-radius: inherit;
 }
 
@@ -52,6 +51,5 @@
 @media (width: 750px) {
     .BarOutline {
         width: 100%;
-        /* max-width: 750px; */
     }
 }

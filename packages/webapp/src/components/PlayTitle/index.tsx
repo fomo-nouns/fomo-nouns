@@ -6,7 +6,6 @@ import Gradient, { GradientStyle } from "../Gradient";
 import { usePickByState } from "../../utils/colorResponsiveUIUtils";
 import clsx from "clsx";
 import { VOTE_OPTIONS } from "../../state/slices/vote";
-import { yesVotesNeeded } from "../../utils/voteMath";
 
 const settleTitles = [
     `Trying to get this noun...`,
@@ -43,81 +42,47 @@ const PlayTitle: React.FC<{}> = props => {
     const nextNounId = useAppSelector(state => state.noun.nextNounId)!;
     const attemptedSettle = useAppSelector(state => state.vote.attemptedSettle);
     const votingActive = useAppSelector(state => state.vote.votingActive);
-    const activeVoters = useAppSelector(state => state.vote.activeVoters);
     const votes = useAppSelector(state => state.vote.voteCounts);
+    const requiredLikes = useAppSelector(state => state.vote.consensusRequiredLikes);
+    const consensusUnreachable = useAppSelector(state => state.vote.consensusUnreachable);
 
     const [noWayWeGetItTitle, setNoWayWeGetItTitle] = useState<string | undefined>(undefined);
 
     const likes = votes[VOTE_OPTIONS.voteLike];
-    const dislikes = votes[VOTE_OPTIONS.voteDislike];
 
-    let timerSpacer = (<div className={classes.timerSpacer}>&nbsp;</div>);
-
-    let title = <></>;
+    let title = '';
     if (attemptedSettle) {
-        title = (
-            <>
-                <Gradient style={GradientStyle.FUCHSIA_PURPLE}>{randomSettleTitle()}</Gradient>
-                <div>{timerSpacer}</div>
-            </>
-        );
-    } else if (votingActive) {
-        const requiredLikes = yesVotesNeeded(dislikes, activeVoters);
+        title = randomSettleTitle()
+    } else if (votingActive && consensusUnreachable) {
+        if (noWayWeGetItTitle === undefined) {
+            const randomNoWayTitle = randomNoWayWeGetItTitle();
+            setNoWayWeGetItTitle(randomNoWayTitle);
 
-        let titleText = ''
-        if ((requiredLikes + dislikes) > activeVoters) {
-            if (noWayWeGetItTitle === undefined) {
-                const randomNoWayTitle = randomNoWayWeGetItTitle();
-                setNoWayWeGetItTitle(randomNoWayTitle);
-
-                titleText = randomNoWayTitle;
-            } else {
-                titleText = noWayWeGetItTitle;
-            }
-
-            title = (
-                <div>
-                    <div>{titleText}</div>
-                    <div>{timerSpacer}</div>
-                </div>
-            );
+            title = randomNoWayTitle;
         } else {
-            if (noWayWeGetItTitle !== undefined) {
-                setNoWayWeGetItTitle(undefined);
-            }
+            title = noWayWeGetItTitle;
+        }
+    } else if (votingActive) {
+        if (noWayWeGetItTitle !== undefined) {
+            setNoWayWeGetItTitle(undefined);
+        }
 
-            if (likes === 0) {
-                titleText = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
-            } else {
-                const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
-                titleText = `${moreLikesNeeded} more votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
-            }
+        //TODO: change text based on selection of showing two nouns or not
 
-            title = (
-                <div>
-                    <div>{titleText}</div>
-                    <BlockCountdownTimer />
-                </div>
-            );
+        if (likes === 0) {
+            title = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
+        } else {
+            const moreLikesNeeded = requiredLikes - likes > 0 ? requiredLikes - likes : 0;
+            title = `${moreLikesNeeded} more votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
         }
     } else if (!activeAuction && !votingActive) {
         if (noWayWeGetItTitle === undefined) {
-            title = (
-                <div>
-                    <div>{randomTimeIsUpTitle()}</div>
-                    <BlockCountdownTimer />
-                </div>
-            );
+            title = randomTimeIsUpTitle();
         } else {
-            title = (
-                <div>
-                    <div>{noWayWeGetItTitle}</div>
-                    <div>{timerSpacer}</div>
-                </div>
-            );
+            title = noWayWeGetItTitle;
         }
     } else {
-        title = <></>
+        title = ''
     }
 
     const style = usePickByState(
@@ -128,7 +93,10 @@ const PlayTitle: React.FC<{}> = props => {
     return (
         <div className={classes.wrapper}>
             <h1 className={clsx(classes.title, style)}>
-                {title}
+                {attemptedSettle
+                    ? <Gradient style={GradientStyle.FUCHSIA_PURPLE}>{title}</Gradient>
+                    : <div>{title}</div>}
+                <BlockCountdownTimer />
             </h1>
         </div>
     )
