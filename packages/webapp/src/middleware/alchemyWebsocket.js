@@ -11,7 +11,8 @@ import dayjs from 'dayjs';
 //TODO: !titles - remove this after dev work
 import {
   incrementCount,
-  triggerSettlement
+  triggerSettlement,
+  setActiveVoters
 } from '../state/slices/vote';
 
 // Define the Actions Intercepted by the Middleware
@@ -85,10 +86,16 @@ const alchemyWebsocketMiddleware = () => {
     store.dispatch(resetVotes());
 
     //TODO: !titles - remove timers after dev work
+    store.dispatch(setActiveVoters(4))
     setTimeout(() => {
       store.dispatch(incrementCount('voteLike'))
       console.log('- add one like vote')
     }, 1000);
+
+    setTimeout(() => {
+      store.dispatch(incrementCount('voteDislike'))
+      console.log('- add one dislike vote')
+    }, 1500);
 
     setTimeout(() => {
       store.dispatch(incrementCount('voteLike'))
@@ -96,9 +103,14 @@ const alchemyWebsocketMiddleware = () => {
     }, 2000);
 
     setTimeout(() => {
+      store.dispatch(incrementCount('voteDislike'))
+      console.log('- - add one dislike vote')
+    }, 2500);
+
+    setTimeout(() => {
       store.dispatch(triggerSettlement())
       console.log('- - - set as try to settle')
-    }, 3000);
+    }, 5000);
 
   }
 

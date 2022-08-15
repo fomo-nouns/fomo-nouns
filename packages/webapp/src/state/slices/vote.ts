@@ -21,6 +21,8 @@ interface VoteState {
   score: number;
   missedVotes: number;
   voteTimeLeft: number;
+  consensusRequiredLikes: number;
+  consensusUnreachable: boolean
 }
 
 const initialState: VoteState = {
@@ -34,7 +36,9 @@ const initialState: VoteState = {
   votingBlockHash: undefined,
   score: 0,
   missedVotes: 0,
-  voteTimeLeft: voteTime
+  voteTimeLeft: voteTime,
+  consensusRequiredLikes: 0,
+  consensusUnreachable: false
 };
 
 export const voteSlice = createSlice({
@@ -74,13 +78,20 @@ export const voteSlice = createSlice({
       activeVotes: state.activeVoters,
       connected: state.connected,
       // If user lodged a vote, reset missed vote counter, otherwise increment it
-      missedVotes: (!state.currentVote ? state.missedVotes + 1 : initialState.missedVotes)
+      missedVotes: (!state.currentVote ? state.missedVotes + 1 : initialState.missedVotes),
+      consensusRequiredLikes: state.activeVoters
     }),
     setVotingBlockHash: (state, action: PayloadAction<string | undefined >) => {
       state.votingBlockHash = action.payload;
     },
     setVoteTimeLeft: (state, action: PayloadAction<number | undefined >) => {
       state.voteTimeLeft = action.payload === undefined ? voteTime : action.payload;
+    },
+    setConsensusRequiredLikes: (state, action: PayloadAction<number | undefined >) => {
+      state.consensusRequiredLikes = action.payload === undefined ? 0 : action.payload;
+    },
+    setConsensusUnreachable: (state) => {
+      state.consensusUnreachable = true;
     }
   },
 });
@@ -96,7 +107,9 @@ export const {
   endVoting,
   resetVotes,
   setVotingBlockHash,
-  setVoteTimeLeft
+  setVoteTimeLeft,
+  setConsensusRequiredLikes,
+  setConsensusUnreachable
 } = voteSlice.actions;
 
 export default voteSlice.reducer;

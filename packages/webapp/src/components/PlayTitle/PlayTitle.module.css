@@ -12,15 +12,6 @@
     padding-bottom: 0.5rem;
 }
 
-.timerSpacer {
-    font-family: 'PT Root UI';
-    font-weight: bold;
-    font-size: medium;
-    margin-top: 1rem;
-    padding-bottom: 0.2rem;
-    margin-bottom: 19px;
-}
-
 .cool {
     color: var(--brand-cool-dark-text);
 }

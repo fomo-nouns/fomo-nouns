@@ -26,7 +26,8 @@ import voteWebsocket from './middleware/voteWebsocket';
 import ethersProviderMiddleware from './middleware/ethersProvider';
 import alchemyWebsocketMiddleware from './middleware/alchemyWebsocket';
 import alchemyMempoolWebsocketMiddleware from './middleware/alchemyMempoolWebsocket';
-import voteTime from './middleware/voteTime';
+import voteTimeMiddleware from './middleware/voteTimeMiddleware';
+import consensusMiddleware from './middleware/consensusMiddleware';
 
 
 dotenv.config();
@@ -57,7 +58,8 @@ export default function configureStore(preloadedState: any) {
         alchemyMempoolWebsocketMiddleware,
         ethersProviderMiddleware,
         voteWebsocket,
-        voteTime
+        voteTimeMiddleware,
+        consensusMiddleware
       ),
     ),
   );
