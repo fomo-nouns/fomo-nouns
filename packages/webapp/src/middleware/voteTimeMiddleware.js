@@ -29,6 +29,7 @@ const voteTimeMiddleware = () => {
     }
 
     // TODO: fix problems with UI glitching side effects this sometimes causes
+    // eslint-disable-next-line
     const closeTimer = (store, time, x) => {
         const newTime = time - (60 * x);
 
