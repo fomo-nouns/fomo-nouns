@@ -7,7 +7,7 @@ import { openVoteSocket } from '../../middleware/voteWebsocket';
 import { openEthereumSocket } from '../../middleware/alchemyWebsocket';
 
 
-const VoteBar:React.FC<{}> = (props) => {
+const VoteBar: React.FC<{}> = (props) => {
   const dispatch = useAppDispatch();
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const voteSocketConnected = useAppSelector(state => state.vote.connected);
@@ -16,7 +16,7 @@ const VoteBar:React.FC<{}> = (props) => {
   const blockhash = useAppSelector(state => state.block.blockHash);
 
   // Approves a specific blockhash for voting after a period of time. This prevents the user from voting on a Noun by mistake as a new block is received.
-  useEffect( () => {
+  useEffect(() => {
     const timerId = setTimeout(dispatch, 500, setVotingBlockHash(blockhash));
     return () => clearTimeout(timerId);
   }, [blockhash, dispatch])
@@ -27,7 +27,7 @@ const VoteBar:React.FC<{}> = (props) => {
     }
     if (!ethereumSocketConnected) {
       dispatch(openEthereumSocket());
-    } 
+    }
   }
 
   const voteOpts = (neutralOption: boolean) => (
@@ -46,14 +46,12 @@ const VoteBar:React.FC<{}> = (props) => {
     <span className={classes.reconnect} onClick={openSocket}>Click to Enable Voting</span>
   )
 
-  return(
-    <div className={`
-      ${(!votingActive || activeAuction === undefined) ? classes.VoteBarOverlay : ''}
-      ${classes.VoteBar}`}
+  return (
+    <div className={classes.VoteBar}
     >
-      { (voteSocketConnected && ethereumSocketConnected) ? voteOpts(false)
+      {(voteSocketConnected && ethereumSocketConnected) ? voteOpts(false)
         : !ethereumSocketConnected ? reconnectOpt
-        : voteReconnectOpt }
+          : voteReconnectOpt}
     </div>
   );
 }

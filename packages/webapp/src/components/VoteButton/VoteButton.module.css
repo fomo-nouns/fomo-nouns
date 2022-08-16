@@ -2,23 +2,33 @@ button {
     padding: 0;
 }
 
-
 .voteButton {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    background-color: white;
-    border: 1px solid black;
+    border: transparent;
     border-radius: 20px;
 
     height: 90px;
     width: 50%;
     min-width: 85px;
-    max-width: 250px;
+    max-width: 300px;
 
     box-sizing: border-box;
+
+    box-shadow: 0px 5px 15px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cool {
+    background-color: var(--brand-cool-background);
+    color: var(--brand-cool-light-text);
+}
+
+.warm {
+    background-color: var(--brand-warm-background);
+    color: var(--brand-warm-light-text);
 }
 
 .voteButton:disabled {
@@ -27,7 +37,7 @@ button {
 
 @media (hover: hover) {
     .voteButton:enabled:hover:not(.selected) {
-        background: rgba(0, 0, 0, 0.1);
+        background: rgb(127, 197, 156, .4);
     }
 }
 
@@ -41,7 +51,6 @@ button {
 }
 
 .selected {
-    border: 2px solid black;
     background: rgb(127, 197, 156, .4);
 }
 
