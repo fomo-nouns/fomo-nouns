@@ -7,6 +7,8 @@ import star from '../../assets/star.png';
 
 dayjs.extend(duration);
 
+const showLevelImages = false;
+
 const AuctionTimer: React.FC<{}> = props => {
     const activeAuction = useAppSelector(state => state.auction.activeAuction);
     const closeToAuctionEnd = useAppSelector(state => state.auction.closeToEnd);
@@ -39,7 +41,7 @@ const AuctionTimer: React.FC<{}> = props => {
 
     const levelImages: Array<React.ReactNode> = [];
 
-    if (closeToAuctionEnd) {
+    if (closeToAuctionEnd && showLevelImages) {
         for (let i = 5; i > minutes; i--) {
             levelImages.push(<img key={i} className={classes.levelImage} src={star} alt="Readiness Level Marker" />)
         }
