@@ -80,7 +80,7 @@
     border-left: 1px solid var(--brand-cool-border);
 }
 
-.coolInfo .divider {
+.warmInfo .divider {
     border-left: 1px solid var(--brand-warm-border);
 }
 

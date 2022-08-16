@@ -16,7 +16,7 @@ const NavPlayers: React.FC<{}> = props => {
     classes.warmInfo,
   );
 
-  if (!activeAuction && voteConnected) {
+  if (activeAuction && voteConnected) {
     return (
       <div
         className={`${classes.wrapper} ${buttonStyle}`}
