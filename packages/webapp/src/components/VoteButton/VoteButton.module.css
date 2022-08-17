@@ -15,11 +15,13 @@ button {
 .cool {
     background-color: var(--brand-cool-background);
     color: var(--brand-cool-light-text);
+    stop-color: var(--brand-cool-light-text);
 }
 
 .warm {
     background-color: var(--brand-warm-background);
     color: var(--brand-warm-light-text);
+    stop-color: var(--brand-warm-light-text);
 }
 
 .voteButton:disabled {
@@ -90,18 +92,34 @@ button {
     }
 }
 
-.solidThumbPositiveStopTop {
+.thumbSelectedPositiveStopTop {
     stop-color: var(--fomo-color-lime);
 }
 
-.solidThumbPositiveStopBottom {
+.thumbSelectedPositiveStopBottom {
     stop-color: var(--fomo-color-teal);
 }
 
-.solidThumbNegativeStopTop {
+.thumbSelectedNegativeStopTop {
     stop-color: var(--fomo-color-red);
 }
 
-.solidThumbNegativeStopBottom {
+.thumbSelectedNegativeStopBottom {
+    stop-color: var(--fomo-color-purple-bright);
+}
+
+.positive:hover:not(.disabled) .thumbPositiveStopTop {
+    stop-color: var(--fomo-color-lime);
+}
+
+.positive:hover:not(.disabled) .thumbPositiveStopBottom {
+    stop-color: var(--fomo-color-teal);
+}
+
+.negative:hover:not(.disabled) .thumbNegativeStopTop {
+    stop-color: var(--fomo-color-red);
+}
+
+.negative:hover:not(.disabled) .thumbNegativeStopBottom {
     stop-color: var(--fomo-color-purple-bright);
 }
