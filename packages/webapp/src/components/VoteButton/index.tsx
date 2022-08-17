@@ -78,6 +78,7 @@ const VoteButton: React.FC<{ voteType: VOTE_OPTIONS }> = props => {
   }
 
   const disabled = voteNotSelected || (!votingActive || activeAuction) || blockHash !== votingBlockHash
+  // const disabled = voteNotSelected || (!votingActive) || blockHash !== votingBlockHash
 
   useEventListener("keydown", (key) => {
     const event = key as KeyboardEvent
@@ -95,11 +96,18 @@ const VoteButton: React.FC<{ voteType: VOTE_OPTIONS }> = props => {
   const currentVoteButton = currentVote === voteType;
 
   return (
-    <button className={clsx(classes.voteButton)}
+    <button className={classes.voteButton}
       onClick={() => changeVote(voteType)}
       //TODO: dev - set disabled back to `disabled={disabled}`
       disabled={!disabled}>
-      <div className={clsx(style, voteToGradientStyle[voteType], currentVoteButton ? classes.selected : '')}>
+      <div className={
+        clsx(
+          style, voteToGradientStyle[voteType],
+          currentVoteButton ? classes.selected : '',
+          //TODO: dev - set disabled back to `disabled ? ...`
+          !disabled ? classes.disabled : ''
+        )
+      }>
         <div className={clsx(style, classes.dataBox)}>
           <div className={currentVoteButton ? classes.thumbBoxSelected : classes.thumbBox}>
             {currentVoteButton ? voteToSolidThumb[voteType] : voteToOutlineThumb[voteType]}

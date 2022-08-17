@@ -37,7 +37,7 @@ button {
     background: linear-gradient(90deg, var(--fomo-color-teal) 0%, var(--fomo-color-lime) 100%);
 }
 
-.positive:enabled:hover {
+.positive:hover:not(.disabled) {
     background: linear-gradient(90deg, var(--fomo-color-teal) 0%, var(--fomo-color-lime) 100%);
 }
 
@@ -52,7 +52,7 @@ button {
     background: linear-gradient(90deg, var(--fomo-color-purple-bright) 0%, var(--fomo-color-red) 100%);
 }
 
-.negative:enabled:hover {
+.negative:hover:not(.disabled) {
     background: linear-gradient(90deg, var(--fomo-color-purple-bright) 0%, var(--fomo-color-red) 100%);
 }
 
@@ -78,16 +78,6 @@ button {
     height: 2.25rem;
     width: 2.25rem;
 }
-
-/* .positive:enabled:hover:not(.selected) {
-    background: linear-gradient(90deg, var(--fomo-color-teal) 0%, var(--fomo-color-lime) 100%);
-} */
-
-/* @media (hover: hover) {
-    .positive:enabled:hover:not(.selected) {
-        background: linear-gradient(90deg, var(--fomo-color-teal) 0%, var(--fomo-color-lime) 100%);
-    }
-} */
 
 .voteText {
     font-size: 1em;
