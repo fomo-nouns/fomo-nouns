@@ -26,7 +26,7 @@ button {
     cursor: not-allowed;
 }
 
-.positive {
+.gradientBox {
     width: 100%;
     height: 100%;
     border-radius: 20px;
@@ -39,13 +39,6 @@ button {
 
 .positive:hover:not(.disabled) {
     background: linear-gradient(90deg, var(--fomo-color-teal) 0%, var(--fomo-color-lime) 100%);
-}
-
-.negative {
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    padding: 0.125rem;
 }
 
 .negative.selected {
@@ -95,4 +88,20 @@ button {
         font-size: 1.25em;
         font-weight: bold;
     }
+}
+
+.solidThumbPositiveStopTop {
+    stop-color: var(--fomo-color-lime);
+}
+
+.solidThumbPositiveStopBottom {
+    stop-color: var(--fomo-color-teal);
+}
+
+.solidThumbNegativeStopTop {
+    stop-color: var(--fomo-color-red);
+}
+
+.solidThumbNegativeStopBottom {
+    stop-color: var(--fomo-color-purple-bright);
 }
