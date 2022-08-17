@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { sendVote } from '../../middleware/voteWebsocket';
 import useEventListener from '@use-it/event-listener';
 import { usePickByState } from '../../utils/colorResponsiveUIUtils';
+import Gradient, { GradientStyle } from '../Gradient';
 
 const solidThumbsUp = (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -48,6 +49,12 @@ const voteToOutlineThumb: Record<VOTE_OPTIONS, JSX.Element> = {
   [VOTE_OPTIONS.voteLike]: outlineThumbsUp,
 };
 
+const voteToGradientStyle: Record<VOTE_OPTIONS, string> = {
+  [VOTE_OPTIONS.voteDislike]: classes.negative,
+  [VOTE_OPTIONS.voteShrug]: '',
+  [VOTE_OPTIONS.voteLike]: classes.positive,
+};
+
 const VoteButton: React.FC<{ voteType: VOTE_OPTIONS }> = props => {
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const currentVote = useAppSelector(state => state.vote.currentVote);
@@ -88,14 +95,18 @@ const VoteButton: React.FC<{ voteType: VOTE_OPTIONS }> = props => {
   const currentVoteButton = currentVote === voteType;
 
   return (
-    <button className={clsx(classes.voteButton, style, currentVoteButton ? classes.selected : '')}
+    <button className={clsx(classes.voteButton)}
       onClick={() => changeVote(voteType)}
       //TODO: dev - set disabled back to `disabled={disabled}`
       disabled={!disabled}>
-      <div className={currentVoteButton ? classes.thumbBoxSelected : classes.thumbBox}>
-        {currentVoteButton ? voteToSolidThumb[voteType] : voteToOutlineThumb[voteType]}
+      <div className={clsx(style, voteToGradientStyle[voteType], currentVoteButton ? classes.selected : '')}>
+        <div className={clsx(style, classes.dataBox)}>
+          <div className={currentVoteButton ? classes.thumbBoxSelected : classes.thumbBox}>
+            {currentVoteButton ? voteToSolidThumb[voteType] : voteToOutlineThumb[voteType]}
+          </div>
+          <span className={classes.voteText}> {voteCounts[voteType]} </span>
+        </div>
       </div>
-      <span className={classes.voteText}> {voteCounts[voteType]} </span>
     </button>
   );
 };

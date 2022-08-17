@@ -1,9 +1,8 @@
 .VoteBar {
     display: flex;
     justify-content: space-evenly;
-    gap: 1.5rem;
-    width: 30%;
-    margin-bottom: 20px;
+    width: 420px;
+    margin-bottom: 3rem;
     margin-top: 3rem;
 }
 
@@ -15,4 +14,11 @@
     font-size: 1.5em;
     font-weight: bold;
     cursor: pointer;
+}
+
+@media (max-width: 460px) {
+    .VoteBar {
+        gap: 1.5rem;
+        width: 80%;
+    }
 }
