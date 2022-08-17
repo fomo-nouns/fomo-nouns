@@ -10,20 +10,20 @@ button {
     cursor: pointer;
     border: transparent;
     border-radius: 20px;
-
-    height: 90px;
     width: 50%;
     min-width: 85px;
     max-width: 300px;
-
     box-sizing: border-box;
-
     box-shadow: 0px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.5rem;
 }
 
 .cool {
     background-color: var(--brand-cool-background);
     color: var(--brand-cool-light-text);
+    outline-color: var(--brand-cool-light-text);
+    fill: var(--brand-cool-light-text);
+    stroke: var(--brand-cool-light-text);
 }
 
 .warm {
@@ -46,25 +46,31 @@ button {
     font-weight: bold;
 }
 
-.voteEmojiText {
-    font-size: 2em;
+.thumbBox {
+    margin-top: 0.75rem;
+    margin-bottom: 0.375rem;
+    height: 2rem;
+    width: 2rem;
 }
 
-.selected {
-    background: rgb(127, 197, 156, .4);
+.thumbBoxSelected {
+    margin-top: 0.6rem;
+    margin-bottom: 0.275rem;
+    height: 2.25rem;
+    width: 2.25rem;
+}
+
+.thumb {
+    stroke: var(--brand-warm-light-text);
+}
+
+.thumbSelected {
+    stroke: var(--brand-warm-light-text);
 }
 
 @media only screen and (min-width: 768px) {
-    .voteButton {
-        height: 110px;
-    }
-
     .voteText {
-        font-size: 1.5em;
+        font-size: 1.25em;
         font-weight: bold;
-    }
-
-    .voteEmojiText {
-        font-size: 3em;
     }
 }
