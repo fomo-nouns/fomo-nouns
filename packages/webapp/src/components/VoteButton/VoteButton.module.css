@@ -68,13 +68,19 @@ button {
 .thumbBox {
     margin-top: 0.75rem;
     margin-bottom: 0.375rem;
-    height: 2rem;
-    width: 2rem;
 }
 
 .thumbBoxSelected {
     margin-top: 0.6rem;
     margin-bottom: 0.275rem;
+}
+
+.thumb {
+    height: 2rem;
+    width: 2rem;
+}
+
+.thumbSelected {
     height: 2.25rem;
     width: 2.25rem;
 }
