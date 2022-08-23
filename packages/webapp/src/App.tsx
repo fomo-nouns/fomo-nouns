@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from './hooks';
 
 import { contract as AuctionContract } from './wrappers/nounsAuction';
 import { setAuctionEnd } from './state/slices/auction';
-import { setNextNounId } from './state/slices/noun';
+import { setNextNounId, setDisplaySingleNoun } from './state/slices/noun';
 import { setBlockAttr } from './state/slices/block';
 import { provider } from './config';
 
@@ -46,6 +46,9 @@ function App() {
     dispatch(setNextNounId(nextNounId));
     dispatch(setAuctionEnd(auctionEnd));
     dispatch(setBlockAttr({blocknumber, blockhash}))
+    if (nextNounId === 420) {
+      dispatch(setDisplaySingleNoun(false));
+    }
   }, [dispatch])
 
   useEffect(() => {
