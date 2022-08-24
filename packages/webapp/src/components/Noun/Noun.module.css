@@ -87,6 +87,10 @@
         max-width: 320px;
     }
 
+    .twoNouns .img {
+        max-width: 320px;
+    }
+
     /* single Noun display */
     .nounWrapper .img {
         height: 100%;
@@ -120,6 +124,10 @@
     }
 
     .platform {
+        margin-top: -3.725rem;
+    }
+
+    .twoNouns .platform {
         margin-top: -3.725rem;
     }
 }
