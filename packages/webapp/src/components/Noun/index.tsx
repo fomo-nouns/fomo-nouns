@@ -5,7 +5,7 @@ import { setActiveBackground } from '../../state/slices/noun';
 import classes from '../Noun/Noun.module.css';
 import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nouns/assets';
 import { buildSVG } from '@nouns/sdk';
-import NounPlatform from '../NounPlatform';
+import NounPlatform, { PlatformType } from '../NounPlatform';
 
 const { palette } = ImageData;
 
@@ -18,7 +18,6 @@ function getNounImage(nounId: number, blockhash: string) {
 }
 
 const Noun: React.FC = props => {
-
   const dispatch = useAppDispatch();
 
   const blockhash = useAppSelector(state => state.block.blockHash);
@@ -64,7 +63,9 @@ const Noun: React.FC = props => {
 
 
     if (nounImageData.length > 1) imgWrapper.push(classes[`noun-${i + 1}`])
-    // const icon = !displaySingleNoun && (nextNounId + i) % 10 !== 0 && <FontAwesomeIcon icon={faGavel} className="icon" />
+    if (!displaySingleNoun) imgWrapper.push(classes.twoNouns)
+
+    const platform = !displaySingleNoun && (nextNounId + i) % 10 === 0 ? <NounPlatform type={PlatformType.nounder} /> : <NounPlatform type={PlatformType.nouner} />
 
     return (
       <div className={`${imgWrapper.join(' ')}`}>
@@ -73,9 +74,8 @@ const Noun: React.FC = props => {
           src={src}
           alt={alt}
         />
-        {/* <div className={classes.nounId}>{icon} Noun {nextNounId + i}</div> */}
         <div className={classes.platform}>
-          <NounPlatform />
+          {platform}
         </div>
       </div>
     )
