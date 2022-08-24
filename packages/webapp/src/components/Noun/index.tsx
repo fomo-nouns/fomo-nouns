@@ -3,18 +3,17 @@ import loadingNoun from '../../assets/loading-skull-noun.gif';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setActiveBackground } from '../../state/slices/noun';
 import classes from '../Noun/Noun.module.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGavel } from '@fortawesome/free-solid-svg-icons'
-
 import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nouns/assets';
 import { buildSVG } from '@nouns/sdk';
+import NounPlatform from '../NounPlatform';
+
 const { palette } = ImageData;
 
 function getNounImage(nounId: number, blockhash: string) {
   const seed = getNounSeedFromBlockHash(nounId, blockhash);
-  const { parts, background } = getNounData(seed);
+  const { parts } = getNounData(seed);
 
-  const svgBinary = buildSVG(parts, palette, background);
+  const svgBinary = buildSVG(parts, palette, 'ffffff00');
   return { src: `data:image/svg+xml;base64,${btoa(svgBinary)}`, seed };
 }
 
@@ -65,7 +64,8 @@ const Noun: React.FC = props => {
 
 
     if (nounImageData.length > 1) imgWrapper.push(classes[`noun-${i + 1}`])
-    const icon = !displaySingleNoun && (nextNounId + i) % 10 !== 0 && <FontAwesomeIcon icon={faGavel} className="icon" />
+    // const icon = !displaySingleNoun && (nextNounId + i) % 10 !== 0 && <FontAwesomeIcon icon={faGavel} className="icon" />
+
     return (
       <div className={`${imgWrapper.join(' ')}`}>
         <img
@@ -73,7 +73,10 @@ const Noun: React.FC = props => {
           src={src}
           alt={alt}
         />
-        <div className={classes.nounId}>{icon} Noun {nextNounId + i}</div>
+        {/* <div className={classes.nounId}>{icon} Noun {nextNounId + i}</div> */}
+        <div className={classes.platform}>
+          <NounPlatform />
+        </div>
       </div>
     )
   })

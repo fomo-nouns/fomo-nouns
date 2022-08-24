@@ -1,36 +1,38 @@
 /* double Noun display */
 .nounsWrapper {
-    border: 1px solid #000000;
-    margin: 0.5em 0 0.75em 0;
-    box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-
+    /* border: 1px solid #000000; */
+    /* margin: 0.5em 0 0.75em 0; */
+    /* box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 20px; */
+    gap: 3rem;
 }
 
 .imgWrapper {
-    z-index: 0;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .noun-1 {
-    border-bottom: 1px solid #000;
+    /* border-bottom: 1px solid #000; */
 }
 
-
 .img {
+    z-index: 10;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     width: 100%;
     height: 100%;
-    max-width: 200px;
+    max-width: 250px;
+    /* Past value: 200px */
 }
 
 .noun-1 .img {
-    border-radius: 20px 20px 0 0;
+    /* border-radius: 20px 20px 0 0; */
 }
 
 .noun-2 .img {
-    border-radius: 0 0 20px 20px;
+    /* border-radius: 0 0 20px 20px; */
 }
 
 /* single Noun display */
@@ -52,14 +54,16 @@
     font-size: 0.75em;
 }
 
-.noun-2 .nounId {
-    border-radius: 0 0 20px 20px;
+.platform {
+    margin-top: -2.725rem;
+    z-index: 0;
+    max-width: 324px;
 }
 
 @media only screen and (min-width: 768px) {
     .nounsWrapper {
         display: flex;
-        margin: 1.5em 0;
+        /* margin: 1.5em 0; */
     }
 
     .imgWrapper {
@@ -68,7 +72,7 @@
 
     .noun-1 {
         border-bottom: 0;
-        border-right: 1px solid #000;
+        /* border-right: 1px solid #000; */
     }
 
     .img {
@@ -81,11 +85,11 @@
     }
 
     .nounWrapper .noun-1 .img {
-        border-radius: 20px 0 0 0;
+        /* border-radius: 20px 0 0 0; */
     }
 
     .nounWrapper .noun-2 .img {
-        border-radius: 0 20px 0 0;
+        /* border-radius: 0 20px 0 0; */
     }
 
     /* double Noun display */
@@ -94,27 +98,22 @@
     }
 
     .nounsWrapper .noun-1 .img {
-        border-radius: 20px 0 0 20px;
-        border-radius: 20px 0 0 0;
+        /* border-radius: 20px 0 0 20px;
+        border-radius: 20px 0 0 0; */
     }
 
     .nounsWrapper .noun-2 .img {
-        border-radius: 0 20px 20px 0;
-        border-radius: 0 20px 0 0;
+        /* border-radius: 0 20px 20px 0;
+        border-radius: 0 20px 0 0; */
     }
 
     .nounId {
         font-size: 2em;
     }
 
-    .noun-1 .nounId {
-        border-radius: 0 0 0 20px;
+    .platform {
+        margin-top: -3.725rem;
     }
-
-    .noun-2 .nounId {
-        border-radius: 0 0 20px 0;
-    }
-
 }
 
 @media only screen and (min-width: 1025px) {
