@@ -52,20 +52,25 @@ const Noun: React.FC = props => {
   }, [nextNounId, blockhash, ethereumConnected]);
 
   useEffect(() => {
-    // When there's only 1 Noun, change the page background to match
-    if (nounImageData.length > 1) return
-    dispatch(setActiveBackground(nounImageData[0].seed.background === 0));
+    // Change app background to match the nouner noun
+    if (nounImageData.length === 1) {
+      dispatch(setActiveBackground(nounImageData[0].seed.background === 0));
+    } else {
+      dispatch(setActiveBackground(nounImageData[1].seed.background === 0));
+    }
   }, [dispatch, nounImageData])
 
 
-  const Imgs = nounImageData.map(({ src, alt }, i) => {
+  const Imgs = nounImageData.map(({ seed, src, alt }, i) => {
     let imgWrapper = [classes.imgWrapper]
 
 
     if (nounImageData.length > 1) imgWrapper.push(classes[`noun-${i + 1}`])
     if (!displaySingleNoun) imgWrapper.push(classes.twoNouns)
 
-    const platform = !displaySingleNoun && (nextNounId + i) % 10 === 0 ? <NounPlatform type={PlatformType.nounder} /> : <NounPlatform type={PlatformType.nouner} />
+    const platform = !displaySingleNoun && (nextNounId + i) % 10 === 0
+      ? <NounPlatform type={PlatformType.nounder} background={seed.background} />
+      : <NounPlatform type={PlatformType.nouner} background={seed.background} />
 
     return (
       <div className={`${imgWrapper.join(' ')}`}>

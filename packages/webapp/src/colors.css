@@ -31,4 +31,9 @@
     --fomo-color-teal: #08DDEA;
     --fomo-color-red: #FF3131;
     --fomo-color-purple-bright: #D400CC;
+
+    --fomo-platform-warm-main: #D6C9C7;
+    --fomo-platform-warm-secondary: #F3E9E9;
+    --fomo-platform-cool-main: #CDD0DC;
+    --fomo-platform-cool-secondary: #E9EBF3;
 }
