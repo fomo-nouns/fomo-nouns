@@ -63,10 +63,24 @@ const Noun: React.FC = props => {
 
   const Imgs = nounImageData.map(({ seed, src, alt }, i) => {
     let imgWrapper = [classes.imgWrapper]
-
+    let nounderLightStyle = {}
 
     if (nounImageData.length > 1) imgWrapper.push(classes[`noun-${i + 1}`])
     if (!displaySingleNoun) imgWrapper.push(classes.twoNouns)
+
+    if ((nextNounId + i) % 10 === 0 && seed.background !== nounImageData[1].seed.background) {
+      imgWrapper.push(classes.differentBackgrounds)
+
+      if (seed.background === 0) {
+        nounderLightStyle = {
+          background: 'linear-gradient(0deg, var(--brand-cool-background) 86%, #00000000 100%)'
+        }
+      } else {
+        nounderLightStyle = {
+          background: 'linear-gradient(0deg, var(--brand-warm-background) 86%, #00000000 100%)'
+        }
+      }
+    }
 
     const platform = !displaySingleNoun && (nextNounId + i) % 10 === 0
       ? <NounPlatform type={PlatformType.nounder} background={seed.background} />
@@ -82,6 +96,7 @@ const Noun: React.FC = props => {
         <div className={classes.platform}>
           {platform}
         </div>
+        <div className={classes.nounderLight} style={nounderLightStyle} />
       </div>
     )
   })
