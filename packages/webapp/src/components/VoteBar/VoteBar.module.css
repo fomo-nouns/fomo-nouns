@@ -2,18 +2,28 @@
     display: flex;
     justify-content: space-evenly;
     width: 420px;
-    margin-bottom: 3rem;
     margin-top: 3rem;
+    margin-bottom: 4rem;
 }
 
 .reconnect {
-    width: 100%;
     margin: auto;
-    text-align: center;
     font-family: Roboto Mono;
-    font-size: 1.5em;
+    font-size: 1.375em;
     font-weight: bold;
     cursor: pointer;
+    border: transparent;
+    border-radius: 20px;
+    box-shadow: 0px 5px 15px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px 40px;
+}
+
+.cool {
+    color: var(--brand-cool-light-text);
+}
+
+.warm {
+    color: var(--brand-warm-light-text);
 }
 
 @media (max-width: 460px) {

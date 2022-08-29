@@ -5,6 +5,8 @@ import classes from './VoteBar.module.css';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { openVoteSocket } from '../../middleware/voteWebsocket';
 import { openEthereumSocket } from '../../middleware/alchemyWebsocket';
+import { usePickByState } from "../../utils/colorResponsiveUIUtils";
+import clsx from "clsx";
 
 
 const VoteBar: React.FC<{}> = (props) => {
@@ -46,8 +48,10 @@ const VoteBar: React.FC<{}> = (props) => {
     <span className={classes.reconnect} onClick={openSocket}>Click to Enable Voting</span>
   )
 
+  const style = usePickByState(classes.cool, classes.warm)
+
   return (
-    <div className={classes.VoteBar}
+    <div className={clsx(classes.VoteBar, style)}
     >
       {(voteSocketConnected && ethereumSocketConnected) ? voteOpts(false)
         : !ethereumSocketConnected ? reconnectOpt
