@@ -121,15 +121,13 @@ const VoteButton: React.FC<{ voteType: VOTE_OPTIONS }> = props => {
   return (
     <button className={classes.voteButton}
       onClick={() => changeVote(voteType)}
-      //TODO: dev - set disabled back to `disabled={disabled}`
-      disabled={!disabled}>
+      disabled={disabled}>
       <div className={
         clsx(
           style, classes.gradientBox,
           voteToGradientStyle[voteType],
           currentVoteButton ? classes.selected : '',
-          //TODO: dev - set disabled back to `disabled ? ...`
-          !disabled ? classes.disabled : ''
+          disabled ? classes.disabled : ''
         )
       }>
         <div className={clsx(style, classes.dataBox)}>
