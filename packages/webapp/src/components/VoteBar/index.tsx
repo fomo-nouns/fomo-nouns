@@ -8,13 +8,20 @@ import { openEthereumSocket } from '../../middleware/alchemyWebsocket';
 import { usePickByState } from "../../utils/colorResponsiveUIUtils";
 import clsx from "clsx";
 
+const waitTexts = [
+  `While we wait, let’s watch perfect nouns pass by...`,
+  `It might have been the one, but it's not the play time yet...`
+]
+
+const getRandomWaitText = () => {
+  return waitTexts[Math.floor(Math.random() * waitTexts.length)]
+}
 
 const VoteBar: React.FC<{}> = (props) => {
   const dispatch = useAppDispatch();
   const activeAuction = useAppSelector(state => state.auction.activeAuction);
   const voteSocketConnected = useAppSelector(state => state.vote.connected);
   const ethereumSocketConnected = useAppSelector(state => state.block.connected);
-  const votingActive = useAppSelector(state => state.vote.votingActive);
   const blockhash = useAppSelector(state => state.block.blockHash);
 
   // Approves a specific blockhash for voting after a period of time. This prevents the user from voting on a Noun by mistake as a new block is received.
@@ -32,6 +39,12 @@ const VoteBar: React.FC<{}> = (props) => {
     }
   }
 
+  const waitText = (
+    <div className={classes.waitText}>
+      {getRandomWaitText()}
+    </div>
+  );
+
   const voteOpts = (neutralOption: boolean) => (
     <>
       <VoteButton voteType={VOTE_OPTIONS.voteDislike} />
@@ -48,14 +61,24 @@ const VoteBar: React.FC<{}> = (props) => {
     <span className={classes.reconnect} onClick={openSocket}>Click to Enable Voting</span>
   )
 
+  let elements = <></>
+
+  if (activeAuction) {
+    elements = waitText;
+  } else if (voteSocketConnected && ethereumSocketConnected) {
+    elements = voteOpts(false);
+  } else if (!ethereumSocketConnected) {
+    elements = reconnectOpt;
+  } else {
+    elements = voteReconnectOpt;
+  }
+
   const style = usePickByState(classes.cool, classes.warm)
 
   return (
     <div className={clsx(classes.VoteBar, style)}
     >
-      {(voteSocketConnected && ethereumSocketConnected) ? voteOpts(false)
-        : !ethereumSocketConnected ? reconnectOpt
-          : voteReconnectOpt}
+      {elements}
     </div>
   );
 }

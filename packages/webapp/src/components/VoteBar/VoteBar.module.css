@@ -26,6 +26,14 @@
     color: var(--brand-warm-light-text);
 }
 
+.waitText {
+    width: 90%;
+    font-family: 'Londrina Solid';
+    font-size: 2em;
+    line-height: normal;
+    text-align: center;
+}
+
 @media (max-width: 460px) {
     .VoteBar {
         gap: 1.5rem;
