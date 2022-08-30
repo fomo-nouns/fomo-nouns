@@ -5,12 +5,12 @@ import { useAppSelector } from '../../hooks';
 import fomoLogo from './fomologo.png';
 import NavPlayers from '../NavPlayers';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
-import NavWallet from '../NavWallet';
+// import NavWallet from '../NavWallet';
 import NavFunds from '../NavFunds';
 import NavNounderNounSwitch from '../NavNounderNounSwitch';
 
 const NavBar = () => {
-  const activeAccount = useAppSelector(state => state.account.activeAccount);
+  // const activeAccount = useAppSelector(state => state.account.activeAccount);
   const useGreyBg = useAppSelector(state => state.noun.isCoolBackground);
 
   const nonWalletButtonStyle = useGreyBg
@@ -46,7 +46,7 @@ const NavBar = () => {
               buttonStyle={nonWalletButtonStyle}
             />
           </Nav.Link>
-          <NavWallet address={activeAccount || '0'} buttonStyle={nonWalletButtonStyle} />
+          {/* <NavWallet address={activeAccount || '0'} buttonStyle={nonWalletButtonStyle} /> */}
         </Navbar.Collapse>
       </Navbar>
     </div>
