@@ -14,7 +14,6 @@ import {
   shortAddress,
   shortENS,
 } from '../../utils/addressAndENSDisplayUtils';
-// TODO: check this
 import responsiveUiUtilsClasses from '../../utils/ResponsiveUIUtils.module.css';
 
 interface NavWalletProps {

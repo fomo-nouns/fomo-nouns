@@ -67,8 +67,6 @@ const PlayTitle: React.FC<{}> = props => {
             setNoWayWeGetItTitle(undefined);
         }
 
-        //TODO: change text based on selection of showing two nouns or not
-
         if (likes === 0) {
             title = `${requiredLikes} yes votes and we'll mint ${nextNounId % 10 === 0 ? 'these Nouns' : 'this Noun'}`;
         } else {

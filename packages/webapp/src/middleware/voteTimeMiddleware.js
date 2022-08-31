@@ -28,19 +28,6 @@ const voteTimeMiddleware = () => {
         }
     }
 
-    // TODO: fix problems with UI glitching side effects this sometimes causes
-    // eslint-disable-next-line
-    const closeTimer = (store, time, x) => {
-        const newTime = time - (60 * x);
-
-        if (time < 0) {
-            closeVoting(store);
-        } else {
-            store.dispatch(setVoteTimeLeft(newTime));
-            timer = setTimeout(() => { closeTimer(store, newTime, x + 1) }, 60);
-        }
-    }
-
     return store => next => action => {
         if (action.type === 'block/setBlockAttr') {
             clearInterval(timer);
@@ -48,9 +35,6 @@ const voteTimeMiddleware = () => {
             updateTimer(store);
         } else if (closeVoteActions.includes(action.type)) {
             closeVoting(store);
-
-            // clearInterval(timer);
-            // closeTimer(store, dayjs().valueOf() - currentBlockTime, 1);
         }
 
         return next(action);

@@ -8,13 +8,6 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { checkAuctionAndSettlement } from './ethersProvider';
 import dayjs from 'dayjs';
 
-//TODO: !titles - cleanup after all dev work done
-// import {
-//   incrementCount,
-//   triggerSettlement,
-//   setActiveVoters
-// } from '../state/slices/vote';
-
 // Define the Actions Intercepted by the Middleware
 const openEthereumSocket = (payload) => ({ type: 'ethereumSocket/open', payload });
 const closeEthereumSocket = (payload) => ({ type: 'ethereumSocket/close', payload });
@@ -84,33 +77,6 @@ const alchemyWebsocketMiddleware = () => {
     // Update the Redux block information
     store.dispatch(setBlockAttr({ 'blockNumber': blockNumber, 'blockHash': blockHash, 'blockTime': blockTime }));
     store.dispatch(resetVotes());
-
-    //TODO: !titles - cleanup after all dev work done
-    // store.dispatch(setActiveVoters(4))
-    // setTimeout(() => {
-    //   store.dispatch(incrementCount('voteLike'))
-    //   console.log('- add one like vote')
-    // }, 1000);
-
-    // setTimeout(() => {
-    //   store.dispatch(incrementCount('voteDislike'))
-    //   console.log('- add one dislike vote')
-    // }, 1500);
-
-    // setTimeout(() => {
-    //   store.dispatch(incrementCount('voteLike'))
-    //   console.log('- - add one like vote')
-    // }, 2000);
-
-    // setTimeout(() => {
-    //   store.dispatch(incrementCount('voteDislike'))
-    //   console.log('- - add one dislike vote')
-    // }, 2500);
-
-    // setTimeout(() => {
-    //   store.dispatch(triggerSettlement())
-    //   console.log('- - - set as try to settle')
-    // }, 5000);
   }
 
   const handleClose = store => () => {
