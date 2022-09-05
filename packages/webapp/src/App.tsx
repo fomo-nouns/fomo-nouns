@@ -20,6 +20,7 @@ import Documentation from './components/Documentation';
 import Banner from './components/Banner';
 import Footer from './components/Footer';
 import SettledAuctionModal from './components/SettledAuctionModal';
+import NotificationToast from './components/NotificationToast';
 
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
@@ -79,6 +80,7 @@ function App() {
       <Banner />
       <Documentation />
       <Footer/>
+      <NotificationToast />
     </div>
   );
 }
