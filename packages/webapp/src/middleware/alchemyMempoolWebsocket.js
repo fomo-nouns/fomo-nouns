@@ -10,7 +10,7 @@ const openEthereumMempoolSocket = (payload) => ({ type: 'ethereumMempoolSocket/o
 const closeEthereumMempoolSocket = (payload) => ({ type: 'ethereumMempoolSocket/close', payload });
 
 const auctionAddress = config.auctionProxyAddress;
-const fomoExecutorAddress = '0x85906cF629ae1DA297548769ecE3e3E6a4f3288f';
+const fomoExecutorAddress = config.fomoExecutorAddress;
 
 // Define the Middleware
 const alchemyMempoolWebsocketMiddleware = () => {
