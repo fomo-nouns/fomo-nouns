@@ -25,7 +25,6 @@ import { default as globalConfig } from './config';
 import voteWebsocket from './middleware/voteWebsocket';
 import ethersProviderMiddleware from './middleware/ethersProvider';
 import alchemyWebsocketMiddleware from './middleware/alchemyWebsocket';
-import alchemyMempoolWebsocketMiddleware from './middleware/alchemyMempoolWebsocket';
 
 
 dotenv.config();
@@ -53,7 +52,6 @@ export default function configureStore(preloadedState: any) {
         routerMiddleware(history), // for dispatching history actions
         // ... other middlewares ...
         alchemyWebsocketMiddleware,
-        alchemyMempoolWebsocketMiddleware,
         ethersProviderMiddleware,
         voteWebsocket
       ),

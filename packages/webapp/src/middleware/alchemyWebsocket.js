@@ -6,21 +6,24 @@ import { setEthereumConnected, setBlockAttr } from '../state/slices/block';
 import { setNextNounId } from '../state/slices/noun';
 import { resetVotes } from '../state/slices/vote';
 import { resetAuctionEnd } from '../state/slices/auction';
-
+import { default as config } from '../config';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { checkForSettlement } from './ethersProvider';
+import { addPendingBidTx, addPendingSettleTx, setMempoolListening } from '../state/slices/mempool';
+import { isBidMethod, isSettleMethod } from '../utils/auctionMethods';
 
 
 // Define the Actions Intercepted by the Middleware
 const openEthereumSocket = (payload) => ({type: 'ethereumSocket/open', payload});
 const closeEthereumSocket = (payload) => ({type: 'ethereumSocket/close', payload});
 
+const auctionAddress = config.auctionProxyAddress;
+const fomoExecutorAddress = config.fomoExecutorAddress;
 
 // Define the Middleware
 const alchemyWebsocketMiddleware = () => {
   let socket = null;
-  let blockSubscription = '0x';
-  let blockId = 44;
+  let blockSubscriptions = [];
   let latestObservedBlock = 0;
 
   const openSocket = () => new W3CWebSocket(`wss://eth-${globalConfig.chainName}.alchemyapi.io/v2/${PROVIDER_KEY}`);
@@ -30,10 +33,10 @@ const alchemyWebsocketMiddleware = () => {
   const parseMessage = (msg) => {
     try {
       const data = JSON.parse(msg.data);
-      if (data?.params?.subscription === blockSubscription) {
+      if (blockSubscriptions.includes(data?.params?.subscription)) {
         return data.params.result;
-      } else if (data.id === blockId) {
-        blockSubscription = data.result;
+      } else if (data.id && data.result) {
+        blockSubscriptions.push(data.result);
       }
     } catch(e) {
       console.log('Error parsing Alchemy websocket message');
@@ -43,24 +46,35 @@ const alchemyWebsocketMiddleware = () => {
 
   const newBlockSubscriptionRequest = JSON.stringify({
     "jsonrpc":"2.0",
-    "id": blockId,
+    "id": '44',
     "method": "eth_subscribe",
     "params": ["newHeads"]
   });
 
+  const newTxSubscriptionRequest = JSON.stringify({
+    "jsonrpc": "2.0",
+    "id": '45',
+    "method": "eth_subscribe",
+    "params": [
+      "alchemy_pendingTransactions",
+      { toAddress: [auctionAddress] },
+    ]
+  });
 
   // Define the Handler Methods
   const handleOpen = store => () => {
     console.log('Alchemy Web Socket OPEN.');
-    store.dispatch(setEthereumConnected(true));
     socket.send(newBlockSubscriptionRequest);
+    store.dispatch(setEthereumConnected(true));
+    socket.send(newTxSubscriptionRequest);
+    store.dispatch(setMempoolListening(true));
   }
 
-  const handleMessage = store => (msg) => {
-    let data = parseMessage(msg);
+  const handleNewBlock = (store, data) => {
+    if (!data.number) return; // Not a new block notification
 
-    if (!data) return; // Not a new block notification
-
+    console.log('! handleNewBlock - is block notif')
+     
     const blockNumber = Number(data.number); // Convert from hex
     const blockHash = data.hash;
     const logsBloom = data.logsBloom;
@@ -90,9 +104,36 @@ const alchemyWebsocketMiddleware = () => {
     store.dispatch(resetVotes());
   }
 
+  const handlePendingTx = (store, data) => {
+    if (!data.input) return; // Not a pending tx notification
+
+    console.log('! handlePendingTx - is tx notif')
+
+    const isSettleTx = isSettleMethod(data.input);
+    const fromFomo = data.from === fomoExecutorAddress;
+    const isBidTx = isBidMethod(data.input);
+
+    if (isSettleTx && !fromFomo) {
+      store.dispatch(addPendingSettleTx({ from: data.from, hash: data.hash }))
+    }
+    if (isBidTx) {
+      store.dispatch(addPendingBidTx({ from: data.from, hash: data.hash, value: data.value }))
+    }
+  }
+
+  const handleMessage = store => (msg) => {
+    let data = parseMessage(msg);
+
+    if (!data) return;
+
+    handleNewBlock(store, data)
+    handlePendingTx(store, data)
+  }
+
   const handleClose = store => () => {
     console.log('Alchemy Web Socket CLOSED.');
     store.dispatch(setEthereumConnected(false));
+    store.dispatch(setMempoolListening(false));
     store.dispatch(resetAuctionEnd());
   }
 
