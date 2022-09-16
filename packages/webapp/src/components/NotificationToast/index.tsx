@@ -32,10 +32,9 @@ const NotificationToast: React.FC<{}> = props => {
 
   useEffect(() => {
     pendingBidTxs.forEach(tx => {
-      //TODO: uncomment after debug work done
-      // if (closeToAuctionEnd) {
+      if (closeToAuctionEnd) {
         showToast(tx, 6000)
-      // }
+      }
       dispatch(removePendingBidTx({ hash: tx.hash }));
     })
   }, [pendingBidTxs, closeToAuctionEnd, dispatch]);

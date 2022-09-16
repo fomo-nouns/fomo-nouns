@@ -72,8 +72,6 @@ const alchemyWebsocketMiddleware = () => {
 
   const handleNewBlock = (store, data) => {
     if (!data.number) return; // Not a new block notification
-
-    console.log('! handleNewBlock - is block notif') //TODO: remove after debug work done
      
     const blockNumber = Number(data.number); // Convert from hex
     const blockHash = data.hash;
@@ -106,11 +104,6 @@ const alchemyWebsocketMiddleware = () => {
 
   const handlePendingTx = (store, data) => {
     if (!data.input) return; // Not a pending tx notification
-
-    console.log('! handlePendingTx - is tx notif') //TODO: remove after debug work done
-
-    console.log(`is settle method ${isSettleMethod(data.input)}`) //TODO: remove after debug work done
-    console.log(`is bid method ${isBidMethod(data.input)}`) //TODO: remove after debug work done
 
     const isSettleTx = isSettleMethod(data.input);
     const fromFomo = data.from === fomoExecutorAddress;
