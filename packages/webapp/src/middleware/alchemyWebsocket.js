@@ -23,7 +23,7 @@ const fomoExecutorAddress = config.fomoExecutorAddress;
 // Define the Middleware
 const alchemyWebsocketMiddleware = () => {
   let socket = null;
-  let blockSubscriptions = [];
+  let subscriptions = [];
   let latestObservedBlock = 0;
 
   const openSocket = () => new W3CWebSocket(`wss://eth-${globalConfig.chainName}.alchemyapi.io/v2/${PROVIDER_KEY}`);
@@ -33,10 +33,10 @@ const alchemyWebsocketMiddleware = () => {
   const parseMessage = (msg) => {
     try {
       const data = JSON.parse(msg.data);
-      if (blockSubscriptions.includes(data?.params?.subscription)) {
+      if (subscriptions.includes(data?.params?.subscription)) {
         return data.params.result;
       } else if (data.id && data.result) {
-        blockSubscriptions.push(data.result);
+        subscriptions.push(data.result);
       }
     } catch(e) {
       console.log('Error parsing Alchemy websocket message');
@@ -73,7 +73,7 @@ const alchemyWebsocketMiddleware = () => {
   const handleNewBlock = (store, data) => {
     if (!data.number) return; // Not a new block notification
 
-    console.log('! handleNewBlock - is block notif')
+    console.log('! handleNewBlock - is block notif') //TODO: remove after debug work done
      
     const blockNumber = Number(data.number); // Convert from hex
     const blockHash = data.hash;
@@ -107,7 +107,10 @@ const alchemyWebsocketMiddleware = () => {
   const handlePendingTx = (store, data) => {
     if (!data.input) return; // Not a pending tx notification
 
-    console.log('! handlePendingTx - is tx notif')
+    console.log('! handlePendingTx - is tx notif') //TODO: remove after debug work done
+
+    console.log(`is settle method ${isSettleMethod(data.input)}`) //TODO: remove after debug work done
+    console.log(`is bid method ${isBidMethod(data.input)}`) //TODO: remove after debug work done
 
     const isSettleTx = isSettleMethod(data.input);
     const fromFomo = data.from === fomoExecutorAddress;
@@ -149,8 +152,7 @@ const alchemyWebsocketMiddleware = () => {
     }
     else if (action.type === 'ethereumSocket/close') {
       closeSocket();
-    }
-    else {
+    } else {
       return next(action);
     }
   };
