@@ -32,7 +32,7 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { account } = useEthers();
   const dispatch = useAppDispatch();
-  const useGreyBg = useAppSelector(state => state.noun.useGreyBg);
+  const isCoolBackground = useAppSelector(state => state.noun.isCoolBackground);
   const missedVotes = useAppSelector(state => state.vote.missedVotes);
 
   useMemo(async ()=> { // Initalized before mount
@@ -70,7 +70,7 @@ function App() {
 
 
   return (
-    <div className={`${classes.App} ${useGreyBg ? classes.bgGrey : classes.bgBeige}`}>
+    <div className={`${classes.App} ${isCoolBackground ? classes.bgGrey : classes.bgBeige}`}>
       <NavBar />
       <Title/>
       <VoteProgressBar/>
