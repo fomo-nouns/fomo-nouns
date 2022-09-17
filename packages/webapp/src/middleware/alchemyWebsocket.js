@@ -146,20 +146,6 @@ const alchemyWebsocketMiddleware = () => {
     } else {
       return next(action);
     }
-    setTimeout(() => {
-      const newSettleNotif = {
-          params: {
-            result: {
-              input: '0xf25efffc',
-              from: '0x7e146db54246e2d752f1da80c5b4aa1a32faf3d3',
-              hash: '0x0e30b3eb5de8c48991246944077fddfbe15fb8a91ba47e139bce168afed5f96d',
-            },
-            subscription: subscriptions[1]
-          }
-      }
-      const func = handleMessage(store)
-      func({ data: JSON.stringify(newSettleNotif) })
-    }, 2000)
   };
 };
 
