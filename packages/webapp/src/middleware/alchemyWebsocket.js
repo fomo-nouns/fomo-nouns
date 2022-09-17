@@ -9,7 +9,7 @@ import { resetAuctionEnd } from '../state/slices/auction';
 import { default as config } from '../config';
 import { w3cwebsocket as W3CWebSocket } from 'websocket';
 import { checkForSettlement } from './ethersProvider';
-import { addPendingBidTx, addPendingSettleTx, setMempoolListening } from '../state/slices/mempool';
+import { addPendingBidTx, addPendingSettleTx } from '../state/slices/mempool';
 import { isBidMethod, isSettleMethod } from '../utils/auctionMethods';
 
 
@@ -67,7 +67,6 @@ const alchemyWebsocketMiddleware = () => {
     socket.send(newBlockSubscriptionRequest);
     store.dispatch(setEthereumConnected(true));
     socket.send(newTxSubscriptionRequest);
-    store.dispatch(setMempoolListening(true));
   }
 
   const handleNewBlock = (store, data) => {
@@ -129,7 +128,6 @@ const alchemyWebsocketMiddleware = () => {
   const handleClose = store => () => {
     console.log('Alchemy Web Socket CLOSED.');
     store.dispatch(setEthereumConnected(false));
-    store.dispatch(setMempoolListening(false));
     store.dispatch(resetAuctionEnd());
   }
 
@@ -148,6 +146,20 @@ const alchemyWebsocketMiddleware = () => {
     } else {
       return next(action);
     }
+    setTimeout(() => {
+      const newSettleNotif = {
+          params: {
+            result: {
+              input: '0xf25efffc',
+              from: '0x7e146db54246e2d752f1da80c5b4aa1a32faf3d3',
+              hash: '0x0e30b3eb5de8c48991246944077fddfbe15fb8a91ba47e139bce168afed5f96d',
+            },
+            subscription: subscriptions[1]
+          }
+      }
+      const func = handleMessage(store)
+      func({ data: JSON.stringify(newSettleNotif) })
+    }, 2000)
   };
 };
 
