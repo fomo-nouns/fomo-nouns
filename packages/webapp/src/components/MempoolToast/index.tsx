@@ -18,7 +18,7 @@ const MempoolToast: React.FC<{ tx: SettleTx | BidTx }> = props => {
   const ensOrAddress = ens ? shortENS(ens) : shortAddress(tx.from)
   const value = isBidTx(tx) ? formatEther(BigNumber.from(tx.value)) : ''
 
-  const toastText = isBidTx(tx) ? `${ensOrAddress} just sent a new bid of ${value} Ξ` : `${ensOrAddress} is attempting to settle`
+  const toastText = isBidTx(tx) ? `${ensOrAddress} just sent a new bid of ${value} Ξ` : `${ensOrAddress} is attempting to mint this Noun`
   const colorsClass = isBidTx(tx) ? classes.Bid : classes.Frontrun
 
   return (
