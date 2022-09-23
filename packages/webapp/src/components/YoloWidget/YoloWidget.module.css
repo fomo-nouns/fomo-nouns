@@ -1,0 +1,26 @@
+.Wrapper {
+    position: fixed;
+    bottom: 0.25rem;
+    right: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.1rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    padding-left: 1.1rem;
+    padding-right: 0.7rem;
+    background-color: var(--brand-gray-dark-text);
+    color: var(--brand-gray-background);
+    fill: var(--brand-gray-background);
+    border-radius: 9999px;
+    cursor: pointer;
+}
+
+.Text {
+    font-family: 'PT Root UI', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 1rem;
+    padding-bottom: 1px;
+}

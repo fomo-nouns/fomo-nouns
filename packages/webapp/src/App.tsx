@@ -25,6 +25,7 @@ import NotificationToast from './components/NotificationToast';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
+import YoloWidget from './components/YoloWidget';
 
 
 
@@ -81,6 +82,7 @@ function App() {
       <Documentation />
       <Footer/>
       <NotificationToast />
+      <YoloWidget />
     </div>
   );
 }
