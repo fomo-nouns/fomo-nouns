@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './colors.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Config, DAppProvider } from '@usedapp/core';
@@ -12,6 +13,7 @@ import block from './state/slices/block';
 import noun from './state/slices/noun';
 import vote from './state/slices/vote';
 import settlement from './state/slices/settlement';
+import mempool from './state/slices/mempool';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
@@ -38,6 +40,7 @@ const createRootReducer = (history: History) =>
     noun,
     settlement,
     vote,
+    mempool
   });
 
 export default function configureStore(preloadedState: any) {
@@ -48,7 +51,7 @@ export default function configureStore(preloadedState: any) {
       applyMiddleware(
         routerMiddleware(history), // for dispatching history actions
         // ... other middlewares ...
-        alchemyWebsocketMiddleware, 
+        alchemyWebsocketMiddleware,
         ethersProviderMiddleware,
         voteWebsocket
       ),

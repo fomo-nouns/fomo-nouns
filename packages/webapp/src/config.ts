@@ -36,6 +36,7 @@ interface Config {
   tokenAddress: string;
   nounsDaoProxyAddress: string;
   nounsDaoExecutorAddress: string;
+  fomoExecutorAddress: string;
   enableHistory: boolean;
 }
 
@@ -52,6 +53,7 @@ const config: Record<SupportedChains, Config> = {
     tokenAddress: '0x632f34c3aee991b10D4b421Bc05413a03d7a37eB',
     nounsDaoProxyAddress: '0xd1C753D9A23eb5c57e0d023e993B9bd4F5086b04',
     nounsDaoExecutorAddress: '0xd1C753D9A23eb5c57e0d023e993B9bd4F5086b04',
+    fomoExecutorAddress: '0x85906cF629ae1DA297548769ecE3e3E6a4f3288f',
     enableHistory: process.env.REACT_APP_ENABLE_HISTORY === 'true' || false,
   },
   [ChainId.Mainnet]: {
@@ -66,6 +68,7 @@ const config: Record<SupportedChains, Config> = {
     tokenAddress: '0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03',
     nounsDaoProxyAddress: '0x6f3E6272A167e8AcCb32072d08E0957F9c79223d',
     nounsDaoExecutorAddress: '0x0BC3807Ec262cB779b38D65b38158acC3bfedE10',
+    fomoExecutorAddress: '0x85906cF629ae1DA297548769ecE3e3E6a4f3288f',
     enableHistory: process.env.REACT_APP_ENABLE_HISTORY === 'true' || false,
   },
   [LOCAL_CHAIN_ID]: {
@@ -79,7 +82,8 @@ const config: Record<SupportedChains, Config> = {
     nounsSeeder: '0xCC8a0FB5ab3C7132c1b2A0109142Fb112c4Ce515',
     tokenAddress: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
     nounsDaoProxyAddress: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
-    nounsDaoExecutorAddress: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',    
+    nounsDaoExecutorAddress: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
+    fomoExecutorAddress: '0x85906cF629ae1DA297548769ecE3e3E6a4f3288f',    
     enableHistory: false,
   },
 };

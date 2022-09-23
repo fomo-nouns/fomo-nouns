@@ -4,11 +4,13 @@ import dayjs from 'dayjs';
 interface AuctionState {
   activeAuction?: boolean;
   auctionEnd: number;
+  closeToEnd?: boolean;
 }
 
 const initialState: AuctionState = {
   activeAuction: undefined,
-  auctionEnd: 0
+  auctionEnd: 0,
+  closeToEnd: undefined
 };
 
 export const auctionSlice = createSlice({
@@ -19,6 +21,7 @@ export const auctionSlice = createSlice({
     setAuctionEnd: (state, action: PayloadAction<number | null>) => {
         state.auctionEnd = action.payload === null ? 0 : action.payload;
         state.activeAuction = dayjs().unix() < state.auctionEnd ? true : false;
+        state.closeToEnd = dayjs().add(5, "minutes").unix() >= state.auctionEnd ? true : false
     }
   },
 });
