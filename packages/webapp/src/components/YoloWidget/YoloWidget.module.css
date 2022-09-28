@@ -1,4 +1,4 @@
-.Wrapper {
+.openButton {
     position: fixed;
     bottom: 0.25rem;
     right: 0.5rem;
@@ -11,16 +11,129 @@
     padding-left: 1.1rem;
     padding-right: 0.7rem;
     background-color: var(--brand-gray-dark-text);
+    font-weight: bolder;
     color: var(--brand-gray-background);
     fill: var(--brand-gray-background);
     border-radius: 9999px;
     cursor: pointer;
+    box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
 }
 
-.Text {
+.openButtonText {
     font-family: 'PT Root UI', sans-serif;
-    font-weight: bold;
+    font-weight: bolder;
     font-size: 1rem;
     line-height: 1rem;
     padding-bottom: 1px;
+}
+
+.panel {
+    position: fixed;
+    bottom: 0.25rem;
+    right: 0.5rem;
+    display: block;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.1rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    padding-left: 1.1rem;
+    padding-right: 0.7rem;
+    color: var(--brand-gray-dark-text);
+    fill: var(--brand-gray-dark-text);
+    border-radius: 25px;
+    
+    text-align: center;
+    width: 20rem;
+    height: auto;
+  	box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
+}
+
+.closeButton {
+    position: fixed;
+    bottom: 0.1rem;
+    right: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.1rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    padding-left: 1.1rem;
+    padding-right: 0.7rem;
+    color: var(--brand-gray-dark-text);
+    fill: var(--brand-gray-dark-text);
+    border-radius: 9999px;
+    cursor: pointer;
+}
+
+.closeButtonText {
+    font-family: 'PT Root UI', sans-serif;
+    font-weight: bold;
+    font-size: small;
+    padding-bottom: 3px;
+}
+
+.mintButton {
+  border-radius: 12px !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 90%;
+  height: 2rem;
+  border: transparent;
+  font-weight: bolder;
+  letter-spacing: normal;
+  font-size: 15px;
+  transition: all 0.2s ease-in-out;
+  
+  background-color: var(--brand-gray-dark-text);
+  color: var(--brand-gray-background);
+  fill: var(--brand-gray-background);
+
+  min-width: 200px;      
+}
+
+.mintButton:disabled {
+  cursor: not-allowed;
+}
+
+.mintButton:hover,
+.mintButton:active,
+.mintButton:focus .mintButton:disabled {
+  outline: none !important;
+  box-shadow: none !important;
+  color: #ea3628;
+}
+
+.mintButton:disabled {
+  background-color: gray !important;
+}
+
+.instructions {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.instructions a {
+  text-decoration: none;
+  color: var(--brand-gray-dark-text);
+}
+
+.priceText {
+  font-weight: bold;
+}
+
+.amountText {
+  font-weight: bold;
+  text-align: right;
+}
+ 
+.footer {
+  font-size: small;
+  font-weight: bold;
+}
+
+.footer a {
+  text-decoration: none;
+  color: var(--brand-gray-dark-text);
 }
