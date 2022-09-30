@@ -1,96 +1,146 @@
 .openButton {
-    position: fixed;
-    bottom: 0.25rem;
-    right: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.1rem;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
-    padding-left: 1.1rem;
-    padding-right: 0.7rem;
-    background-color: var(--brand-gray-dark-text);
-    font-weight: bolder;
-    color: var(--brand-gray-background);
-    fill: var(--brand-gray-background);
-    border-radius: 9999px;
-    cursor: pointer;
-    box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  bottom: 0.25rem;
+  right: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.1rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  padding-left: 1.1rem;
+  padding-right: 0.7rem;
+  background-color: var(--brand-gray-dark-text);
+  font-weight: bolder;
+  color: var(--brand-gray-background);
+  fill: var(--brand-gray-background);
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.1);
+  transition: 0.4s all ease;
+}
+
+.openButton.cool {
+  background-color: var(--brand-cool-dark-text);
+  color: var(--brand-cool-accent);
+  fill: var(--brand-cool-accent);
+}
+
+.openButton.warm {
+  background-color: var(--brand-warm-dark-text);
+  color: var(--brand-warm-accent);
+  fill: var(--brand-warm-accent);
+}
+
+.openButton:hover {
+  bottom: 0.5rem;
+  right: 0.75rem;
 }
 
 .openButtonText {
-    font-family: 'PT Root UI', sans-serif;
-    font-weight: bolder;
-    font-size: 1rem;
-    line-height: 1rem;
-    padding-bottom: 1px;
+  font-family: 'PT Root UI', sans-serif;
+  font-weight: bolder;
+  font-size: 1rem;
+  line-height: 1rem;
+  padding-bottom: 1px;
 }
 
 .panel {
-    position: fixed;
-    bottom: 0.25rem;
-    right: 0.5rem;
-    display: block;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.1rem;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
-    padding-left: 1.1rem;
-    padding-right: 0.7rem;
-    color: var(--brand-gray-dark-text);
-    fill: var(--brand-gray-dark-text);
-    border-radius: 25px;
-    
-    text-align: center;
-    width: 20rem;
-    height: auto;
-  	box-shadow: 2px 5px 5px 2px rgba(0, 0, 0, 0.25);
+  position: fixed;
+  bottom: 0.75rem;
+  right: 0.5rem;
+  display: block;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.1rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  color: var(--brand-gray-dark-text);
+  fill: var(--brand-gray-dark-text);
+  border-radius: 25px;
+
+  text-align: center;
+  width: 20rem;
+  height: auto;
+  box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.1);
+}
+
+.panel.cool {
+  background-color: var(--brand-cool-background);
+  color: var(--brand-cool-dark-text);
+  fill: var(--brand-cool-dark-text);
+}
+
+.panel.warm {
+  background-color: var(--brand-warm-background);
+  color: var(--brand-warm-dark-text);
+  fill: var(--brand-warm-dark-text);
+}
+
+.logo {
+  margin-top: 5px;
 }
 
 .closeButton {
-    position: fixed;
-    bottom: 0.1rem;
-    right: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.1rem;
-    padding-top: 0.6rem;
-    padding-bottom: 0.6rem;
-    padding-left: 1.1rem;
-    padding-right: 0.7rem;
-    color: var(--brand-gray-dark-text);
-    fill: var(--brand-gray-dark-text);
-    border-radius: 9999px;
-    cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.1rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  padding-left: 0.75rem;
+  width: max-content;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.4s all ease;
+}
+
+.closeButton.cool:hover {
+  background-color: var(--brand-cool-accent);
+  padding-right: 0.45rem;
+}
+
+.closeButton.warm:hover {
+  background-color: var(--brand-warm-accent);
+  padding-right: 0.45rem;
 }
 
 .closeButtonText {
-    font-family: 'PT Root UI', sans-serif;
-    font-weight: bold;
-    font-size: small;
-    padding-bottom: 3px;
+  font-family: 'PT Root UI', sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  padding-bottom: 1px;
 }
 
 .mintButton {
   border-radius: 12px !important;
   margin-top: 10px;
-  margin-bottom: 10px;
-  width: 90%;
-  height: 2rem;
+  margin-bottom: 8px;
+  width: 100%;
+  height: 2.2rem;
   border: transparent;
   font-weight: bolder;
   letter-spacing: normal;
   font-size: 15px;
   transition: all 0.2s ease-in-out;
-  
+
   background-color: var(--brand-gray-dark-text);
   color: var(--brand-gray-background);
   fill: var(--brand-gray-background);
 
-  min-width: 200px;      
+  min-width: 200px;
+}
+
+.mintButton.cool {
+  background-color: var(--brand-cool-dark-text);
+  color: var(--brand-cool-accent);
+}
+
+.mintButton.warm {
+  background-color: var(--brand-warm-dark-text);
+  color: var(--brand-warm-accent);
 }
 
 .mintButton:disabled {
@@ -112,11 +162,21 @@
 .instructions {
   margin-top: 10px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .instructions a {
   text-decoration: none;
   color: var(--brand-gray-dark-text);
+}
+
+.priceWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
 }
 
 .priceText {
@@ -127,13 +187,33 @@
   font-weight: bold;
   text-align: right;
 }
- 
+
 .footer {
-  font-size: small;
-  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer a {
+  display: flex;
+  flex-direction: row;
+  gap: 0.1rem;
+  align-items: center;
+  margin-left: 0.2rem;
+  font-size: 0.875em;
+  font-weight: bold;
   text-decoration: none;
   color: var(--brand-gray-dark-text);
+  fill: var(--brand-gray-dark-text);
+}
+
+.footer.cool a {
+  color: var(--brand-cool-light-text);
+  fill: var(--brand-cool-light-text);
+}
+
+.footer.warm a {
+  color: var(--brand-warm-light-text);
+  fill: var(--brand-warm-light-text);
 }
