@@ -137,6 +137,9 @@ const YoloWidget: React.FC<{}> = (props) => {
 						</div>
 					</div>
 
+					{ !activeAccount && (
+						<span style={{ fontSize: 'small', fontStyle: 'italic' }}>Please connect your wallet to get started.</span>
+					)}
 					<button className={clsx(classes.mintButton, style)} onClick={mintNounHandler} disabled={disabled}>
 						<span className={classes.voteText}>
 							{mintButtonContent.loading ? <Spinner animation="border" style={{ height: '1rem', width: '1rem' }} /> : mintButtonContent.content}
