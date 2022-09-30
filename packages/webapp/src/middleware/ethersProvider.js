@@ -38,7 +38,7 @@ const ethersProviderMiddleware = () => {
   const checkSettlementTx = async (store, blockNumber) => {
     if (!blockNumber) return;
 
-    let blockWithTxs = await RPCProvider.getBlockWithTransactions(blockNumber);
+    const blockWithTxs = await RPCProvider.getBlockWithTransactions(blockNumber);
 
     const settleTx = blockWithTxs.transactions.find(tx => possibleSettleContracts.includes(tx.to));
 
