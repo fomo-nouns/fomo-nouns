@@ -9,7 +9,7 @@ import { setDisplaySingleNoun } from '../../state/slices/noun';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
-// import WalletConnectModal from "../WalletConnectModal";
+import WalletConnectModal from "../WalletConnectModal";
 import fomologo from './fomologo.png';
 import PlayersConnected from '../PlayersConnected';
 
@@ -88,9 +88,9 @@ const NavBar = () => {
           >
             NOUNS
           </Nav.Link>
-          {/* <Nav.Item>
+          { <Nav.Item>
             <WalletConnectModal />
-          </Nav.Item> */}
+          </Nav.Item> }
         </Navbar.Collapse>
       </Navbar>
     </div>
