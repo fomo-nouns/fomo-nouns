@@ -1,15 +1,3 @@
-.cool {
-  background-color: var(--brand-cool-background);
-  color: var(--brand-cool-dark-text);
-  fill: var(--brand-cool-dark-text);
-}
-
-.warm {
-  background-color: var(--brand-warm-background);
-  color: var(--brand-warm-dark-text);
-  fill: var(--brand-warm-dark-text);
-}
-
 .openButton {
   position: fixed;
   bottom: 0.25rem;
@@ -30,6 +18,18 @@
   cursor: pointer;
   box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.1);
   transition: 0.4s all ease;
+}
+
+.openButton.cool {
+  background-color: var(--brand-cool-dark-text);
+  color: var(--brand-cool-accent);
+  fill: var(--brand-cool-accent);
+}
+
+.openButton.warm {
+  background-color: var(--brand-warm-dark-text);
+  color: var(--brand-warm-accent);
+  fill: var(--brand-warm-accent);
 }
 
 .openButton:hover {
@@ -67,6 +67,18 @@
   box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.1);
 }
 
+.panel.cool {
+  background-color: var(--brand-cool-background);
+  color: var(--brand-cool-dark-text);
+  fill: var(--brand-cool-dark-text);
+}
+
+.panel.warm {
+  background-color: var(--brand-warm-background);
+  color: var(--brand-warm-dark-text);
+  fill: var(--brand-warm-dark-text);
+}
+
 .logo {
   margin-top: 5px;
 }
@@ -80,15 +92,18 @@
   padding-bottom: 0.1rem;
   padding-left: 0.75rem;
   width: max-content;
-  color: var(--brand-gray-dark-text);
-  fill: var(--brand-gray-dark-text);
   border-radius: 12px;
   cursor: pointer;
   transition: 0.4s all ease;
 }
 
-.closeButton:hover {
-  background-color: var(--brand-gray-light-text-translucent);
+.closeButton.cool:hover {
+  background-color: var(--brand-cool-accent);
+  padding-right: 0.45rem;
+}
+
+.closeButton.warm:hover {
+  background-color: var(--brand-warm-accent);
   padding-right: 0.45rem;
 }
 
@@ -118,12 +133,12 @@
   min-width: 200px;
 }
 
-.mintButton .cool {
+.mintButton.cool {
   background-color: var(--brand-cool-dark-text);
   color: var(--brand-cool-accent);
 }
 
-.mintButton .warm {
+.mintButton.warm {
   background-color: var(--brand-warm-dark-text);
   color: var(--brand-warm-accent);
 }
