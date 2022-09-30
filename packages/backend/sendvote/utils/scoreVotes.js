@@ -12,7 +12,7 @@
  * @returns {Number} Calculated score
  */
 function scoreVotes(voteObj, userCount) {
-  let winThreshold = 0.55; // Max negative votes = userCount * (1-winThreshold)/2
+  let winThreshold = 0.45; // Max negative votes = userCount * (1-winThreshold)/2
 
   let like = (voteObj.voteLike ?? 0);
   // shrug == 0 vote
