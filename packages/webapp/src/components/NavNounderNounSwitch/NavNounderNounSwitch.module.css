@@ -1,0 +1,51 @@
+.wrapper {
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'PT Root UI';
+    font-weight: bold;
+    padding: 0px 10px 0px 10px;
+    transition: all 0.125s ease-in-out;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0.3rem
+}
+
+.button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.coolInfo {
+    border: 1px solid var(--brand-cool-border);
+    border-radius: 10px;
+    color: var(--brand-cool-dark-text);
+}
+
+.coolInfo:hover {
+    background-color: var(--brand-cool-accent);
+    color: black;
+}
+
+.warmInfo {
+    border: 1px solid var(--brand-warm-border);
+    border-radius: 10px;
+    color: var(--brand-warm-dark-text);
+}
+
+.warmInfo:hover {
+    background-color: var(--brand-warm-accent);
+    color: black;
+}
+
+.image {
+    height: 24px;
+}

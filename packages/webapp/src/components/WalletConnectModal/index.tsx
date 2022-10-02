@@ -1,74 +1,32 @@
 import Modal from '../Modal';
-import WalletButton from "../WalletButton";
+import WalletButton from '../WalletButton';
 import { WALLET_TYPE } from '../WalletButton';
 import { useEthers } from '@usedapp/core';
+import clsx from 'clsx';
 import { InjectedConnector } from '@web3-react/injected-connector';
 import { WalletLinkConnector } from '@web3-react/walletlink-connector';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { TrezorConnector } from '@web3-react/trezor-connector';
+import { FortmaticConnector } from '@web3-react/fortmatic-connector';
 import config, { CHAIN_ID } from '../../config';
 import classes from './WalletConnectModal.module.css';
-import { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setActiveAccount } from '../../state/slices/account';
 import { AbstractConnector } from '@web3-react/abstract-connector';
+import { useAppDispatch } from '../../hooks';
+import { setActiveAccount } from '../../state/slices/account';
 
-const WalletConnectModal: React.FC<{}> = props => {
-  const activeAccount = useAppSelector(state => state.account.activeAccount);
+const WalletConnectModal: React.FC<{ onDismiss: () => void }> = props => {
+  const { onDismiss } = props;
+  const { activate, account } = useEthers();
   const dispatch = useAppDispatch();
-  const { deactivate, activate, account } = useEthers();
-  const [showConnectModal, setShowConnectModal] = useState(false);
+  const supportedChainIds = [CHAIN_ID];
 
   const activateAccount = async (connector: AbstractConnector) => {
     await activate(connector);
     dispatch(setActiveAccount(account));
   }
 
-  const deactivateAccount = () => {
-    deactivate();
-    dispatch(setActiveAccount(undefined));
-  }
-
-  const showModalHandler = () => {
-    setShowConnectModal(true);
-  };
-  const hideModalHandler = () => {
-    setShowConnectModal(false);
-  };
-
-  const connectedContent = (
-    <>
-    <div className={classes.walletConnectWrapper}>
-      <button className={classes.disconnectBtn} onClick={deactivateAccount}>
-        DISCONNECT
-        <span className={classes.greenStatusCircle}> </span>
-      </button>
-    </div>
-    </>
-  )
-
-  const disconnectedContent = (
-    <>
-    <div className={classes.walletConnectWrapper}>
-      <button className={classes.connectBtn} onClick={showModalHandler} >
-          CONNECT WALLET
-      </button>
-    </div>
-    </>
-  );
-
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-  const supportedChainIds = [CHAIN_ID];
-    
-  useEffect(() => {
-    if(activeAccount){
-      hideModalHandler();
-    }
-  }, [account, dispatch, activate, activeAccount]);
-  
-
   const wallets = (
-    <>
+    <div className={classes.walletConnectModal}>
       <WalletButton
         onClick={() => {
           const injected = new InjectedConnector({
@@ -77,6 +35,16 @@ const WalletConnectModal: React.FC<{}> = props => {
           activateAccount(injected);
         }}
         walletType={WALLET_TYPE.metamask}
+      />
+      <WalletButton
+        onClick={() => {
+          const fortmatic = new FortmaticConnector({
+            apiKey: 'pk_live_60FAF077265B4CBA',
+            chainId: CHAIN_ID,
+          });
+          activateAccount(fortmatic);
+        }}
+        walletType={WALLET_TYPE.fortmatic}
       />
       <WalletButton
         onClick={() => {
@@ -117,33 +85,24 @@ const WalletConnectModal: React.FC<{}> = props => {
           const trezor = new TrezorConnector({
             chainId: CHAIN_ID,
             url: config.jsonRpcUri,
-            manifestAppUrl: 'nounops+trezorconnect@protonmail.com',
-            manifestEmail: 'https://nouns.wtf',
+            manifestAppUrl: 'https://nouns.wtf',
+            manifestEmail: 'nounops+trezorconnect@protonmail.com',
           });
           activateAccount(trezor);
         }}
         walletType={WALLET_TYPE.trezor}
       />
-      <div className={classes.clickable} onClick={() => setAdvancedOpen(!advancedOpen)}>
-        Advanced {advancedOpen ? '^' : 'v'}
+      <div
+        className={clsx(classes.clickable, classes.walletConnectData)}
+        onClick={() => localStorage.removeItem('walletconnect')}
+      >
+        Clear WalletConnect Data
       </div>
-      {advancedOpen && (
-        <div
-          className={classes.clickable}
-          onClick={() => {
-            console.log(localStorage.removeItem('walletconnect'));
-          }}
-        >
-          Clear WalletConnect Data
-        </div>
-      )}
-    </>
+    </div>
   );
   return (
-    <div className={classes.WalletArea}>
-      {activeAccount ? connectedContent : disconnectedContent}
-      {showConnectModal && <Modal title="Connect your wallet" content={wallets} onDismiss={hideModalHandler} />}
-    </div>
-  )
+    <Modal title={'Connect your wallet'} content={wallets} onDismiss={onDismiss} />
+  );
 };
+
 export default WalletConnectModal;

@@ -1,0 +1,109 @@
+.stale {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 0.75rem;
+}
+
+.staleHidden {
+    display: none;
+}
+
+.wrapper {
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: 'PT Root UI';
+    font-weight: bold;
+    padding: 0px 10px 0px 10px;
+    transition: all 0.125s ease-in-out;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.coolInfo {
+    border: 1px solid var(--brand-cool-border);
+    border-radius: 10px;
+    color: var(--brand-cool-dark-text);
+}
+
+.coolInfo:hover {
+    background-color: var(--brand-cool-accent);
+    color: black;
+}
+
+.warmInfo {
+    border: 1px solid var(--brand-warm-border);
+    border-radius: 10px;
+    color: var(--brand-warm-dark-text);
+}
+
+.warmInfo:hover {
+    background-color: var(--brand-warm-accent);
+    color: black;
+}
+
+.players {
+    color: black;
+    opacity: 0.5;
+}
+
+.warmInfo .players {
+    color: var(--brand-warm-light-text);
+}
+
+.coolInfo .players {
+    color: var(--brand-cool-light-text);
+}
+
+.divider {
+    height: 14px;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.coolInfo .divider {
+    border-left: 1px solid var(--brand-cool-border);
+}
+
+.warmInfo .divider {
+    border-left: 1px solid var(--brand-warm-border);
+}
+
+@media (max-width: 450px) {
+    .wrapper {
+        margin-left: -0.5rem;
+        padding: 0px 12px 0px 12px;
+    }
+
+    .players {
+        display: none;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .stale .divider {
+        display: flex;
+        margin-left: 0rem;
+    }
+
+    .stale {
+        margin-left: 0.5rem;
+    }
+}

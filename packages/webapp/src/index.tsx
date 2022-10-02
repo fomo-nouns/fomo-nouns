@@ -76,9 +76,9 @@ ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
       <Web3ReactProvider getLibrary={
-        (provider, connector) => new Web3Provider(provider)
+        (provider) => new Web3Provider(provider)
       }>
-        <DAppProvider config={config}> 
+        <DAppProvider config={config}>
           <App />
         </DAppProvider>
       </Web3ReactProvider>
