@@ -1,6 +1,5 @@
 import classes from './NavBar.module.css';
 import { Nav, Navbar } from 'react-bootstrap';
-import { useAppSelector } from '../../hooks';
 
 import fomoLogo from './fomologo.png';
 import NavPlayers from '../NavPlayers';
