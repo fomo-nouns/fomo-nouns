@@ -28,10 +28,12 @@ const NavBar = () => {
             <NavPlayers />
           </Nav.Item>
         </div>
-        <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
-        <Navbar.Collapse id="nav-items" className="justify-content-end">
-          <NavFunds />
+        <div className={classes.nonHideItems}>
           <NavNounderNounSwitch />
+        </div>
+        <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
+        <Navbar.Collapse id="nav-items" className="flex-grow-0">
+          <NavFunds />
           <Nav.Link
             href="https://nouns.wtf/"
             className={classes.nounsNavLink}
