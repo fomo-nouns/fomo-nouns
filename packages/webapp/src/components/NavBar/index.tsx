@@ -2,6 +2,7 @@ import classes from './NavBar.module.css';
 import { Nav, Navbar } from 'react-bootstrap';
 
 import fomoLogo from './fomologo.png';
+import fomoLogoSmall from './fomologo-small.png';
 import NavPlayers from '../NavPlayers';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
 // import NavWallet from '../NavWallet';
@@ -14,13 +15,15 @@ const NavBar = () => {
 
   const nonWalletButtonStyle = usePickByState(NavBarButtonStyle.COOL_INFO, NavBarButtonStyle.WARM_INFO)
 
+  const logo = window.innerWidth < 600 ? fomoLogoSmall : fomoLogo
+
   return (
     <div className={classes.HeaderBar}>
       <Navbar collapseOnSelect expand="lg">
         <div className={classes.brandAndPlayersWrapper}>
           <Navbar.Brand href="/" className={classes.navBarBrand}>
-            <img src={fomoLogo} alt='FOMO Nouns'
-              width="115"
+            <img src={logo} alt='FOMO Nouns'
+              height="52"
               className={classes.LogoImage}
             />
           </Navbar.Brand>

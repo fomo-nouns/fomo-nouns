@@ -84,9 +84,21 @@
     border-left: 1px solid var(--brand-warm-border);
 }
 
+.icon {
+    margin-right: 8px;
+    display: none;
+}
+
+.coolInfo .icon {
+    fill: var(--brand-cool-light-text);
+}
+
+.warmInfo .icon {
+    fill: var(--brand-warm-light-text);
+}
+
 @media (max-width: 450px) {
     .wrapper {
-        margin-left: -0.5rem;
         padding: 0px 12px 0px 12px;
     }
 
@@ -105,5 +117,9 @@
 
     .stale {
         margin-left: 0.5rem;
+    }
+
+    .icon {
+        display: flex;
     }
 }

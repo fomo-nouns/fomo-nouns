@@ -86,3 +86,9 @@
   padding: 0.25rem 0.5rem;
   margin-right: 12px;
 }
+
+@media (max-width: 600px) {
+  .navBarBrand {
+    margin-right: 0px;
+  }
+}
