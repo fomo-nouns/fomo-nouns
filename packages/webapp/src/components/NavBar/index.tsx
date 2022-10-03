@@ -6,12 +6,17 @@ import fomoLogoSmall from './fomologo-small.png';
 import NavPlayers from '../NavPlayers';
 import NavBarButton, { NavBarButtonStyle } from '../NavBarButton';
 // import NavWallet from '../NavWallet';
+// import { useAppSelector } from '../../hooks';
 import NavFunds from '../NavFunds';
 import NavNounderNounSwitch from '../NavNounderNounSwitch';
 import { usePickByState } from '../../utils/colorResponsiveUIUtils';
+import { buildEtherscanWriteLink } from '../../utils/etherscan';
+import config from '../../config';
 
 const NavBar = () => {
   // const activeAccount = useAppSelector(state => state.account.activeAccount);
+
+  const settlementWriteLink = buildEtherscanWriteLink(config.fomoSettlerAddress);
 
   const nonWalletButtonStyle = usePickByState(NavBarButtonStyle.COOL_INFO, NavBarButtonStyle.WARM_INFO)
 
@@ -37,6 +42,17 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="nav-items" className={classes.navBarToggle} />
         <Navbar.Collapse id="nav-items" className="flex-grow-0">
           <NavFunds />
+          <Nav.Link
+            href={settlementWriteLink}
+            className={classes.nounsNavLink}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <NavBarButton
+              buttonText={<>Donate</>}
+              buttonStyle={nonWalletButtonStyle}
+            />
+          </Nav.Link>
           <Nav.Link
             href="https://nouns.wtf/"
             className={classes.nounsNavLink}
