@@ -18399,6 +18399,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-google-recaptcha-v3@npm:^1.10.0":
+  version: 1.10.0
+  resolution: "react-google-recaptcha-v3@npm:1.10.0"
+  dependencies:
+    hoist-non-react-statics: ^3.3.2
+  peerDependencies:
+    react: ^17.0 || ^18.0
+    react-dom: ^17.0 || ^18.0
+  checksum: 43b19eba4e4ebf96f6d9256fcb5a93aabe69878ce9fe4a6c73a3175d0ec9990abb39302c361ca99d7f20b2401353dce69236f299e64ee23a61fc71633b9107f3
+  languageName: node
+  linkType: hard
+
 "react-hot-toast@npm:^2.3.0":
   version: 2.3.0
   resolution: "react-hot-toast@npm:2.3.0"
@@ -22429,6 +22441,7 @@ __metadata:
     react-bootstrap: ^2.0.0
     react-dom: ^17.0.2
     react-dom-confetti: ^0.2.0
+    react-google-recaptcha-v3: ^1.10.0
     react-hot-toast: ^2.3.0
     react-redux: ^7.2.5
     react-router-dom: ^5.3.0

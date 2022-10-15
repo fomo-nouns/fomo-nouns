@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useEthers } from '@usedapp/core';
 import { useAppDispatch, useAppSelector } from './hooks';
 
@@ -6,13 +6,13 @@ import { contract as AuctionContract } from './wrappers/nounsAuction';
 import { setAuctionEnd } from './state/slices/auction';
 import { setNextNounId, setDisplaySingleNoun } from './state/slices/noun';
 import { setBlockAttr } from './state/slices/block';
-import { provider } from './config';
+import { provider, RECAPTCHA_ACTION_NAME } from './config';
 
 import classes from './App.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavBar from './components/NavBar';
-import Noun  from './components/Noun';
+import Noun from './components/Noun';
 import Title from './components/Title';
 import VoteBar from './components/VoteBar';
 import VoteProgressBar from './components/VoteProgressBar';
@@ -25,6 +25,7 @@ import NotificationToast from './components/NotificationToast';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 
 
@@ -32,11 +33,12 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { account } = useEthers();
   const dispatch = useAppDispatch();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const isCoolBackground = useAppSelector(state => state.noun.isCoolBackground);
   const missedVotes = useAppSelector(state => state.vote.missedVotes);
 
-  useMemo(async ()=> { // Initalized before mount
-    const [{number: blocknumber, hash: blockhash}, auction] = await Promise.all([
+  useMemo(async () => { // Initalized before mount
+    const [{ number: blocknumber, hash: blockhash }, auction] = await Promise.all([
       provider.getBlock('latest'),
       AuctionContract.auction()
     ])
@@ -46,7 +48,7 @@ function App() {
 
     dispatch(setNextNounId(nextNounId));
     dispatch(setAuctionEnd(auctionEnd));
-    dispatch(setBlockAttr({blocknumber, blockhash}))
+    dispatch(setBlockAttr({ blocknumber, blockhash }))
     if (nextNounId === 420) {
       dispatch(setDisplaySingleNoun(false));
     }
@@ -57,7 +59,6 @@ function App() {
   }, [dispatch, account]);
 
   useEffect(() => { // Only initialize after mount
-    dispatch(openVoteSocket());
     dispatch(openEthereumSocket());
   }, [dispatch]);
 
@@ -68,18 +69,33 @@ function App() {
     }
   }, [dispatch, missedVotes]);
 
+  const reCaptchaVerify = useCallback(async () => {
+    if (!executeRecaptcha) {
+      return;
+    }
+
+    const token = await executeRecaptcha(RECAPTCHA_ACTION_NAME);
+    console.log('recaptcha token')
+    console.log(token)
+    dispatch(openVoteSocket()); // TODO: pass token
+  }, [executeRecaptcha, dispatch]);
+
+  // Get reCaptcha user token and open vote socket
+  useEffect(() => {
+    reCaptchaVerify();
+  }, [reCaptchaVerify]);
 
   return (
     <div className={`${classes.App} ${isCoolBackground ? classes.bgGrey : classes.bgBeige}`}>
       <NavBar />
-      <Title/>
-      <VoteProgressBar/>
-      <SettledAuctionModal/>
+      <Title />
+      <VoteProgressBar />
+      <SettledAuctionModal />
       <Noun />
       <VoteBar />
       <Banner />
       <Documentation />
-      <Footer/>
+      <Footer />
       <NotificationToast />
     </div>
   );
