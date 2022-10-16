@@ -81,9 +81,9 @@ async function updateActivity(connectionId, nounBlockKey) {
     UpdateExpression: 'set inactive = :false, lastVote = :lastVote'
   };
 
-  ddb.update(updateParams).promise()
-    .then(() => console.log(`${connectionId} marked active.`))
-    .catch(e => console.log(e));
+  return ddb.update(updateParams).promise()
+    .then(() => console.log(`${connectionId} marked active.`));
+  // Leave errors uncaught to stop voting
 }
 
 
