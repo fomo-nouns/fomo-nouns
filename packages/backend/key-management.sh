@@ -9,6 +9,21 @@ if [[ "$2" == "--alchemy" ]]; then
 elif [[ "$2" == "--executor" ]]; then
   NAME="nouns/ExecutorPrivateKey"
   DESCRIPTION="Ethereum private key with Executor rights to the FOMO Nouns Contract"
+elif [[ "$2" == "--google-api-key" ]]; then
+  NAME="nouns/GoogleApiKey"
+  DESCRIPTION="ReCaptcha: API key associated with the Google Cloud project"
+elif [[ "$2" == "--google-project-id" ]]; then
+  NAME="nouns/GoogleProjectId"
+  DESCRIPTION="ReCaptcha: Google Cloud project ID"
+elif [[ "$2" == "--recaptcha-key" ]]; then
+  NAME="nouns/ReCaptchaKey"
+  DESCRIPTION="ReCAPTCHA key associated with the site/app"
+elif [[ "$2" == "--recaptcha-action" ]]; then
+  NAME="nouns/ReCaptchaAction"
+  DESCRIPTION="ReCAPTCHA: the user-initiated action specified in ReCaptcha call"
+elif [[ "$2" == "--recaptcha-threshold" ]]; then
+  NAME="nouns/ReCaptchaThreshold"
+  DESCRIPTION="ReCAPTCHA: threshold to determine when to restrict access to backend"
 else
   ACTION=""
 fi
