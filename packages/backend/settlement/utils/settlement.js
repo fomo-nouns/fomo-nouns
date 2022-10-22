@@ -24,6 +24,7 @@ async function buildTransaction(fomoSettler, blockhash, feeData, priorityFeePerG
     feeData.maxPriorityFeePerGas = maxPriorityFee;
 
     delete feeData.gasPrice;
+    delete feeData.lastBaseFeePerGas;
   }
   
   const tx = await fomoSettler.populateTransaction.settleAuctionWithRefund(blockhash, {...feeData, type: 2});
