@@ -2,6 +2,7 @@
 
 ACTION="$1"
 SECRET="$3"
+REGION="$4"
 
 if [[ "$2" == "--alchemy" ]]; then
   NAME="nouns/AlchemyKey"
@@ -28,12 +29,16 @@ else
   ACTION=""
 fi
 
+if [ -z "$REGION" ]; then 
+  REGION="us-east-2"
+fi
+
 if [[ "$ACTION" == "--set" ]]; then
-  aws secretsmanager create-secret --name "$NAME" --description "$DESCRIPTION" --secret-string "$SECRET"
+  aws secretsmanager create-secret --name "$NAME" --description "$DESCRIPTION" --secret-string "$SECRET" --region "$REGION"
 elif [[ "$ACTION" == "--update" ]]; then
-  aws secretsmanager update-secret --secret-id "$NAME" --secret-string "$SECRET"
+  aws secretsmanager update-secret --secret-id "$NAME" --secret-string "$SECRET" --region "$REGION"
 elif [[ "$ACTION" == "--get" ]]; then
-  aws secretsmanager describe-secret --secret-id "$NAME"
+  aws secretsmanager describe-secret --secret-id "$NAME" --region "$REGION"
 else
   echo '''The script can be run with the following commands:
     ./key-management.sh --set --executor/--alchemy <private_key>

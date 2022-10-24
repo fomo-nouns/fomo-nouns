@@ -44,6 +44,12 @@ in AWS Secrets Manager:
 ./key-management.sh --set --recaptcha-threshold "<YOUR_RECAPTCHA_THRESHOLD>"
 ```
 
+If you deploy to non standard AWS region (us-east-2), you may specify region after `key` value:
+
+```
+./key-management.sh --set --alchemy "<YOUR_PRIVATE_KEY>" <YOUR_AWS_REGION>
+```
+
 (*) This is used to determine when to restrict access to backend. In ReCaptcha score 0.0 is highest risk, 1.0 is lowest risk. Setting threshold to 0.0 will allow bots to send votes, setting to 1.0 will allow only most reCaptcha trusted and legitimate "users" to be able to send votes. Setting to 1.0 may limit other actual (and legitimate) users from sending votes ([learn more](https://cloud.google.com/recaptcha-enterprise/docs/interpret-assessment?authuser=6#interpret_scores)). Set this value according to analytics.
 
 ### 3. Build and Deploy
