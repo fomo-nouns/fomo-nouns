@@ -60,7 +60,7 @@ async function retrieveConnections() {
   try {
     let connectionData = await ddb.scan({
       TableName: SOCKET_TABLE_NAME,
-      ProjectionExpression: 'connectionId, inactive'
+      ProjectionExpression: 'connectionId, inactive, captchaPassed'
     }).promise();
     return connectionData.Items;
   } catch (e) {
@@ -76,7 +76,7 @@ async function setActive(connectionId) {
   const updateParams = {
     TableName: SOCKET_TABLE_NAME,
     Key: { 'connectionId': connectionId },
-    ExpressionAttributeValues: { ':false': false},
+    ExpressionAttributeValues: { ':false': false },
     UpdateExpression: 'set inactive = :false'
   };
 
@@ -93,12 +93,12 @@ async function setActive(connectionId) {
  */
 async function distributeMessage(connections, endpoint, jsonMessage) {
   const messageString = JSON.stringify(jsonMessage);
-  
+
   const apigwManagementApi = new ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
     endpoint: endpoint
   });
-  
+
   const postCalls = connections.map(async ({ connectionId }) => {
     try {
       await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: messageString }).promise();
@@ -111,7 +111,7 @@ async function distributeMessage(connections, endpoint, jsonMessage) {
       }
     }
   });
-  
+
   try {
     await Promise.all(postCalls);
   } catch (e) {
@@ -129,7 +129,7 @@ async function distributeMessage(connections, endpoint, jsonMessage) {
 async function callSettlement(nounId, blockhash) {
   var params = {
     FunctionName: SETTLEMENT_FUNCTION_NAME,
-    InvokeArgs: JSON.stringify({'nounId': nounId, 'blockhash': blockhash})
+    InvokeArgs: JSON.stringify({ 'nounId': nounId, 'blockhash': blockhash })
   };
 
   try {
@@ -157,19 +157,23 @@ exports.handler = async event => {
   const dbKey = `${nounId}||${blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
 
+  // Retrieve connected users
+  const connections = await retrieveConnections();
+  const thisConnection = connections.find(i => i.connectionId === context.connectionId);
+
+  if (!thisConnection.captchaPassed) {
+    return { statusCode: 403, body: 'User have not passed the captcha' };
+  }
+
   // Update the DB with the latest vote
   let newVotes;
   try {
     newVotes = await updateVote(dbKey, vote);
-  } catch(err) {
+  } catch (err) {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
   }
 
-  // Retrieve connected users
-  let connections = await retrieveConnections();
-
   // If the voter was inactive, update the DB and data
-  let thisConnection = connections.find(i => i.connectionId === context.connectionId);
   if (thisConnection.inactive) {
     setActive(thisConnection.connectionId);
     thisConnection.inactive = false;
@@ -198,7 +202,7 @@ exports.handler = async event => {
   // Distribute votes to clients
   try {
     await distributeMessage(connections, endpoint, msg);
-  } catch(err) {
+  } catch (err) {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
 
