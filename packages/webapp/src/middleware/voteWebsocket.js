@@ -12,10 +12,11 @@ import {
 
 
 // Define the Actions Intercepted by the Middleware
-const openVoteSocket = (payload) => ({type: 'voteSocket/open', payload});
-const closeVoteSocket = (payload) => ({type: 'voteSocket/close', payload});
-const sendVote = (payload) => ({type: 'voteSocket/send', payload});
-const markVoterInactive = (payload) => ({type: 'voteSocket/inactive', payload});
+const openVoteSocket = (payload) => ({ type: 'voteSocket/open', payload });
+const closeVoteSocket = (payload) => ({ type: 'voteSocket/close', payload });
+const sendVote = (payload) => ({ type: 'voteSocket/send', payload });
+const markVoterInactive = (payload) => ({ type: 'voteSocket/inactive', payload });
+const sendCaptchaToken = (payload) => ({ type: 'voteSocket/captcha', payload });
 
 
 // Define the Middleware
@@ -39,7 +40,7 @@ const voteWebsocketMiddleware = () => {
     console.log('FOMO Web Socket OPEN.');
     store.dispatch(setConnected(true));
   }
-  
+
   const handleReceiveMessage = store => (msg) => {
     try {
       const data = JSON.parse(String(msg.data));
@@ -53,13 +54,13 @@ const voteWebsocketMiddleware = () => {
         store.dispatch(triggerSettlement());
         store.dispatch(setAttemptedSettleBlockHash(data.blockhash));
       }
-      if('connections' in data) {
+      if ('connections' in data) {
         store.dispatch(setNumConnections(data.connections));
       }
       if ('activeVoters' in data) {
         store.dispatch(setActiveVoters(data.activeVoters));
       }
-    } catch(err) {
+    } catch (err) {
       console.error('Erroring parsing FOMO websocket message');
       console.error(err);
     }
@@ -68,14 +69,14 @@ const voteWebsocketMiddleware = () => {
   const handleSendMessage = (msg) => {
     try {
       const { nounId, blockhash, vote } = msg;
-      const voteMsg = {"action": "sendvote", "nounId": nounId, "blockhash": blockhash, "vote": vote};
+      const voteMsg = { "action": "sendvote", "nounId": nounId, "blockhash": blockhash, "vote": vote };
       socket.send(JSON.stringify(voteMsg));
-    } catch(e) {
+    } catch (e) {
       console.error('Websocket message ill-formed');
       console.log(e);
     }
   }
-  
+
   const handleClose = store => () => {
     console.log('FOMO Web Socket CLOSED.');
     store.dispatch(setConnected(false));
@@ -83,10 +84,21 @@ const voteWebsocketMiddleware = () => {
 
   const handleInactiveStatus = () => {
     try {
-      const statusMsg = {"action": "changestatus", "status": "inactive"};
+      const statusMsg = { "action": "changestatus", "status": "inactive" };
       socket.send(JSON.stringify(statusMsg));
-    } catch(e) {
+    } catch (e) {
       console.error('Websocket message ill-formed');
+      console.log(e);
+    }
+  }
+
+  const handleCaptchaToken = (msg) => {
+    try {
+      const { token } = msg;
+      const tokenMsg = { "action": "checkcaptcha", "token": token };
+      socket.send(JSON.stringify(tokenMsg));
+    } catch (e) {
+      console.error('Websocket "checkcaptcha" message ill-formed');
       console.log(e);
     }
   }
@@ -107,6 +119,9 @@ const voteWebsocketMiddleware = () => {
     else if (action.type === 'voteSocket/inactive') {
       handleInactiveStatus();
     }
+    else if (action.type === 'voteSocket/captcha') {
+      handleCaptchaToken(action.payload);
+    }
     else {
       return next(action);
     }
@@ -115,4 +130,4 @@ const voteWebsocketMiddleware = () => {
 
 
 export default voteWebsocketMiddleware();
-export { openVoteSocket, closeVoteSocket, sendVote, markVoterInactive };
+export { openVoteSocket, closeVoteSocket, sendVote, markVoterInactive, sendCaptchaToken };

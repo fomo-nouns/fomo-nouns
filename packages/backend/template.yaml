@@ -313,7 +313,7 @@ Resources:
       - NounsWebSocket
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !Ref ChangeStatusFunction
+      FunctionName: !Ref CheckCaptchaFunction
       Principal: apigateway.amazonaws.com
 
   #----------------------------------------#

@@ -23,7 +23,7 @@ import SettledAuctionModal from './components/SettledAuctionModal';
 import NotificationToast from './components/NotificationToast';
 
 import { setActiveAccount } from './state/slices/account';
-import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
+import { openVoteSocket, markVoterInactive, sendCaptchaToken } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
@@ -36,6 +36,7 @@ function App() {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const isCoolBackground = useAppSelector(state => state.noun.isCoolBackground);
   const missedVotes = useAppSelector(state => state.vote.missedVotes);
+  const voteWSConnected = useAppSelector(state => state.vote.connected);
 
   useMemo(async () => { // Initalized before mount
     const [{ number: blocknumber, hash: blockhash }, auction] = await Promise.all([
@@ -60,6 +61,7 @@ function App() {
 
   useEffect(() => { // Only initialize after mount
     dispatch(openEthereumSocket());
+    dispatch(openVoteSocket());
   }, [dispatch]);
 
   // Deal with inactive users
@@ -70,15 +72,12 @@ function App() {
   }, [dispatch, missedVotes]);
 
   const reCaptchaVerify = useCallback(async () => {
-    if (!executeRecaptcha) {
-      return;
-    }
+    if (!executeRecaptcha) return;
+    if (!voteWSConnected) return;
 
     const token = await executeRecaptcha(RECAPTCHA_ACTION_NAME);
-    console.log('recaptcha token')
-    console.log(token)
-    dispatch(openVoteSocket()); // TODO: pass token
-  }, [executeRecaptcha, dispatch]);
+    dispatch(sendCaptchaToken({ "token": token }));
+  }, [executeRecaptcha, dispatch, voteWSConnected]);
 
   // Get reCaptcha user token and open vote socket
   useEffect(() => {

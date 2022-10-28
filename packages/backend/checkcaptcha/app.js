@@ -7,7 +7,7 @@
  */
 
 const AWS = require('aws-sdk');
-const axios = require('axios').default;
+const axios = require('axios');
 
 const { AWS_REGION, SOCKET_TABLE_NAME } = process.env;
 
@@ -54,17 +54,17 @@ async function checkRecaptcha(token) {
 
   if (response.status == 200) {
     const valid = response.data.tokenProperties.valid
-    if (valid) {
-      const score = response.data.riskAnalysis.score
+    const action = response.data.tokenProperties.action
+    const expectedAction = response.data.event.expectedAction
+    const score = response.data.riskAnalysis.score
 
-      if (score >= reCaptchaThreshold) {
-        return true
-      } else {
-        return false
-      }
+    const actionsMatch = action == expectedAction
+    const scorePassed = score >= reCaptchaThreshold
+
+    if (valid && actionsMatch && scorePassed) {
+      return true
     } else {
-      const reason = response.data.tokenProperties.invalidReason
-      throw Error(`Token Validity: token is not valid, reason: ${reason}`)
+      return false
     }
   } else {
     throw Error(`Request: request returned with status: ${response.status} and data: ${response.data}`)
@@ -82,6 +82,7 @@ exports.handler = async event => {
     captchaPassed = await checkRecaptcha(token);
     await updateStatus(connectionId, captchaPassed);
   } catch (err) {
+    console.error(err)
     return { statusCode: 500, body: 'Error validating captcha', message: err.stack };
   }
 
