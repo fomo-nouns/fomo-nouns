@@ -73,16 +73,17 @@ function App() {
 
   const reCaptchaVerify = useCallback(async () => {
     if (!executeRecaptcha) return;
-    if (!voteWSConnected) return;
 
     const token = await executeRecaptcha(RECAPTCHA_ACTION_NAME);
     dispatch(sendCaptchaToken({ "token": token }));
-  }, [executeRecaptcha, dispatch, voteWSConnected]);
+  }, [executeRecaptcha, dispatch]);
 
-  // Get reCaptcha user token and open vote socket
+  // Get reCaptcha user token
   useEffect(() => {
-    reCaptchaVerify();
-  }, [reCaptchaVerify]);
+    if (voteWSConnected) {
+      reCaptchaVerify();
+    }
+  }, [reCaptchaVerify, voteWSConnected]);
 
   return (
     <div className={`${classes.App} ${isCoolBackground ? classes.bgGrey : classes.bgBeige}`}>
