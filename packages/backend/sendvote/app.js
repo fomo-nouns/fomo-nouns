@@ -72,17 +72,18 @@ async function retrieveConnections() {
 /**
  * Set the provided connectionId to active
  */
-async function setActive(connectionId) {
+async function updateActivity(connectionId, nounBlockKey) {
   const updateParams = {
     TableName: SOCKET_TABLE_NAME,
     Key: { 'connectionId': connectionId },
-    ExpressionAttributeValues: { ':false': false},
-    UpdateExpression: 'set inactive = :false'
+    ExpressionAttributeValues: { ':false': false, ':lastVote': nounBlockKey },
+    ConditionExpression: 'lastVote <> :lastVote',
+    UpdateExpression: 'set inactive = :false, lastVote = :lastVote'
   };
 
-  ddb.update(updateParams).promise()
-    .then(() => console.log(`${connectionId} marked active.`))
-    .catch(e => console.log(e));
+  return ddb.update(updateParams).promise()
+    .then(() => console.log(`${connectionId} marked active.`));
+  // Leave errors uncaught to stop voting
 }
 
 
@@ -160,6 +161,10 @@ exports.handler = async event => {
   // Update the DB with the latest vote
   let newVotes;
   try {
+    // Confirm user as active and prevent double voting
+    await updateActivity(context.connectionId, dbKey);
+
+    // Update vote tracking DB
     newVotes = await updateVote(dbKey, vote);
   } catch(err) {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
@@ -167,13 +172,6 @@ exports.handler = async event => {
 
   // Retrieve connected users
   let connections = await retrieveConnections();
-
-  // If the voter was inactive, update the DB and data
-  let thisConnection = connections.find(i => i.connectionId === context.connectionId);
-  if (thisConnection.inactive) {
-    setActive(thisConnection.connectionId);
-    thisConnection.inactive = false;
-  }
 
   // Score the votes and create the response message
   let activeCount = activeUserCount(connections);
