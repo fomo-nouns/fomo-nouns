@@ -94,12 +94,12 @@ async function updateActivity(connectionId, nounBlockKey) {
  */
 async function distributeMessage(connections, endpoint, jsonMessage) {
   const messageString = JSON.stringify(jsonMessage);
-  
+
   const apigwManagementApi = new ApiGatewayManagementApi({
     apiVersion: '2018-11-29',
     endpoint: endpoint
   });
-  
+
   const postCalls = connections.map(async ({ connectionId }) => {
     try {
       await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: messageString }).promise();
@@ -112,7 +112,7 @@ async function distributeMessage(connections, endpoint, jsonMessage) {
       }
     }
   });
-  
+
   try {
     await Promise.all(postCalls);
   } catch (e) {
@@ -130,7 +130,7 @@ async function distributeMessage(connections, endpoint, jsonMessage) {
 async function callSettlement(nounId, blockhash) {
   var params = {
     FunctionName: SETTLEMENT_FUNCTION_NAME,
-    InvokeArgs: JSON.stringify({'nounId': nounId, 'blockhash': blockhash})
+    InvokeArgs: JSON.stringify({ 'nounId': nounId, 'blockhash': blockhash })
   };
 
   try {
@@ -138,6 +138,15 @@ async function callSettlement(nounId, blockhash) {
   } catch (err) {
     throw err;
   }
+}
+
+/**
+ * Check if 8 seconds have passed since the user connected to backend
+ * 
+ * @param {number} connectedAt timestamp when the user connected to backend WS
+ */
+function enoughTimePassed(connectedAt) {
+  return Date.now() - 8000 - connectedAt >= 0
 }
 
 
@@ -158,6 +167,12 @@ exports.handler = async event => {
   const dbKey = `${nounId}||${blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
 
+  const timeBufferPassed = enoughTimePassed(context.connectedAt)
+
+  if (!timeBufferPassed) {
+    return { statusCode: 403, body: 'Voting restricted: not enough time have passed since connecting' };
+  }
+
   // Update the DB with the latest vote
   let newVotes;
   try {
@@ -166,7 +181,7 @@ exports.handler = async event => {
 
     // Update vote tracking DB
     newVotes = await updateVote(dbKey, vote);
-  } catch(err) {
+  } catch (err) {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
   }
 
@@ -196,7 +211,7 @@ exports.handler = async event => {
   // Distribute votes to clients
   try {
     await distributeMessage(connections, endpoint, msg);
-  } catch(err) {
+  } catch (err) {
     return { statusCode: 500, body: 'Error distributing vote to clients.', message: err.stack };
   }
 
