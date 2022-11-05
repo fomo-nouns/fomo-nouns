@@ -41,7 +41,7 @@ async function checkRecaptcha(token) {
     reCaptchaThreshold
   } = await getReCaptchaKeys(smc);
 
-  const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${googleProjectId}/assessments?key=${googleApiKey}`
+  const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${googleProjectId}/assessments?key=${googleApiKey}`;
   const params = {
     event: {
       token: token,
@@ -53,13 +53,13 @@ async function checkRecaptcha(token) {
   const response = await axios.post(url, params)
 
   if (response.status == 200) {
-    const valid = response.data.tokenProperties.valid
-    const action = response.data.tokenProperties.action
-    const expectedAction = response.data.event.expectedAction
-    const score = response.data.riskAnalysis.score
+    const valid = response.data.tokenProperties.valid;
+    const action = response.data.tokenProperties.action;
+    const expectedAction = response.data.event.expectedAction;
+    const score = response.data.riskAnalysis.score;
 
-    const actionsMatch = action == expectedAction
-    const scorePassed = score >= reCaptchaThreshold
+    const actionsMatch = action == expectedAction;
+    const scorePassed = score >= reCaptchaThreshold;
 
     if (valid && actionsMatch && scorePassed) {
       return true
