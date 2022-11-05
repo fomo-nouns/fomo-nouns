@@ -142,6 +142,16 @@ async function callSettlement(nounId, blockhash) {
 
 
 /**
+ * Check if 8 seconds have passed since the user connected to backend
+ * 
+ * @param {number} connectedAt timestamp when the user connected to backend WS
+ */
+function enoughTimePassed(connectedAt) {
+  return Date.now() - 8000 - connectedAt >= 0;
+}
+
+
+/**
  * 
  * @param {Object} event
  *    event.body:
@@ -157,6 +167,12 @@ exports.handler = async event => {
 
   const dbKey = `${nounId}||${blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
+
+  const timeBufferPassed = enoughTimePassed(context.connectedAt);
+
+  if (!timeBufferPassed) {
+    return { statusCode: 403, body: 'Voting restricted: not enough time have passed since connecting' };
+  }
 
   // Retrieve connected users
   const connections = await retrieveConnections();
