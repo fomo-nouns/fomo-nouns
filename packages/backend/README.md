@@ -44,13 +44,17 @@ If you deploy to non standard AWS region (us-east-2), you may specify region aft
 ./key-management.sh --set --alchemy "<YOUR_PRIVATE_KEY>" <YOUR_AWS_REGION>
 ```
 
-### 2.1 Set the project ENV variables
+### 2.1 Prepare more keys for deploy
 
-TODO: finish the section 2.1
+You will need three more keys for deployment:
 
-1. Set the Google Cloud Project Id
+1. Google Cloud Project Id
 2. ReCaptcha Action specified in ReCaptcha call
 3. ReCaptcha threshold (0.0-1.0)*
+
+This values will be asked during guided deployment at step 3.
+
+To change values after you deployed the project, you may run this command: `sam deploy --stack-name <name_here> --parameter-overrides Key=Value`. Example: `sam deploy --stack-name <name_here> --parameter-overrides ReCaptchaThreshold=0.5`
 
 (*) This is used to determine when to restrict access to backend. In ReCaptcha score 0.0 is highest risk, 1.0 is lowest risk. Setting threshold to 0.0 will allow bots to send votes, setting to 1.0 will allow only most reCaptcha trusted and legitimate "users" to be able to send votes. Setting to 1.0 may limit other actual (and legitimate) users from sending votes ([learn more](https://cloud.google.com/recaptcha-enterprise/docs/interpret-assessment?authuser=6#interpret_scores)). Set this value according to analytics.
 
