@@ -9,7 +9,13 @@
 const AWS = require('aws-sdk');
 const axios = require('axios');
 
-const { AWS_REGION, SOCKET_TABLE_NAME } = process.env;
+const {
+  AWS_REGION,
+  SOCKET_TABLE_NAME,
+  GOOGLE_PROJECT_ID,
+  RECAPTCHA_THRESHOLD,
+  RECAPTCHA_ACTION
+} = process.env;
 
 const ddb = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-08-10', region: AWS_REGION });
 const smc = new AWS.SecretsManager({ region: AWS_REGION });
@@ -35,18 +41,15 @@ async function updateStatus(connectionId, captchaPassed) {
 async function checkRecaptcha(token) {
   const {
     googleApiKey,
-    googleProjectId,
-    reCaptchaKey,
-    reCaptchaAction,
-    reCaptchaThreshold
+    reCaptchaKey
   } = await getReCaptchaKeys(smc);
 
-  const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${googleProjectId}/assessments?key=${googleApiKey}`;
+  const url = `https://recaptchaenterprise.googleapis.com/v1/projects/${GOOGLE_PROJECT_ID}/assessments?key=${googleApiKey}`
   const params = {
     event: {
       token: token,
       siteKey: reCaptchaKey,
-      expectedAction: reCaptchaAction
+      expectedAction: RECAPTCHA_ACTION
     }
   }
 
@@ -59,7 +62,7 @@ async function checkRecaptcha(token) {
     const score = response.data.riskAnalysis.score;
 
     const actionsMatch = action == expectedAction;
-    const scorePassed = score >= reCaptchaThreshold;
+    const scorePassed = score >= RECAPTCHA_THRESHOLD;
 
     if (valid && actionsMatch && scorePassed) {
       return true

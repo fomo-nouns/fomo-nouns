@@ -27,10 +27,7 @@ Run `key-management.sh` script to store:
 1. Alchemy API key
 2. Ethereum Executor Account private key
 3. Google Cloud Project API key
-4. Google Cloud Project Id
-5. ReCaptcha key (Score based)
-6. ReCaptcha Action specified in ReCaptcha call
-7. ReCaptcha threshold (0.0-1.0)*
+4. ReCaptcha key (Score based)
 
 in AWS Secrets Manager:
 
@@ -38,10 +35,7 @@ in AWS Secrets Manager:
 ./key-management.sh --set --alchemy "<YOUR_PRIVATE_KEY>"
 ./key-management.sh --set --executor "0x<YOUR_PRIVATE_KEY>"
 ./key-management.sh --set --google-api-key "<YOUR_API_KEY>"
-./key-management.sh --set --google-project-id "<YOUR_PROJECT_ID>"
 ./key-management.sh --set --recaptcha-key "<YOUR_RECAPTCHA_KEY>"
-./key-management.sh --set --recaptcha-action "<YOUR_RECAPTCHA_ACTION>"
-./key-management.sh --set --recaptcha-threshold "<YOUR_RECAPTCHA_THRESHOLD>"
 ```
 
 If you deploy to non standard AWS region (us-east-2), you may specify region after `key` value:
@@ -49,6 +43,14 @@ If you deploy to non standard AWS region (us-east-2), you may specify region aft
 ```
 ./key-management.sh --set --alchemy "<YOUR_PRIVATE_KEY>" <YOUR_AWS_REGION>
 ```
+
+### 2.1 Set the project ENV variables
+
+TODO: finish the section 2.1
+
+1. Set the Google Cloud Project Id
+2. ReCaptcha Action specified in ReCaptcha call
+3. ReCaptcha threshold (0.0-1.0)*
 
 (*) This is used to determine when to restrict access to backend. In ReCaptcha score 0.0 is highest risk, 1.0 is lowest risk. Setting threshold to 0.0 will allow bots to send votes, setting to 1.0 will allow only most reCaptcha trusted and legitimate "users" to be able to send votes. Setting to 1.0 may limit other actual (and legitimate) users from sending votes ([learn more](https://cloud.google.com/recaptcha-enterprise/docs/interpret-assessment?authuser=6#interpret_scores)). Set this value according to analytics.
 

@@ -7,6 +7,23 @@ Description: >
   Gateway to enable real-time voting and settlement for Nouns auctions.
 
 Parameters:
+  GoogleProjectId:
+    Type: String
+    Default: 'fomo-web-main'
+    Description: 'Required. Google Cloud Project ID that is used for ReCaptcha.'
+
+  ReCaptchaAction:
+    Type: String
+    Default: 'captcha'
+    Description: 'Required. The user-initiated action specified in ReCaptcha v3 score based call.'
+
+  ReCaptchaThreshold:
+    Type: String
+    Default: '0.5'
+    Description: 'Required. ReCaptcha v3 score based threshold to determine when to restrict access to backend.'
+    AllowedPattern: ^(0(\.\d+)?|1(\.0+)?)$
+    ConstraintDescription: 'Required. Threshold value can only be between 0 and 1.0 (these numbers included).'
+
   SocketTableName:
     Type: String
     Default: 'nouns_websocket_connections'
@@ -294,6 +311,9 @@ Resources:
       Environment:
         Variables:
           SOCKET_TABLE_NAME: !Ref SocketTableName
+          GOOGLE_PROJECT_ID: !Ref GoogleProjectId
+          RECAPTCHA_ACTION: !Ref ReCaptchaAction
+          RECAPTCHA_THRESHOLD: !Ref ReCaptchaThreshold
       Policies:
       - DynamoDBCrudPolicy:
           TableName: !Ref SocketTableName
@@ -303,10 +323,7 @@ Resources:
           - 'secretsmanager:GetSecretValue'
           Resource:
           - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/GoogleApiKey-*'
-          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/GoogleProjectId-*'
           - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ReCaptchaKey-*'
-          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ReCaptchaAction-*'
-          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ReCaptchaThreshold-*'
   CheckCaptchaPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
