@@ -12,7 +12,8 @@ exports.handler = async event => {
   const putParams = {
     TableName: SOCKET_TABLE_NAME,
     Item: {
-      connectionId: event.requestContext.connectionId
+      connectionId: event.requestContext.connectionId,
+      inactive: true
     }
   };
 
