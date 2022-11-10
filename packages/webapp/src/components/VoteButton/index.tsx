@@ -47,9 +47,7 @@ const VoteButton: React.FC<{ voteType: VOTE_OPTIONS }> = props => {
 
   const disabled = voteNotSelected || (!votingActive || activeAuction) || blockHash !== votingBlockHash
 
-  useEventListener("keydown", (key) => {
-    const event = key as KeyboardEvent
-
+  useEventListener("keydown", (event: KeyboardEvent) => {
     if (event.key === voteToKey[voteType] && !disabled) {
       changeVote(voteType);
     }

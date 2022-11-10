@@ -1,23 +1,17 @@
 import React from "react";
 import classes from './CornerHelpText.module.css';
-import { isMobileScreen } from "../../utils/isMobile";
 import clsx from 'clsx';
 import { usePickByState } from "../../utils/colorResponsiveUIUtils";
 
 
 const CornerHelpText: React.FC<{}> = (props) => {
-  const display = isMobileScreen() ? 'none' : 'flex';
-  const wrapperStyle = {
-    display
-  };
-
   const style = usePickByState(classes.Cool, classes.Warm)
 
   const textStyle = clsx(classes.Text, style)
   const keyStyle = clsx(classes.Key, style)
 
   return (
-    <div className={classes.Wrapper} style={wrapperStyle}>
+    <div className={classes.Wrapper}>
       <div className={textStyle}>Vote with</div>
       <svg className={keyStyle} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 12.3005V5.91192C12 5.1046 11.0927 4.63006 10.4296 5.09055L5.31875 8.63975C4.71065 9.06205 4.75632 9.97573 5.40351 10.3353L10.5144 13.1746C11.1809 13.5449 12 13.063 12 12.3005Z" />
