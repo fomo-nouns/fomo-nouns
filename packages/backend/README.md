@@ -5,9 +5,12 @@
 This has the code and deployment infrastructure for the FOMO Nouns backend. This backend allows users to connect via websocket, votes to be submitted and stored in a DynamoDB table, and when a quorum of votes likes a Noun, launches settlement on the FOMO Nouns contract.
 
 Dependencies:
- - AWS Account with Appropriate IAM Accesses
- - AWS CLI
- - Alchemy API Key & Ethereum Account with ETH
+
+- AWS Account with Appropriate IAM Accesses
+- AWS CLI
+- Alchemy API Key & Ethereum Account with ETH
+- Google Cloud account with ReCaptcha v3 Enterprise Enabled
+- Score based ReCaptcha API Key
 
 ## Setup
 
@@ -19,12 +22,41 @@ First, install the AWS CLI ([instructions](https://docs.aws.amazon.com/cli/lates
 
 ### 2. Store private keys in AWS Secrets Manager
 
-Run `key-management.sh` script to store your Alchemy API key and Ethereum Executor Account private key in AWS Secrets Manager:
+Run `key-management.sh` script to store:
+
+1. Alchemy API key
+2. Ethereum Executor Account private key
+3. Google Cloud Project API key
+4. ReCaptcha key (Score based)
+
+in AWS Secrets Manager:
 
 ```
 ./key-management.sh --set --alchemy "<YOUR_PRIVATE_KEY>"
 ./key-management.sh --set --executor "0x<YOUR_PRIVATE_KEY>"
+./key-management.sh --set --google-api-key "<YOUR_API_KEY>"
+./key-management.sh --set --recaptcha-key "<YOUR_RECAPTCHA_KEY>"
 ```
+
+If you deploy to non standard AWS region (us-east-2), you may specify region after `key` value:
+
+```
+./key-management.sh --set --alchemy "<YOUR_PRIVATE_KEY>" <YOUR_AWS_REGION>
+```
+
+### 2.1 Prepare more keys for deploy
+
+You will need three more keys for deployment:
+
+1. Google Cloud Project Id
+2. ReCaptcha Action specified in ReCaptcha call
+3. ReCaptcha threshold (0.0-1.0)*
+
+This values will be asked during guided deployment at step 3.
+
+To change values after you deployed the project, you may run this command: `sam deploy --stack-name <name_here> --parameter-overrides Key=Value`. Example: `sam deploy --stack-name <name_here> --parameter-overrides ReCaptchaThreshold=0.5`
+
+(*) This is used to determine when to restrict access to backend. In ReCaptcha score 0.0 is highest risk, 1.0 is lowest risk. Setting threshold to 0.0 will allow bots to send votes, setting to 1.0 will allow only most reCaptcha trusted and legitimate "users" to be able to send votes. Setting to 1.0 may limit other actual (and legitimate) users from sending votes ([learn more](https://cloud.google.com/recaptcha-enterprise/docs/interpret-assessment?authuser=6#interpret_scores)). Set this value according to analytics.
 
 ### 3. Build and Deploy
 

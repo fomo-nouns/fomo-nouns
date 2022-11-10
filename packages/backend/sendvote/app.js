@@ -60,7 +60,7 @@ async function retrieveConnections() {
   try {
     let connectionData = await ddb.scan({
       TableName: SOCKET_TABLE_NAME,
-      ProjectionExpression: 'connectionId, inactive'
+      ProjectionExpression: 'connectionId, inactive, captchaPassed'
     }).promise();
     return connectionData.Items;
   } catch (e) {
@@ -174,6 +174,14 @@ exports.handler = async event => {
     return { statusCode: 403, body: 'Voting restricted: not enough time have passed since connecting' };
   }
 
+  // Retrieve connected users
+  const connections = await retrieveConnections();
+  const thisConnection = connections.find(i => i.connectionId === context.connectionId);
+
+  if (!thisConnection.captchaPassed) {
+    return { statusCode: 403, body: 'User have not passed the captcha' };
+  }
+
   // Update the DB with the latest vote
   let newVotes;
   try {
@@ -185,9 +193,6 @@ exports.handler = async event => {
   } catch (err) {
     return { statusCode: 500, body: 'Error updating vote in DB.', message: err.stack };
   }
-
-  // Retrieve connected users
-  let connections = await retrieveConnections();
 
   // Score the votes and create the response message
   let activeCount = activeUserCount(connections);

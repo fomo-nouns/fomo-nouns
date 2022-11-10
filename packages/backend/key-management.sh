@@ -2,6 +2,7 @@
 
 ACTION="$1"
 SECRET="$3"
+REGION="$4"
 
 if [[ "$2" == "--alchemy" ]]; then
   NAME="nouns/AlchemyKey"
@@ -9,16 +10,26 @@ if [[ "$2" == "--alchemy" ]]; then
 elif [[ "$2" == "--executor" ]]; then
   NAME="nouns/ExecutorPrivateKey"
   DESCRIPTION="Ethereum private key with Executor rights to the FOMO Nouns Contract"
+elif [[ "$2" == "--google-api-key" ]]; then
+  NAME="nouns/GoogleApiKey"
+  DESCRIPTION="ReCaptcha: API key associated with the Google Cloud project"
+elif [[ "$2" == "--recaptcha-key" ]]; then
+  NAME="nouns/ReCaptchaKey"
+  DESCRIPTION="ReCAPTCHA key associated with the site/app"
 else
   ACTION=""
 fi
 
+if [ -z "$REGION" ]; then 
+  REGION="us-east-2"
+fi
+
 if [[ "$ACTION" == "--set" ]]; then
-  aws secretsmanager create-secret --name "$NAME" --description "$DESCRIPTION" --secret-string "$SECRET"
+  aws secretsmanager create-secret --name "$NAME" --description "$DESCRIPTION" --secret-string "$SECRET" --region "$REGION"
 elif [[ "$ACTION" == "--update" ]]; then
-  aws secretsmanager update-secret --secret-id "$NAME" --secret-string "$SECRET"
+  aws secretsmanager update-secret --secret-id "$NAME" --secret-string "$SECRET" --region "$REGION"
 elif [[ "$ACTION" == "--get" ]]; then
-  aws secretsmanager describe-secret --secret-id "$NAME"
+  aws secretsmanager describe-secret --secret-id "$NAME" --region "$REGION"
 else
   echo '''The script can be run with the following commands:
     ./key-management.sh --set --executor/--alchemy <private_key>

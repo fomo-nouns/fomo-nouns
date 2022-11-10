@@ -7,6 +7,23 @@ Description: >
   Gateway to enable real-time voting and settlement for Nouns auctions.
 
 Parameters:
+  GoogleProjectId:
+    Type: String
+    Default: 'fomo-web-main'
+    Description: 'Required. Google Cloud Project ID that is used for ReCaptcha.'
+
+  ReCaptchaAction:
+    Type: String
+    Default: 'captcha'
+    Description: 'Required. The user-initiated action specified in ReCaptcha v3 score based call.'
+
+  ReCaptchaThreshold:
+    Type: String
+    Default: '0.5'
+    Description: 'Required. ReCaptcha v3 score based threshold to determine when to restrict access to backend.'
+    AllowedPattern: ^(0(\.\d+)?|1(\.0+)?)$
+    ConstraintDescription: 'Required. Threshold value can only be between 0 and 1.0 (these numbers included).'
+
   SocketTableName:
     Type: String
     Default: 'nouns_websocket_connections'
@@ -125,6 +142,26 @@ Resources:
       IntegrationUri: 
         Fn::Sub:
             arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ChangeStatusFunction.Arn}/invocations
+  CheckCaptchaRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref NounsWebSocket
+      RouteKey: checkcaptcha
+      AuthorizationType: NONE
+      OperationName: CheckCaptchaRoute
+      Target: !Join
+        - '/'
+        - - 'integrations'
+          - !Ref CheckCaptchaInteg
+  CheckCaptchaInteg:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref NounsWebSocket
+      Description: CheckCaptcha Integration
+      IntegrationType: AWS_PROXY
+      IntegrationUri: 
+        Fn::Sub:
+            arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CheckCaptchaFunction.Arn}/invocations
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
@@ -132,6 +169,7 @@ Resources:
     - SendRoute
     - DisconnectRoute
     - ChangeStatusRoute
+    - CheckCaptchaRoute
     Properties:
       ApiId: !Ref NounsWebSocket
   Stage:
@@ -248,6 +286,54 @@ Resources:
       Principal: apigateway.amazonaws.com
 
   #----------------------------------------#
+  # Lambda: CheckCaptcha from Websocket
+  #----------------------------------------#
+  AxiosDepLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: axios-dependency
+      Description: Axios dependency
+      ContentUri: axios-layer/
+      CompatibleRuntimes:
+        - nodejs14.x
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: nodejs14.x
+  CheckCaptchaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: checkcaptcha/
+      Handler: app.handler
+      MemorySize: 256
+      Runtime: nodejs14.x
+      Layers:
+        - !Ref AxiosDepLayer
+      Environment:
+        Variables:
+          SOCKET_TABLE_NAME: !Ref SocketTableName
+          GOOGLE_PROJECT_ID: !Ref GoogleProjectId
+          RECAPTCHA_ACTION: !Ref ReCaptchaAction
+          RECAPTCHA_THRESHOLD: !Ref ReCaptchaThreshold
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: !Ref SocketTableName
+      - Statement:
+        - Effect: Allow
+          Action:
+          - 'secretsmanager:GetSecretValue'
+          Resource:
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/GoogleApiKey-*'
+          - !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:nouns/ReCaptchaKey-*'
+  CheckCaptchaPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - NounsWebSocket
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref CheckCaptchaFunction
+      Principal: apigateway.amazonaws.com
+
+  #----------------------------------------#
   # Lambda: SendVote Websocket Handler
   #----------------------------------------#
   SendVoteFunction:
@@ -349,6 +435,10 @@ Outputs:
   ChangeStatusFunctionArn:
     Description: "ChangeStatus function ARN"
     Value: !GetAtt ChangeStatusFunction.Arn
+
+  CheckCaptchaFunctionArn:
+    Description: "CheckCaptcha function ARN"
+    Value: !GetAtt CheckCaptchaFunction.Arn
 
   SendVoteFunctionArn:
     Description: "SendVote function ARN"

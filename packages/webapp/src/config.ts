@@ -10,6 +10,8 @@ export const PROVIDER_NAME = process.env.REACT_APP_PROVIDER_NAME!;
 export const FOMO_WEBSOCKET = process.env.REACT_APP_WEB_SOCKET!;
 export const PROVIDER_KEY = process.env.REACT_APP_PROVIDER_KEY!;
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY!;
+export const RECAPTCHA_KEY = process.env.REACT_APP_RECAPTCHA_KEY!;
+export const RECAPTCHA_ACTION_NAME = process.env.REACT_APP_RECAPTCHA_ACTION_NAME!;
 /*--------------------------*/
 
 // TODO: Clean this up

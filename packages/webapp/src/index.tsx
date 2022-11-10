@@ -21,10 +21,11 @@ import { routerMiddleware } from 'connected-react-router';
 import { Provider } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import dotenv from 'dotenv';
-import { default as globalConfig } from './config';
+import { default as globalConfig, RECAPTCHA_KEY } from './config';
 import voteWebsocket from './middleware/voteWebsocket';
 import ethersProviderMiddleware from './middleware/ethersProvider';
 import alchemyWebsocketMiddleware from './middleware/alchemyWebsocket';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 
 dotenv.config();
@@ -78,8 +79,10 @@ ReactDOM.render(
       <Web3ReactProvider getLibrary={
         (provider, connector) => new Web3Provider(provider)
       }>
-        <DAppProvider config={config}> 
-          <App />
+        <DAppProvider config={config}>
+          <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+            <App />
+          </GoogleReCaptchaProvider>
         </DAppProvider>
       </Web3ReactProvider>
     </React.StrictMode>

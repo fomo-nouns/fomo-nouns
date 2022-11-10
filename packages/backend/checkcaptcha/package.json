@@ -1,0 +1,12 @@
+{
+  "name": "checkcaptcha",
+  "version": "1.0.0",
+  "description": "Check user's captcha token and save status to db",
+  "main": "src/app.js",
+  "author": "ng",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.739.0"
+  }
+}
