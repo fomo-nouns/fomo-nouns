@@ -1,12 +1,16 @@
 import { contract as AuctionContract } from '../wrappers/nounsAuction';
 
-const settleMethods = ['settleCurrentAndCreateNewAuction', 'settleAuction']
+const settleMethod = 'settleCurrentAndCreateNewAuction'
 const bidMethod = 'createBid'
+
+const decodeMethod = (input: string) => {
+    const decodedInput = AuctionContract.interface.parseTransaction({ data: input })
+    return decodedInput.name
+}
 
 export const isSettleMethod = (input: string) => {
     try {
-        const decodedInput = AuctionContract.interface.parseTransaction({ data: input })
-        return settleMethods.includes(decodedInput.name);
+        return decodeMethod(input) === settleMethod;
     } catch {
         return false;
     }
@@ -14,8 +18,7 @@ export const isSettleMethod = (input: string) => {
 
 export const isBidMethod = (input: string) => {
     try {
-        const decodedInput = AuctionContract.interface.parseTransaction({ data: input })
-        return decodedInput.name === bidMethod;
+        return decodeMethod(input) === bidMethod;
     } catch {
         return false;
     }
