@@ -14,6 +14,7 @@
   cursor: pointer;
   text-decoration: none !important;
 }
+
 .navBarLink:hover {
   color: var(--brand-dark-green) !important;
   background-color: #f2f2f2;
@@ -24,6 +25,7 @@
     background-color: transparent !important;
     color: var(--brand-black) !important;
   }
+
   .navBarLink:hover {
     background-color: transparent !important;
     color: var(--brand-dark-green) !important;

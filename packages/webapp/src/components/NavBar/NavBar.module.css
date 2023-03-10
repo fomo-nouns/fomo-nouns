@@ -1,11 +1,8 @@
 .HeaderBar {
   width: 100%;
   box-sizing: border-box;
-  padding: 0 5px;
-}
-
-.fundsLow {
-  color: red;
+  padding: 10px 5px;
+  max-width: 1140px;
 }
 
 .navBarBrand {
@@ -14,7 +11,18 @@
   padding: 5px;
 }
 
+.nonHideItems {
+  margin-left: auto;
+}
+
 /* connect button displays differently to default NavBarItems, thus the !importants */
+.navBarToggle {
+  border-radius: 10px;
+  height: 44px;
+  padding: 0.25rem 0.5rem;
+  margin-right: 12px;
+}
+
 .connectBtn {
   cursor: pointer;
 }
@@ -27,6 +35,8 @@
 
 .disconnectBtn {
   cursor: pointer;
+  font-family: 'PT Root UI';
+  font-weight: bold;
 }
 
 .disconnectBtn:hover,
@@ -35,21 +45,16 @@
   cursor: pointer !important;
 }
 
-.greenStatusCircle {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  background-color: #7fc59c;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-
 .nounsNavLink,
 .nounsNavLink:active,
 .nounsNavLink:visited {
+  font-family: 'PT Root UI';
+  font-weight: bold;
   font-size: 0.9rem;
-  padding: 0.5rem 0.8rem !important;
-  color: var(--brand-black) !important;
+  padding: 0.3rem 0.3rem !important;
+  color: black !important;
+  /* padding: 0.5rem 0.8rem !important;
+  color: var(--brand-black) !important; */
 }
 
 .nounsNavLink:hover {
@@ -68,9 +73,22 @@
   align-items: center;
 }
 
-.nogglesAscii {
-  display: inline-block;
-  position: relative;
-  bottom: 1px;
-  right: 3px;
+.brandAndPlayersWrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.navBarToggle {
+  border-radius: 10px;
+  height: 44px;
+  padding: 0.25rem 0.5rem;
+  margin-right: 12px;
+}
+
+@media (max-width: 600px) {
+  .navBarBrand {
+    margin-right: 0px;
+  }
 }

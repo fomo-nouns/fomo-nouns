@@ -1,0 +1,26 @@
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nounsNavLink,
+.nounsNavLink:active,
+.nounsNavLink:visited {
+    font-family: 'PT Root UI';
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.3rem !important;
+    color: black !important;
+}
+
+.lowFundsText {
+    color: rgba(228, 5, 54, 0.75);
+}
+
+.divider {
+    height: 14px;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    border-left: 1px solid rgba(228, 5, 54, 0.3);
+}

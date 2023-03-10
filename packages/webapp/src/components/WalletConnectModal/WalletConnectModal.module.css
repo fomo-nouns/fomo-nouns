@@ -1,54 +1,16 @@
-.WalletArea {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 0.8rem;
-  font-size: 0.9rem;
-}
-
 .clickable {
-    cursor: pointer;
-}
-
-.connectBtn {
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  border: 0;
-  background: inherit;
-}
-.connectBtn:hover,
-.connectBtn:active,
-.connectBtn:focus {
-  cursor: pointer !important;
 }
 
-.disconnectBtn {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  border: 0;
-  background: inherit;
-}
-.disconnectBtn:hover,
-.disconnectBtn:active,
-.disconnectBtn:focus {
-  cursor: pointer !important;
+.walletConnectData {
+  font-size: 15px;
+  padding-top: 1.5rem;
+  padding-bottom: 0rem;
+  margin-bottom: -1.25rem;
+  opacity: 0.5;
+  transition: all 0.15s ease-in-out;
 }
 
-.greenStatusCircle{
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  background: #7fc59c;
-  border-radius: 50px;
-  margin-left: 5px;
-}
-
-.walletConnectWrapper{
-  display: flex;
-  align-items: center;
-  border: black 1px solid;
-  padding: 0.1rem 0.5rem;
-  background:rgb(256, 256, 256, 0.8);
-  border-radius: 30px;
+.walletConnectData:hover {
+  opacity: 1;
 }
