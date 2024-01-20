@@ -26,7 +26,10 @@ async function buildTransaction(fomoSettler, blockhash, feeData, priorityFeePerG
     delete feeData.gasPrice;
   }
   
-  const tx = await fomoSettler.settleAuctionWithRefund.populateTransaction(blockhash, {...feeData, type: 2});
+  const tx = await fomoSettler.settleAuctionWithRefund.populateTransaction(
+    blockhash,
+    {...feeData, type: 2, blockTag: 'latest'}
+  );
   tx.chainId = 1; //fomoSettler.provider.network.chainId;
   return tx;
 }
