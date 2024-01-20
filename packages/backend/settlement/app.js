@@ -55,7 +55,7 @@ async function initSigner() {
   let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys(smc);
   let provider = new AlchemyProvider(NETWORK_NAME, alchemyKey);
   signer = new Wallet(executorPrivateKey, provider);
-  console.log('Signer initialized');
+  console.log(`Signer ${signer.address} initialized`);
 }
 
 
