@@ -8,9 +8,11 @@
   "scripts": {
     "test": "mocha tests"
   },
+  "dependencies": {
+    "aws-sdk": "2.1540.0"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "aws-sdk": "2.1540.0",
     "chai": "^4.3.4",
     "ethers": "5.7.2",
     "hardhat": "^2.6.8"
