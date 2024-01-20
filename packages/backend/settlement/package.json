@@ -1,6 +1,6 @@
 {
   "name": "sendvote",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Send votes for a specific Noun",
   "main": "src/app.js",
   "author": "@_forager",
@@ -10,9 +10,9 @@
   },
   "devDependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "aws-sdk": "^2.739.0",
+    "aws-sdk": "2.1540.0",
     "chai": "^4.3.4",
-    "ethers": "~5.7.1",
+    "ethers": "5.7.2",
     "hardhat": "^2.6.8"
   }
 }

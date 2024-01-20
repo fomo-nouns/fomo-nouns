@@ -1,12 +1,12 @@
 {
   "name": "ondisconnect",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Disconnect to FOMO Nouns websocket",
   "main": "src/app.js",
   "author": "@_forager",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "aws-sdk": "^2.739.0"
+    "aws-sdk": "2.1540.0"
   }
 }
