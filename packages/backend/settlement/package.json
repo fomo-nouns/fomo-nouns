@@ -14,7 +14,7 @@
   "devDependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "chai": "^4.3.4",
-    "ethers": "5.7.2",
+    "ethers": "6.10.0",
     "hardhat": "^2.6.8"
   }
 }

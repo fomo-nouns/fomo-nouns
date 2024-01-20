@@ -1,4 +1,4 @@
-const { parseUnits } = require('@ethersproject/units');
+const { parseUnits } = require('ethers/utils');
 
 // Configuration Settings
 const NETWORK_NAME = 'mainnet';

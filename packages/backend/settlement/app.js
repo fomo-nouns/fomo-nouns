@@ -9,8 +9,8 @@
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const SecretsManager = require('aws-sdk/clients/secretsmanager');
 
-const { AlchemyProvider } = require('@ethersproject/providers');
-const { Wallet } = require('ethers');
+const { AlchemyProvider } = require('ethers/providers');
+const { Wallet } = require('ethers/wallet');
 
 const { NETWORK_NAME } = require('./ethereumConfig.js');
 const { getEthereumPrivateKeys } = require('./utils/getEthereumPrivateKeys.js');

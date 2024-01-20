@@ -1,5 +1,5 @@
-const { Contract } = require("@ethersproject/contracts");
-const { formatEther } = require('@ethersproject/units');
+const { Contract } = require("ethers/contract");
+const { formatEther } = require('ethers/utils');
 
 const { FOMO_SETTLER_ABI } = require('./abi.js');
 const {
@@ -18,17 +18,16 @@ const logr = x => { if (LOG_PROGRESS) console.log(x); }
  */
 async function buildTransaction(fomoSettler, blockhash, feeData, priorityFeePerGas = null) {
   if (priorityFeePerGas) {  // if (network === 'goerli') baseFeePerGas = baseFeePerGas.mul(GWEI);
-    let maxPriorityFee = priorityFeePerGas.gt(feeData.maxPriorityFeePerGas) ? priorityFeePerGas : feeData.maxPriorityFeePerGas;
+    let maxPriorityFee = priorityFeePerGas > feeData.maxPriorityFeePerGas ? priorityFeePerGas : feeData.maxPriorityFeePerGas;
 
-    feeData.maxFeePerGas = feeData.maxFeePerGas.sub(feeData.maxPriorityFeePerGas).add(maxPriorityFee);
+    feeData.maxFeePerGas = feeData.maxFeePerGas - feeData.maxPriorityFeePerGas + maxPriorityFee;
     feeData.maxPriorityFeePerGas = maxPriorityFee;
 
     delete feeData.gasPrice;
-    delete feeData.lastBaseFeePerGas;
   }
   
-  const tx = await fomoSettler.populateTransaction.settleAuctionWithRefund(blockhash, {...feeData, type: 2});
-  tx.chainId = fomoSettler.provider.network.chainId;
+  const tx = await fomoSettler.settleAuctionWithRefund.populateTransaction(blockhash, {...feeData, type: 2});
+  tx.chainId = 1; //fomoSettler.provider.network.chainId;
   return tx;
 }
 
@@ -38,7 +37,7 @@ async function buildTransaction(fomoSettler, blockhash, feeData, priorityFeePerG
  */
 async function simulateNormalTransaction(provider, tx) {
   const gasUsed = await provider.estimateGas(tx);
-  const totalCost = gasUsed.mul(tx.maxFeePerGas);
+  const totalCost = gasUsed * tx.maxFeePerGas;
 
   logr(`  ⛽️ Gas Used: ${gasUsed}  💰 Max Cost: ${formatEther(totalCost)}`);
 
