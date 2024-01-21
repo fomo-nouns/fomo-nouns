@@ -46,7 +46,7 @@ Connected (press CTRL+C to quit)
 Pass an example payload like the one below:
 
 ```
-{"action": "sendvote", "nounId": "1234", "blockhash": "abcd1234", "vote": "voteLove"}
+{"action": "sendvote", "nounId": "1234", "vote": "voteLike", "blockhash": "abcd1234"}
 ```
 
 You should see a response from the websocket echoing the vote:
