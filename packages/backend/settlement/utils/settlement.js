@@ -28,7 +28,7 @@ async function buildTransaction(fomoSettler, blockhash, feeData, priorityFeePerG
   
   const tx = await fomoSettler.settleAuctionWithRefund.populateTransaction(
     blockhash,
-    {...feeData, type: 2, blockTag: 'latest'}
+    {...feeData, type: 2, from: fomoSettler.runner.address}
   );
   tx.chainId = 1; //fomoSettler.provider.network.chainId;
   return tx;
@@ -39,7 +39,7 @@ async function buildTransaction(fomoSettler, blockhash, feeData, priorityFeePerG
  * Simulate the gas cost of settlement
  */
 async function simulateNormalTransaction(provider, tx) {
-  const gasUsed = await provider.estimateGas(tx);
+  const gasUsed = BigInt(450000); // await provider.estimateGas(tx)
   const totalCost = gasUsed * tx.maxFeePerGas;
 
   logr(`  ⛽️ Gas Used: ${gasUsed}  💰 Max Cost: ${formatEther(totalCost)}`);
@@ -54,6 +54,8 @@ async function simulateNormalTransaction(provider, tx) {
 async function sendNormalTransaction(signer, tx) {
   try {
     const response = await signer.sendTransaction(tx);
+    logr(`  📡 Transaction sent: ${response}`);
+
     const receipt = await response.wait();
 
     if (receipt.status !== 1) {
