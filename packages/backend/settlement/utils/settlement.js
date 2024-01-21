@@ -99,7 +99,7 @@ async function submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SE
   }
   
 
-  if (cost.lt(maxSettlementCost)) {
+  if (cost < maxSettlementCost) {
     let result = await sendNormalTransaction(signer, tx);
     return result;
   } else {
