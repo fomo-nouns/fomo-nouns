@@ -12,9 +12,9 @@
     "aws-sdk": "2.1540.0"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@nomicfoundation/hardhat-ethers": "3.0.5",
     "chai": "^4.3.4",
     "ethers": "6.10.0",
-    "hardhat": "^2.6.8"
+    "hardhat": "2.19.4"
   }
 }
