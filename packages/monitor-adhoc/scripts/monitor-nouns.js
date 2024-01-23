@@ -1,6 +1,6 @@
 const { network, ethers } = require('hardhat');
 const { abi, address } = require('./config.js');
-const { FlashbotsBundleProvider } = require('@flashbots/ethers-provider-bundle');
+// const { FlashbotsBundleProvider } = require('@flashbots/ethers-provider-bundle');
 const { settleNormally, settleFlashbots } = require('./settle.js');
 
 const { Wallet } = ethers;
@@ -26,8 +26,8 @@ async function assignNetworkParams() {
 
   flashbotSigner = Wallet.createRandom(); // TODO: Assing a stable private key new Wallet(<private key>)
   flashbotsProvider =
-    (network.name === 'mainnet') ? FlashbotsBundleProvider.create(provider, flashbotSigner) :
-    (network.name === 'goerli')  ? FlashbotsBundleProvider.create(provider, flashbotSigner, 'https://relay-goerli.flashbots.net/', 'goerli') :
+    // (network.name === 'mainnet') ? FlashbotsBundleProvider.create(provider, flashbotSigner) :
+    // (network.name === 'goerli')  ? FlashbotsBundleProvider.create(provider, flashbotSigner, 'https://relay-goerli.flashbots.net/', 'goerli') :
     null;
 }
 
