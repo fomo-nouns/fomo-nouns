@@ -4,6 +4,7 @@ const { parseUnits } = require('ethers/utils');
 const NETWORK_NAME = 'mainnet';
 const MAX_BASE_FEE = parseUnits('150', 'gwei');
 const PRIORITY_FEE = parseUnits('10', 'gwei');
+const WARM_UP_PERIOD = 0n; // period to wait after auction ends before settlement
 
 // Key Addresses
 const addresses = {
@@ -25,5 +26,6 @@ module.exports = {
   AUCTION_HOUSE_ADDR,
   FOMO_SETTLER_ADDR,
   PRIORITY_FEE,
-  MAX_BASE_FEE
+  MAX_BASE_FEE,
+  WARM_UP_PERIOD
 }

@@ -7,7 +7,8 @@ const {
   FOMO_SETTLER_ADDR,
   AUCTION_HOUSE_ADDR,
   MAX_BASE_FEE,
-  PRIORITY_FEE
+  PRIORITY_FEE,
+  WARM_UP_PERIOD
 } = require('../ethereumConfig.js');
 
 
@@ -46,6 +47,8 @@ async function validateRequest(nounId, blockhash, auctionHouse) {
     throw Error(`Requested blockhash ${blockhash} does not match latest block ${block.hash}`);
   } else if (auction.endTime > block.timestamp) {
     throw Error(`Auction has not yet ended`);
+  } else if (auction.endTime + WARM_UP_PERIOD > block.timestamp) {
+    throw Error(`Settlement requested too soon after auction end`);
   } else if (nounId != nextAuctionNounId(auction.nounId)) {
     throw Error(`Requested nounId ${nounId} is not next auctioned nounId after ${auction.nounId}`);
   }
