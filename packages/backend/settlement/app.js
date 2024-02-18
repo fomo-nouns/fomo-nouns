@@ -75,7 +75,7 @@ exports.handler = async event => {
 
   try {
     await updateStatus(dbKey, signer, blockhash);
-    await submitSettlement(signer, blockhash);
+    await submitSettlement(signer, nounId, blockhash);
   } catch(err) {
     // If settlement was already attempted, ignore
     if (err.code !== "ConditionalCheckFailedException") {

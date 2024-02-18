@@ -19,6 +19,7 @@ describe("Settlement", function () {
   
   // https://etherscan.io/tx/0x41e1d69761ab00167384c3871f0e5d6c6d8a2d85a35ffab29d0b170d81888165
   const RESET_BLOCK_NUMBER = 16890723;
+  const SETTLEMENT_NOUN_ID = 653n;
 
   var executor, auctionHouse;
   var settler;
@@ -46,7 +47,7 @@ describe("Settlement", function () {
       const blockhash = block.hash;
 
       impersonateAccount(FOMO_EXECUTOR_ADDRESS);
-      let result = await submitSettlement(executor, blockhash, FOMO_SETTLER_ADDRESS);
+      let result = await submitSettlement(executor, SETTLEMENT_NOUN_ID, blockhash, FOMO_SETTLER_ADDRESS);
       expect(result).to.be.true;
     });
 
@@ -57,7 +58,7 @@ describe("Settlement", function () {
       const blockhash = block.hash;
 
       impersonateAccount(FOMO_EXECUTOR_ADDRESS);
-      let result = await submitSettlement(executor, blockhash, FOMO_SETTLER_ADDRESS);
+      let result = await submitSettlement(executor, SETTLEMENT_NOUN_ID, blockhash, FOMO_SETTLER_ADDRESS);
 
       expect(result).to.be.false;
     });
@@ -69,7 +70,7 @@ describe("Settlement", function () {
       const blockhash = block.hash;
 
       impersonateAccount(FOMO_EXECUTOR_ADDRESS);
-      let result = await submitSettlement(executor, blockhash, FOMO_SETTLER_ADDRESS);
+      let result = await submitSettlement(executor, SETTLEMENT_NOUN_ID, blockhash, FOMO_SETTLER_ADDRESS);
 
       expect(result).to.be.false;
     });
