@@ -19,7 +19,7 @@ describe("Settlement", function () {
   
   // https://etherscan.io/tx/0x41e1d69761ab00167384c3871f0e5d6c6d8a2d85a35ffab29d0b170d81888165
   const RESET_BLOCK_NUMBER = 16890723;
-  const SETTLEMENT_NOUN_ID = 653n;
+  const SETTLEMENT_NOUN_ID = 653;
 
   var executor, auctionHouse;
   var settler;
