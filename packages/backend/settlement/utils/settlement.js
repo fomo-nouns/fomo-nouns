@@ -1,5 +1,6 @@
 const { Contract } = require("ethers/contract");
 const { formatEther } = require('ethers/utils');
+const { nextAuctionNounId } = require('./nouns.js');
 
 const { FOMO_SETTLER_ABI, AUCTION_HOUSE_ABI } = require('./abi.js');
 const {
@@ -42,9 +43,11 @@ async function validateRequest(nounId, blockhash, auctionHouse) {
   let auction = await auctionHouse.auction();
 
   if (block.hash !== blockhash) {
-    throw Error(`Settlement blockhash ${blockhash} does not match latest block ${block.hash}`);
+    throw Error(`Requested blockhash ${blockhash} does not match latest block ${block.hash}`);
   } else if (auction.endTime > block.timestamp) {
     throw Error(`Auction has not yet ended`);
+  } else if (nounId != nextAuctionNounId(auction.nounId)) {
+    throw Error(`Requested nounId ${nounId} is not next auctioned nounId after ${auction.nounId}`);
   }
 }
 

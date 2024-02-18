@@ -74,6 +74,18 @@ describe("Settlement", function () {
 
       expect(result).to.be.false;
     });
+
+    it("should revert if requested noun is wrong", async function() {
+      await networkReset(RESET_BLOCK_NUMBER, NETWORK_NAME);
+
+      const block = await executor.provider.getBlock();
+      const blockhash = block.hash;
+
+      impersonateAccount(FOMO_EXECUTOR_ADDRESS);
+      let result = await submitSettlement(executor, SETTLEMENT_NOUN_ID-1, blockhash, FOMO_SETTLER_ADDRESS);
+
+      expect(result).to.be.false;
+    });
   });
 
 });
