@@ -2,8 +2,8 @@ const { parseUnits } = require('ethers/utils');
 
 // Configuration Settings
 const NETWORK_NAME = 'mainnet';
-const DEFAULT_PRIORITY_FEE = parseUnits('15', 'gwei');
-const DEFAULT_MAX_SETTLEMENT_COST = parseUnits('0.50', 'ether');
+const MAX_BASE_FEE = parseUnits('150', 'gwei');
+const PRIORITY_FEE = parseUnits('10', 'gwei');
 
 // Key Addresses
 const addresses = {
@@ -24,6 +24,6 @@ module.exports = {
   NETWORK_NAME,
   AUCTION_HOUSE_ADDR,
   FOMO_SETTLER_ADDR,
-  DEFAULT_PRIORITY_FEE,
-  DEFAULT_MAX_SETTLEMENT_COST
+  PRIORITY_FEE,
+  MAX_BASE_FEE
 }

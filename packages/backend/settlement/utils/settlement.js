@@ -1,11 +1,12 @@
 const { Contract } = require("ethers/contract");
 const { formatEther } = require('ethers/utils');
 
-const { FOMO_SETTLER_ABI } = require('./abi.js');
+const { FOMO_SETTLER_ABI, AUCTION_HOUSE_ABI } = require('./abi.js');
 const {
   FOMO_SETTLER_ADDR,
-  DEFAULT_PRIORITY_FEE,
-  DEFAULT_MAX_SETTLEMENT_COST
+  AUCTION_HOUSE_ADDR,
+  MAX_BASE_FEE,
+  PRIORITY_FEE
 } = require('../ethereumConfig.js');
 
 
@@ -16,35 +17,35 @@ const logr = x => { if (LOG_PROGRESS) console.log(x); }
 /**
  * Build the settlement transaction to execute
  */
-async function buildTransaction(fomoSettler, blockhash, feeData, priorityFeePerGas = null) {
-  if (priorityFeePerGas) {  // if (network === 'goerli') baseFeePerGas = baseFeePerGas.mul(GWEI);
-    let maxPriorityFee = priorityFeePerGas > feeData.maxPriorityFeePerGas ? priorityFeePerGas : feeData.maxPriorityFeePerGas;
-
-    feeData.maxFeePerGas = feeData.maxFeePerGas - feeData.maxPriorityFeePerGas + maxPriorityFee;
-    feeData.maxPriorityFeePerGas = maxPriorityFee;
-
-    delete feeData.gasPrice;
-  }
+async function buildTransaction(fomoSettler, blockhash, maxBaseFeePerGas, priorityFeePerGas) {
   
   const tx = await fomoSettler.settleAuctionWithRefund.populateTransaction(
     blockhash,
-    {...feeData, type: 2, from: fomoSettler.runner.address}
+    {
+      type: 2,
+      from: fomoSettler.runner.address,
+      maxFeePerGas: maxBaseFeePerGas,
+      maxPriorityFeePerGas: priorityFeePerGas,
+      gasLimit: 650_000
+    }
   );
-  tx.chainId = 1; //fomoSettler.provider.network.chainId;
+  tx.chainId = fomoSettler.runner.provider.chainId; //fomoSettler.provider.network.chainId;
   return tx;
 }
 
 
 /**
- * Simulate the gas cost of settlement
+ * Validate the request to settle
  */
-async function simulateNormalTransaction(provider, tx) {
-  const gasUsed = BigInt(450000); // await provider.estimateGas(tx)
-  const totalCost = gasUsed * tx.maxFeePerGas;
+async function validateRequest(blockhash, auctionHouse) {
+  let block = await auctionHouse.runner.provider.getBlock();
+  let auction = await auctionHouse.auction();
 
-  logr(`  ⛽️ Gas Used: ${gasUsed}  💰 Max Cost: ${formatEther(totalCost)}`);
-
-  return totalCost;
+  if (block.hash !== blockhash) {
+    throw Error(`Settlement blockhash ${blockhash} does not match latest block ${block.hash}`);
+  } else if (auction.endTime > block.timestamp) {
+    throw Error(`Auction has not yet ended`);
+  }
 }
 
 
@@ -80,30 +81,34 @@ async function sendNormalTransaction(signer, tx) {
  * @param {BigNumber} priorityFee Max priority fee to pay on top of the base fee
  * @param {BigNumber} maxSettlementCost Maximum all-in cost to pay for settlement
  */
-async function submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SETTLER_ADDR, priorityFee = DEFAULT_PRIORITY_FEE, maxSettlementCost = DEFAULT_MAX_SETTLEMENT_COST) {
-  const provider = signer.provider;
+async function submitSettlement(signer, blockhash, fomoContractAddress = FOMO_SETTLER_ADDR, auctionHouseAddress = AUCTION_HOUSE_ADDR, baseFee = MAX_BASE_FEE, priorityFee = PRIORITY_FEE) {
   const fomoSettler = new Contract(fomoContractAddress, FOMO_SETTLER_ABI, signer);
+  const auctionHouse = new Contract(auctionHouseAddress, AUCTION_HOUSE_ABI, signer.provider);
 
-  logr(`🔨 TRXN: Launching settlement...`);
-
-  let tx, cost;
+  logr(`🔬 VALIDATION: Checking request for ${blockhash}...`);
   try {
-    const feeData = await provider.getFeeData();
-    tx = await buildTransaction(fomoSettler, blockhash, feeData, priorityFee);
-    logr(tx);
-
-    cost = await simulateNormalTransaction(provider, tx);
+    await validateRequest(blockhash, auctionHouse);
+    logr(`  ✅ OK: Request is valid`);
   } catch(err) {
-    logr(`  ❌ ERROR: Cannot build and simulate trxn\n${err}`);
+    logr(`  ❌ ERROR: Cannot validate request\n${err}`);
     return false;
   }
-  
 
-  if (cost < maxSettlementCost) {
+  logr(`🔨 TRXN: Launching settlement...`);
+  try {
+    let tx = await buildTransaction(fomoSettler, blockhash, baseFee, priorityFee);
+    logr(tx);
+
+    const totalCost = tx.gasLimit * tx.maxFeePerGas;
+    logr(`  ⛽️ GAS: ${tx.gasLimit}  💰 Max Cost: ${formatEther(totalCost)}`);
+
+    logr(`  🚀 SENDING: Submitting transaction to network...`)
     let result = await sendNormalTransaction(signer, tx);
+
+    logr(`  🏁 DONE: Settlement ${result ? 'suceeded' : 'failed'}`);
     return result;
-  } else {
-    logr(`  ❌ NOT SETTLING: Total cost above ${formatEther(maxSettlementCost)} limit`);
+  } catch(err) {
+    logr(`  ❌ ERROR: Cannot build, simulate, or send trxn:\n${err}`);
     return false;
   }
 }
