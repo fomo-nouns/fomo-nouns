@@ -12,7 +12,7 @@ import classes from './App.module.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import NavBar from './components/NavBar';
-import Noun  from './components/Noun';
+import Noun from './components/Noun';
 import Title from './components/Title';
 import VoteBar from './components/VoteBar';
 import VoteProgressBar from './components/VoteProgressBar';
@@ -25,6 +25,7 @@ import NotificationToast from './components/NotificationToast';
 import { setActiveAccount } from './state/slices/account';
 import { openVoteSocket, markVoterInactive } from './middleware/voteWebsocket';
 import { openEthereumSocket } from './middleware/alchemyWebsocket';
+import CornerHelpText from './components/CornerHelpText';
 
 
 
@@ -35,8 +36,8 @@ function App() {
   const isCoolBackground = useAppSelector(state => state.noun.isCoolBackground);
   const missedVotes = useAppSelector(state => state.vote.missedVotes);
 
-  useMemo(async ()=> { // Initalized before mount
-    const [{number: blocknumber, hash: blockhash}, auction] = await Promise.all([
+  useMemo(async () => { // Initalized before mount
+    const [{ number: blocknumber, hash: blockhash }, auction] = await Promise.all([
       provider.getBlock('latest'),
       AuctionContract.auction()
     ])
@@ -46,7 +47,7 @@ function App() {
 
     dispatch(setNextNounId(nextNounId));
     dispatch(setAuctionEnd(auctionEnd));
-    dispatch(setBlockAttr({blocknumber, blockhash}))
+    dispatch(setBlockAttr({ blocknumber, blockhash }))
     if (nextNounId === 420) {
       dispatch(setDisplaySingleNoun(false));
     }
@@ -72,14 +73,15 @@ function App() {
   return (
     <div className={`${classes.App} ${isCoolBackground ? classes.bgGrey : classes.bgBeige}`}>
       <NavBar />
-      <Title/>
-      <VoteProgressBar/>
-      <SettledAuctionModal/>
+      <Title />
+      <VoteProgressBar />
+      <SettledAuctionModal />
       <Noun />
       <VoteBar />
       <Banner />
       <Documentation />
-      <Footer/>
+      <Footer />
+      <CornerHelpText />
       <NotificationToast />
     </div>
   );

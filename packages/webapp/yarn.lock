@@ -4633,6 +4633,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@use-it/event-listener@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "@use-it/event-listener@npm:0.1.7"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 6d29f72fd4da0d3a2b015389b646d9b2f7e0ff9d04b2781bad70a81477f7ee3e79256b4abbd4d4bbd9f871d38ca6f7b48b9104e504d176b88f3a149a32fcaf99
+  languageName: node
+  linkType: hard
+
 "@usedapp/core@npm:^0.5.3":
   version: 0.5.6
   resolution: "@usedapp/core@npm:0.5.6"
@@ -22411,6 +22420,7 @@ __metadata:
     "@types/react-dom": ^17.0.0
     "@types/react-router-dom": ^5.3.1
     "@types/websocket": ^1.0.4
+    "@use-it/event-listener": ^0.1.7
     "@usedapp/core": ^0.5.3
     "@web3-react/core": ^6.1.9
     "@web3-react/fortmatic-connector": ^6.1.6
