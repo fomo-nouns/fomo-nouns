@@ -16,7 +16,7 @@ function scoreVotes(voteObj, userCount) {
   let like = (voteObj.voteLike ?? 0);
   // let dislike = (voteObj.voteDislike ?? 0);
 
-  if (!userCount) {
+  if (!userCount || userCount < 2) {
     return 0;
   } else {
     let score = like / userCount;
