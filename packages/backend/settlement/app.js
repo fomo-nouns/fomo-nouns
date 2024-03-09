@@ -9,7 +9,7 @@
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const SecretsManager = require('aws-sdk/clients/secretsmanager');
 
-const { AlchemyProvider } = require('ethers/providers');
+const { AlchemyProvider, JsonRpcProvider } = require('ethers/providers');
 const { Wallet } = require('ethers/wallet');
 
 const { NETWORK_NAME } = require('./ethereumConfig.js');
@@ -53,7 +53,8 @@ var signer;
 
 async function initSigner() {
   let { alchemyKey, executorPrivateKey } = await getEthereumPrivateKeys(smc);
-  let provider = new AlchemyProvider(NETWORK_NAME, alchemyKey);
+  // let provider = new AlchemyProvider(NETWORK_NAME, alchemyKey);
+  let provider = new JsonRpcProvider('https://rpc.mevblocker.io/noreverts');
   signer = new Wallet(executorPrivateKey, provider);
   console.log(`Signer ${signer.address} initialized`);
 }
