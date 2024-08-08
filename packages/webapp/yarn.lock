@@ -2645,10 +2645,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nouns/assets@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@nouns/assets/-/assets-0.7.0.tgz#c5de336ad04f9fef2107853762005c11fce67a45"
-  integrity sha512-V1CA/ert+lSsoGzreU2rniadlFYPfjQNsIewaOxN+5JxZYafSRySXPe7XCMU/wQ5yJzGeljiKVX9aDoxtEwrjg==
+"@nouns/assets@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@nouns/assets/-/assets-0.8.0.tgz#d0d12e55c1f10069764a3be1a1eaa3bd04d4c185"
+  integrity sha512-L2jXwXdmn6q9KoKe84HfHzyPq1A+ZvKPzipqzxMWZAF2ogT1DKVC1gRauPjMLRtR4Qe66dpi+PH/p0SdC7kuEw==
   dependencies:
     "@ethersproject/bignumber" "^5.5.0"
     "@ethersproject/solidity" "^5.5.0"
