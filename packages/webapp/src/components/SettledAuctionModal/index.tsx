@@ -5,7 +5,7 @@ import classes from './SettledAuctionModal.module.css';
 import Confetti from 'react-dom-confetti';
 import axios from 'axios';
 
-import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nouns/assets';
+import { ImageData, getNounSeedFromBlockHash, getNounData } from '../../nouns-assets-package';
 import { buildSVG } from '@nouns/sdk';
 import { resetPrevSettledBlockHash } from '../../state/slices/settlement';
 const { palette } = ImageData;
