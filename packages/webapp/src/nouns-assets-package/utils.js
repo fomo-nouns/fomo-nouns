@@ -65,13 +65,18 @@ exports.getPseudorandomPart = getPseudorandomPart;
  */
 const getNounSeedFromBlockHash = (nounId, blockHash) => {
     const pseudorandomness = (0, solidity_1.keccak256)(['bytes32', 'uint256'], [blockHash, nounId]);
-    return {
+    console.log('pseudorandomness',pseudorandomness);
+    console.log('nounId',nounId);
+    console.log('blockHash',blockHash);
+    const traits = {
         background: (0, exports.getPseudorandomPart)(pseudorandomness, image_data_json_1.bgcolors.length, 0),
         body: (0, exports.getPseudorandomPart)(pseudorandomness, bodies.length, 48),
         accessory: (0, exports.getPseudorandomPart)(pseudorandomness, accessories.length, 96),
         head: (0, exports.getPseudorandomPart)(pseudorandomness, heads.length, 144),
         glasses: (0, exports.getPseudorandomPart)(pseudorandomness, glasses.length, 192),
     };
+    console.log('traits',traits);
+    return traits;
 };
 exports.getNounSeedFromBlockHash = getNounSeedFromBlockHash;
 /**
