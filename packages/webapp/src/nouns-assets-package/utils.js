@@ -1,4 +1,4 @@
-"use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPartData = exports.getNounSeedFromBlockHash = exports.getPseudorandomPart = exports.shiftRightAndCast = exports.getRandomNounSeed = exports.getNounData = void 0;
 const solidity_1 = require("@ethersproject/solidity");
