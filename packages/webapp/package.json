@@ -16,7 +16,6 @@
     "@usedapp/core": "^0.5.3",
     "@web3-react/core": "^6.1.9",
     "@web3-react/walletconnect-connector": "^6.2.4",
-    "@web3-react/walletlink-connector": "^6.2.5",
     "axios": "^0.24.0",
     "bootstrap": "^5.1",
     "clsx": "^1.2.1",
@@ -67,7 +66,6 @@
     "dotenv": "^10.0.0"
   },
   "resolutions": {
-    "@types/react": "^17.0.0",
-    "@metamask/safe-event-emitter": "2.0.0"
+    "@types/react": "^17.0.0"
   }
 }
