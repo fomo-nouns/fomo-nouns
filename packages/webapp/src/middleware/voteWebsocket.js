@@ -106,8 +106,10 @@ const voteWebsocketMiddleware = () => {
 
   const handleInactiveStatus = () => {
     try {
-      const statusMsg = {"action": "changestatus", "status": "inactive"};
-      socket.send(JSON.stringify(statusMsg));
+      if (socket && socket.readyState === socket.OPEN) {
+        const statusMsg = {"action": "changestatus", "status": "inactive"};
+        socket.send(JSON.stringify(statusMsg));
+      }
     } catch(e) {
       console.error('Websocket message ill-formed');
       console.log(e);
