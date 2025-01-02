@@ -14,6 +14,7 @@ import noun from './state/slices/noun';
 import vote from './state/slices/vote';
 import settlement from './state/slices/settlement';
 import mempool from './state/slices/mempool';
+import auth from './state/slices/auth';
 import { connectRouter } from 'connected-react-router';
 import { createBrowserHistory, History } from 'history';
 import { applyMiddleware, createStore, combineReducers } from 'redux';
@@ -40,7 +41,8 @@ const createRootReducer = (history: History) =>
     noun,
     settlement,
     vote,
-    mempool
+    mempool,
+    auth
   });
 
 export default function configureStore(preloadedState: any) {

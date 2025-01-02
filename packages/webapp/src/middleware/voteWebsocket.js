@@ -22,11 +22,30 @@ const markVoterInactive = (payload) => ({type: 'voteSocket/inactive', payload});
 const voteWebsocketMiddleware = () => {
   let socket = null;
 
-  const createSocket = () => new W3CWebSocket(FOMO_WEBSOCKET);
+  const createSocket = (signature, address, nounId) => {
+    // Pass auth data in query parameters for API Gateway compatibility
+    const authParams = new URLSearchParams({
+      signature,
+      address: address.toLowerCase(),
+      nounId
+    });
+    const socket = new W3CWebSocket(`${FOMO_WEBSOCKET}?${authParams.toString()}`);
+    return socket;
+  };
 
   // Define the socket handlers
   const openSocket = (store) => {
-    socket = createSocket();
+    const state = store.getState();
+    const { signature, address } = state.auth;
+    const nextNounId = state.noun.nextNounId?.toString();
+
+    // Only open socket if we have auth data
+    if (!signature || !address || !nextNounId) {
+      console.error('Missing auth data for websocket connection');
+      return;
+    }
+
+    socket = createSocket(signature, address, nextNounId);
     socket.onopen = handleOpen(store);
     socket.onmessage = handleReceiveMessage(store);
     socket.onclose = handleClose(store);
@@ -59,8 +78,12 @@ const voteWebsocketMiddleware = () => {
       if ('activeVoters' in data) {
         store.dispatch(setActiveVoters(data.activeVoters));
       }
+      if (data.error === 'invalid_signature' || data.error === 'missing_fields') {
+        console.error('Authentication error:', data.message);
+        closeSocket();
+      }
     } catch(err) {
-      console.error('Erroring parsing FOMO websocket message');
+      console.error('Error parsing FOMO websocket message');
       console.error(err);
     }
   }
@@ -68,7 +91,7 @@ const voteWebsocketMiddleware = () => {
   const handleSendMessage = (msg) => {
     try {
       const { nounId, blockhash, vote } = msg;
-      const voteMsg = {"action": "sendvote", "nounId": nounId, "blockhash": blockhash, "vote": vote};
+      const voteMsg = { action: "sendvote", nounId, blockhash, vote };
       socket.send(JSON.stringify(voteMsg));
     } catch(e) {
       console.error('Websocket message ill-formed');
