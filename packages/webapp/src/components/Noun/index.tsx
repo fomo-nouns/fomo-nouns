@@ -67,7 +67,7 @@ const Noun: React.FC = props => {
     if (nounImageData.length > 1) imgWrapper.push(classes[`noun-${i + 1}`])
     const icon = !displaySingleNoun && (nextNounId + i) % 10 !== 0 && <FontAwesomeIcon icon={faGavel} className="icon" />
     return (
-      <div className={`${imgWrapper.join(' ')}`}>
+      <div key={`noun-${nextNounId}-${i}`} className={`${imgWrapper.join(' ')}`}>
         <img
           className={classes.img}
           src={src}
