@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useCallback } from 'react';
 import Modal from '../Modal';
 import WalletButton, { WALLET_TYPE } from "../WalletButton";
 import { useEthers } from '@usedapp/core';
@@ -35,21 +35,7 @@ const WalletConnectModal: FC<WalletConnectModalProps> = ({ onClose, requireSigna
   const { activate, account, library } = useEthers();
   const nextNounId = useAppSelector(state => state.noun.nextNounId);
 
-  useEffect(() => {
-    const handleAccountConnection = async () => {
-      if (account && library) {
-        if (requireSignature) {
-          await requestSignature(account);
-        }
-        setShowModal(false);
-        if (onClose) onClose();
-      }
-    };
-
-    handleAccountConnection();
-  }, [account, library]);
-
-  const requestSignature = async (address: string) => {
+  const requestSignature = useCallback(async (address: string) => {
     try {
       const signer = library?.getSigner();
       if (!signer || !nextNounId) return;
@@ -65,7 +51,21 @@ const WalletConnectModal: FC<WalletConnectModalProps> = ({ onClose, requireSigna
     } catch (error) {
       console.error('Error getting signature:', error);
     }
-  };
+  }, [dispatch, library, nextNounId]);
+
+  useEffect(() => {
+    const handleAccountConnection = async () => {
+      if (account && library) {
+        if (requireSignature) {
+          await requestSignature(account);
+        }
+        setShowModal(false);
+        if (onClose) onClose();
+      }
+    };
+
+    handleAccountConnection();
+  }, [account, library, onClose, requireSignature, requestSignature]);
 
   const handleConnect = async (connectorType: keyof typeof connectors) => {
     try {

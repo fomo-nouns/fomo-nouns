@@ -1,5 +1,3 @@
-import { ethers } from 'ethers';
-
 /**
  * Creates a simple message for the user to sign that can be easily verified server-side
  * The server can recover the signer's address from this signature using ecrecover
