@@ -1,23 +1,33 @@
 .walletButton {
-    border: none;
-    margin: 5px;
-    padding: 5px 20px;
-    border-radius: 5px;
-    background-color: rgba(211, 211, 211, 0.664);
-    color: var(--brand-black);
-    border: none;
-  }
-  .walletButton img {
-    margin-right: 10px;
-    border-radius: 5px;
-  }
-  .walletButton:hover,
-  .walletButton:active,
-  .walletButton:focus,
-  .walletButton:disabled {
-    outline: none !important;
-    box-shadow: none !important;
-    background-color: lightgray !important;
-    color: var(--brand-dark-green);
-    color: white;
-  }
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  margin: 8px 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.walletButton:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.walletButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon {
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+} 
