@@ -5,7 +5,15 @@
   "main": "src/app.js",
   "author": "@_forager",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
-    "aws-sdk": "2.1540.0"
+    "ethers": "^6.9.0",
+    "@aws-sdk/client-dynamodb": "^3.484.0",
+    "@aws-sdk/lib-dynamodb": "^3.484.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
