@@ -165,6 +165,9 @@ exports.handler = async event => {
 
   const { vote, nounId, blockhash } = body;
 
+  // NOTE: Skipping a check that voted nounId matches the connection's verifiedForNounId
+  // With a persistent connection, this could let users vote for later nouns but seems harmless
+
   const dbKey = `${nounId}||${blockhash}`;
   const endpoint = `${context.domainName}/${context.stage}`;
 
@@ -202,7 +205,7 @@ exports.handler = async event => {
     'settlementAttempted': false
   };
 
-  // Launch settlement and upate message if votes are sufficient
+  // Launch settlement and update message if votes are sufficient
   if (!newVotes.settled && hasWinningScore(voteScore)) {
     console.log(`Winning votes tallied for ${dbKey}, launching settlement...`);
     await callSettlement(nounId, blockhash);
