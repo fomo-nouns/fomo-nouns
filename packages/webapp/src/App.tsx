@@ -56,8 +56,8 @@ function App() {
     dispatch(setActiveAccount(account));
   }, [dispatch, account]);
 
-  useEffect(() => { // Only initialize after mount
-    dispatch(openVoteSocket());
+  // Initialize Ethereum WebSocket on mount
+  useEffect(() => {
     dispatch(openEthereumSocket());
   }, [dispatch]);
 

@@ -1,5 +1,5 @@
 import classes from './NavBar.module.css';
-import { useEtherBalance } from '@usedapp/core';
+import { useEtherBalance, useEthers } from '@usedapp/core';
 import { Nav, Navbar } from 'react-bootstrap';
 import config from '../../config';
 import { utils } from 'ethers';
@@ -7,13 +7,16 @@ import { buildEtherscanWriteLink, buildEtherscanHoldingsLink } from '../../utils
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setDisplaySingleNoun } from '../../state/slices/noun';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import WalletConnectModal from '../WalletConnectModal';
 
-// import WalletConnectModal from "../WalletConnectModal";
 import fomologo from './fomologo-snake.png';
 import PlayersConnected from '../PlayersConnected';
 
 const NavBar = () => {
+  const [showWalletModal, setShowWalletModal] = useState(false);
+  const { account } = useEthers();
   const treasuryBalance = useEtherBalance(config.fomoSettlerAddress);
   const settlementHoldingsLink = buildEtherscanHoldingsLink(config.fomoSettlerAddress);
   const settlementWriteLink = buildEtherscanWriteLink(config.fomoSettlerAddress);
@@ -21,7 +24,7 @@ const NavBar = () => {
   const contractFundsLow = treasuryBalance && treasuryBalance.lt(utils.parseEther('1'));
 
   const scrollTo = (ref: string) => () => {
-    const anchor = document.querySelector(ref); console.log(anchor);
+    const anchor = document.querySelector(ref);
     if (!anchor) return;
     anchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
@@ -33,6 +36,10 @@ const NavBar = () => {
   function toggleSingleNounDisplay() {
     dispatch(setDisplaySingleNoun(!displaySingleNoun));
   }
+
+  const shortenAddress = (address: string) => {
+    return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  };
 
   return (
     <div className={classes.HeaderBar}>
@@ -88,9 +95,18 @@ const NavBar = () => {
           >
             NOUNS
           </Nav.Link>
-          {/* <Nav.Item>
-            <WalletConnectModal />
-          </Nav.Item> */}
+          <Nav.Link 
+            onClick={() => !account && setShowWalletModal(true)} 
+            className={classes.nounsNavLink}
+          >
+            {account ? shortenAddress(account) : 'CONNECT'}
+          </Nav.Link>
+          {showWalletModal && (
+            <WalletConnectModal 
+              onClose={() => setShowWalletModal(false)}
+              requireSignature={false}
+            />
+          )}
         </Navbar.Collapse>
       </Navbar>
     </div>
