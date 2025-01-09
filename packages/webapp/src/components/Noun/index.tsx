@@ -6,7 +6,7 @@ import classes from '../Noun/Noun.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGavel } from '@fortawesome/free-solid-svg-icons'
 
-import { ImageData, getNounSeedFromBlockHash, getNounData } from '../../nouns-assets-package';
+import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nomonouns/assets';
 import { buildSVG } from '@nouns/sdk';
 const { palette } = ImageData;
 
