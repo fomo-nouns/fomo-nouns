@@ -11,7 +11,7 @@ import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import WalletConnectModal from '../WalletConnectModal';
 
-import fomologo from './fomologo-snake.png';
+import fomologo from './fomologo-gnars.png';
 import PlayersConnected from '../PlayersConnected';
 
 const NavBar = () => {
