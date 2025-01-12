@@ -69,19 +69,23 @@
     <meta
       name="fc:frame"
       content='{
-        "version": "1.0",
-        "image": "/static/fomo_nouns_sharing.png",
-        "buttons": [
-          {
-            "label": "Vote",
-            "action": "post"
+        "version": "next",
+        "imageUrl": "/static/farcaster-frame-icon.png",
+        "button": {
+          "title": "Play",
+          "action": {
+            "type": "launch_frame",
+            "name": "FOMO Nouns",
+            "url": "https://fomonouns.wtf",
+            "splashImageUrl": "/static/farcaster-frame-icon.png",
+            "splashBackgroundColor": "#ffffff"
           }
-        ],
+        },
         "app": {
           "name": "FOMO Nouns",
           "description": "Vote with the community to pick the next Noun to mint. Everyday at Noun O'Clock.",
-          "image": "/static/favicon.ico",
-          "backgroundColor": "#000000"
+          "image": "/static/farcaster-frame-icon.png",
+          "backgroundColor": "#ffffff"
         }
       }'
     />
