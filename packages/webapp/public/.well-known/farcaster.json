@@ -1,0 +1,14 @@
+{
+    "name": "FOMO Nouns",
+    "description": "Vote with the community to pick the next Noun to mint. Everyday at Noun O'Clock.",
+    "image": "https://fomonouns.wtf/static/favicon.ico",
+    "background_color": "#000000",
+    "buttons": [
+      {
+        "label": "Vote",
+        "action": "post",
+        "target": "/"
+      }
+    ],
+    "version": "1.0"
+  }
