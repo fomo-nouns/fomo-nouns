@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import { Config, DAppProvider } from '@usedapp/core';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import FrameProvider from '@farcaster/frame-sdk';
+import FarcasterConnector from '@farcaster/frame-wagmi-connector';
 import account from './state/slices/account';
 import auction from './state/slices/auction';
 import block from './state/slices/block';
@@ -67,23 +69,42 @@ const store = configureStore({});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-const config: Config = {
+
+// Add type for the config
+interface ExtendedConfig extends Config {
+  connectors?: {
+    farcaster: any;
+  };
+}
+
+// Type assertion for FarcasterConnector
+const farcasterConnector = FarcasterConnector as any;
+
+const config: ExtendedConfig = {
   readOnlyChainId: globalConfig.chainId,
   readOnlyUrls: {
     [globalConfig.chainId]: globalConfig.jsonRpcUri
+  },
+  connectors: {
+    farcaster: new farcasterConnector()
   }
 };
+
+// Cast FrameProvider to any to bypass type checking
+const AnyFrameProvider = FrameProvider as any;
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <Web3ReactProvider getLibrary={
-        (provider, connector) => new Web3Provider(provider)
-      }>
-        <DAppProvider config={config}> 
-          <App />
-        </DAppProvider>
-      </Web3ReactProvider>
+      <AnyFrameProvider>
+        <Web3ReactProvider getLibrary={
+          (provider, connector) => new Web3Provider(provider)
+        }>
+          <DAppProvider config={config}> 
+            <App />
+          </DAppProvider>
+        </Web3ReactProvider>
+      </AnyFrameProvider>
     </React.StrictMode>
   </Provider>,
   document.getElementById('root')

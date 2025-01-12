@@ -12,8 +12,9 @@ import { setAuthData } from '../../state/slices/auth';
 
 const supportedChainIds = [CHAIN_ID];
 
-// Connector configurations
-const connectors = {
+type ConnectorType = 'metamask' | 'walletconnect' | 'brave';
+
+const connectors: Record<ConnectorType, () => InjectedConnector | WalletConnectConnector> = {
   metamask: () => new InjectedConnector({ supportedChainIds }),
   walletconnect: () => new WalletConnectConnector({
     supportedChainIds,
@@ -67,7 +68,7 @@ const WalletConnectModal: FC<WalletConnectModalProps> = ({ onClose, requireSigna
     handleAccountConnection();
   }, [account, library, onClose, requireSignature, requestSignature]);
 
-  const handleConnect = async (connectorType: keyof typeof connectors) => {
+  const handleConnect = async (connectorType: ConnectorType) => {
     try {
       setIsConnecting(true);
       const connector = connectors[connectorType]();
@@ -100,7 +101,7 @@ const WalletConnectModal: FC<WalletConnectModalProps> = ({ onClose, requireSigna
         walletType={WALLET_TYPE.brave}
         disabled={isConnecting}
       />
-      <button 
+      <button
         className={classes.clearDataBtn}
         onClick={() => localStorage.removeItem('walletconnect')}
       >

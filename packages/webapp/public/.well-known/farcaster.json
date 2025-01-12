@@ -1,0 +1,17 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjgwMywidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDQ3YzQ0NmQ2Njk3NUUyN2MyMTA5OTNEQTI5YmQ3ZmRlMDkyNUE4OUEifQ",
+    "payload": "eyJkb21haW4iOiJmb21vbm91bnMud3RmIn0",
+    "signature": "MHhmNWNlNzQyMDZhNDUwN2RlZDBmOTIxOTQ4ZWNkOGVlNDNlNWJhZjZiOGQ5NjAzOTY1ZWZiY2E0ZjQ3NmZiZTU3NzYxYzgyNmMzNmUzNjg1Njg0MmQ4MzgzZDVmNWM4MTBjYTIwYjI0MGEyYmUzNzJiYWJlODNhYTQ4NDA3ZDllMjFj"
+  },
+  "frame": {
+    "version": "1",
+    "name": "FOMO Nouns",
+    "iconUrl": "https://fomonouns.wtf/static/farcaster-frame-icon.png",
+    "homeUrl": "https://fomonouns.wtf",
+    "imageUrl": "https://fomonouns.wtf/static/farcaster-frame-icon.png",
+    "buttonTitle": "Play",
+    "splashImageUrl": "https://fomonouns.wtf/static/farcaster-frame-icon.png",
+    "splashBackgroundColor": "#ffffff"
+  }
+}

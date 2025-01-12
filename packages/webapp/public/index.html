@@ -64,6 +64,33 @@
       <meta property="og:image:alt" content="Vote. Mint. FOMO." />
       <meta property="og:image:alt" content="Vote. Mint. FOMO." />
     <!-- End Sharing Metadata -->
+
+    <!-- Add Farcaster Frame Metadata -->
+    <meta
+      name="fc:frame"
+      content='{
+        "version": "next",
+        "imageUrl": "/static/farcaster-frame-icon.png",
+        "button": {
+          "title": "Play",
+          "action": {
+            "type": "launch_frame",
+            "name": "FOMO Nouns",
+            "url": "https://fomonouns.wtf",
+            "splashImageUrl": "/static/farcaster-frame-icon.png",
+            "splashBackgroundColor": "#ffffff"
+          }
+        },
+        "app": {
+          "name": "FOMO Nouns",
+          "description": "Vote with the community to pick the next Noun to mint. Everyday at Noun O'Clock.",
+          "image": "/static/farcaster-frame-icon.png",
+          "backgroundColor": "#ffffff"
+        }
+      }'
+    />
+    <!-- End Farcaster Frame Metadata -->
+
     <style>
       @font-face {
         font-family: 'Londrina Solid';
