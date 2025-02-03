@@ -11,7 +11,7 @@ import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import WalletConnectModal from '../WalletConnectModal';
 
-import fomologo from './fomologo-gnars.png';
+import fomologo from './fomologo-lavender.png';
 import PlayersConnected from '../PlayersConnected';
 
 const NavBar = () => {
@@ -95,14 +95,14 @@ const NavBar = () => {
           >
             NOUNS
           </Nav.Link>
-          <Nav.Link 
-            onClick={() => !account && setShowWalletModal(true)} 
+          <Nav.Link
+            onClick={() => !account && setShowWalletModal(true)}
             className={classes.nounsNavLink}
           >
             {account ? shortenAddress(account) : 'CONNECT'}
           </Nav.Link>
           {showWalletModal && (
-            <WalletConnectModal 
+            <WalletConnectModal
               onClose={() => setShowWalletModal(false)}
               requireSignature={false}
             />
