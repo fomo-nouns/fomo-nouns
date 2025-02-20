@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGavel } from '@fortawesome/free-solid-svg-icons'
 
 import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nomonouns/assets';
-import { buildSVG } from '@nouns/sdk';
+import { buildSVG } from '../../utils/svg-builder';
 const { palette } = ImageData;
 
 function getNounImage(nounId: number, blockhash: string) {

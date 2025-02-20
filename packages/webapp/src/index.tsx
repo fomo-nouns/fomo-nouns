@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import './colors.css';
 import App from './App';
@@ -15,26 +15,20 @@ import vote from './state/slices/vote';
 import settlement from './state/slices/settlement';
 import mempool from './state/slices/mempool';
 import auth from './state/slices/auth';
-import { connectRouter } from 'connected-react-router';
-import { createBrowserHistory, History } from 'history';
-import { applyMiddleware, createStore, combineReducers } from 'redux';
-import { routerMiddleware } from 'connected-react-router';
+import { BrowserRouter } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import dotenv from 'dotenv';
 import { default as globalConfig } from './config';
 import voteWebsocket from './middleware/voteWebsocket';
 import ethersProviderMiddleware from './middleware/ethersProvider';
 import alchemyWebsocketMiddleware from './middleware/alchemyWebsocket';
 
-
-dotenv.config();
-
+// Create React App handles env variables automatically, no need for dotenv in browser
 export const history = createBrowserHistory();
 
-const createRootReducer = (history: History) =>
-  combineReducers({
-    router: connectRouter(history),
+const store = configureStore({
+  reducer: {
     account,
     auction,
     block,
@@ -43,30 +37,18 @@ const createRootReducer = (history: History) =>
     vote,
     mempool,
     auth
-  });
-
-export default function configureStore(preloadedState: any) {
-  const store = createStore(
-    createRootReducer(history), // root reducer with router state
-    preloadedState,
-    composeWithDevTools(
-      applyMiddleware(
-        routerMiddleware(history), // for dispatching history actions
-        // ... other middlewares ...
-        alchemyWebsocketMiddleware,
-        ethersProviderMiddleware,
-        voteWebsocket
-      ),
-    ),
-  );
-
-  return store;
-}
-
-const store = configureStore({});
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([
+      alchemyWebsocketMiddleware,
+      ethersProviderMiddleware,
+      voteWebsocket
+    ])
+});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
 const config: Config = {
   readOnlyChainId: globalConfig.chainId,
   readOnlyUrls: {
@@ -74,19 +56,24 @@ const config: Config = {
   }
 };
 
-ReactDOM.render(
+const container = document.getElementById('root');
+if (!container) throw new Error('Failed to find the root element');
+const root = createRoot(container);
+
+root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <Web3ReactProvider getLibrary={
-        (provider, connector) => new Web3Provider(provider)
-      }>
-        <DAppProvider config={config}> 
-          <App />
-        </DAppProvider>
-      </Web3ReactProvider>
+      <BrowserRouter>
+        <Web3ReactProvider getLibrary={
+          (provider, connector) => new Web3Provider(provider)
+        }>
+          <DAppProvider config={config}> 
+            <App />
+          </DAppProvider>
+        </Web3ReactProvider>
+      </BrowserRouter>
     </React.StrictMode>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

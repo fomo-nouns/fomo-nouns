@@ -6,7 +6,7 @@ import Confetti from 'react-dom-confetti';
 import axios from 'axios';
 
 import { ImageData, getNounSeedFromBlockHash, getNounData } from '@nomonouns/assets';
-import { buildSVG } from '@nouns/sdk';
+import { buildSVG } from '../../utils/svg-builder';
 import { resetPrevSettledBlockHash } from '../../state/slices/settlement';
 const { palette } = ImageData;
 
